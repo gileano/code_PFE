@@ -111,4 +111,4 @@ For `qaoa_maxcut`-like cases, pass `--fidelity-approximate-backend statevector` 
 - `run_experiment.py`, `run_sweep.py`, `aggregate_results.py`: CLI tooling for single runs, resumable multi-seed sweeps, and results aggregation.
 - `runs/`: Structured output of experiment runs (gitignored) — one directory per run, aggregated by `aggregate_results.py`.
 - `tests/`: Pytest smoke test for the pipeline (no broader test suite exists).
-- `logs.txt`: Full narrative project log (scaling history, research findings, ablation results). `status.txt`: latest supervisor-facing status snapshot. `moo.txt`: web-research notes on the wider Pareto-dominance MOO algorithm landscape.
+- `logs.txt`: Full narrative project log (scaling history, research findings, ablation results, current status). `moo.txt`: web-research notes on the wider Pareto-dominance MOO algorithm landscape.

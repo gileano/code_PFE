@@ -1,1687 +1,272 @@
 PROJECT LOG — Quantum Circuit Optimization with Genetic Algorithms
 Generated: 2026-08-18
-Last updated: 2026-09-06
+Last updated: 2026-09-07
 
-Recent activity (newest first; see the dated section below for full detail):
-- 2026-09-06: Discussed scope for re-running the mutation-scheme/hybrid-LAS/
-  sa-injection ablations on the fixed injection code (900 new configs at
-  full scope, ~55-60h estimated) -- deferred the scope decision to next
-  session. Removed runs_backup_pre_injection_blockpair_fix/ (4.6GB) now that
-  its findings are fully written up below and the post-fix baseline is the
-  current source of truth. See "GREEDY-PASS WIN-RATE RE-CHECKED ON FIXED
-  INJECTION CODE"'s SCOPING DISCUSSION.
-- 2026-09-06: Resumed and completed the core algorithm-comparison baseline
-  re-run (paused 2026-09-04 at 122/225) -- 11 more configs run (all
-  hw_efficient_ansatz@20q), 214 skipped, 0 failed; results_master.csv
-  regenerated fresh (225 rows, only fixed-code data); pytest 19/19 still
-  passing. Re-checked the ORIGINAL open question the injection-stage bugs
-  were found while investigating -- whether fidelity_driven_injection's
-  greedy-pass win rate is non-monotonic in n -- on this fixed-code data.
-  Headline: the shape changed entirely, not just the numbers. Pre-fix, win
-  rate was high at n=8 (92-96%), collapsed at n=12 (16-28%), then partly
-  recovered at a uniform n=16 (72-88%). Post-fix, win rate is LOW at both
-  n=8 (24-40%) and n=12 (8-28%), then HIGH at each family's own ceiling
-  (qaoa_maxcut@16: 100%/5 seeds; the other 4 families@20: 65-70%) -- i.e.
-  now roughly monotonically increasing with n rather than dipping-then-
-  recovering. Root cause: mean block count at n=8 is already 4.0 for
-  qft/weak_random (only ~2.0-2.2 for the other 3 families) -- the
-  block-pair-coverage bug was already live at n=8 for those two families,
-  not only "above ~n=8" as the fix's own write-up assumed, so its removal
-  changed n=8's numbers just as much as n=12's. Confirms the fix
-  invalidated the entire pre-fix win-rate curve, not just its magnitude --
-  no pre-fix non-monotonicity conclusion survives. See "GREEDY-PASS
-  WIN-RATE RE-CHECKED ON FIXED INJECTION CODE" for full detail.
-- 2026-09-04: While investigating the n=16 non-monotonic greedy-pass
-  finding below, found and fixed two real, previously-undocumented bugs
-  in the injection stage: (1) stochastic_injection/sa_injection/fidelity_
-  driven_injection all hardcoded candidate gates to blocks[0]/blocks[1]
-  only, ignoring every other block pair -- unreachable connectivity for
-  any partition with >2 blocks (the norm above ~n=8); (2) extract_
-  interblock_gates miscounts full-width barrier() no-ops as "inter-block
-  gates" -- weak_random is the only circuit family that inserts them, and
-  for one real instance checked, 100% of its reported "20 inter-block
-  gates" were actually barriers (true count: 0). Quantified impact on one
-  seed: +526% fidelity_final at n=8, negligible at n=12/16 (where real
-  interblock connectivity for that seed was genuinely zero). Fidelity-
-  backend hypothesis for the n=16 finding was REJECTED along the way
-  (weak_random control showed the same reversal with no backend switch
-  involved). Given the impact, treated the entire existing results_
-  master.csv (1185 rows) as superseded: backed up runs/ (1186 dirs, 4.6GB)
-  to runs_backup_pre_injection_blockpair_fix/, fixed both bugs (pytest
-  19/19 still passing), and started re-running the core algorithm-
-  comparison baseline (225 configs) -- paused at user request after
-  122/225 (0 failed), to resume next session. See "INJECTION STAGE
-  BLOCK-PAIR COVERAGE FIX + BARRIER-MISCOUNTING FIX".
-- 2026-09-04: Resumed and completed the n=16 ceiling-size sweep paused
-  2026-09-03 (211 new runs, 0 failed; results_master.csv now 1185 rows).
-  Two findings hold at all 3 tested sizes (n=8/12/16): nsga2 keeps its
-  same mutation-scheme ranking throughout, and swap_add keeps the highest
-  fair hypervolume for all 3 algorithms. Headline finding, and a genuine
-  surprise: fidelity_driven_injection's greedy-pass win rate, which the
-  n=12 write-up found dropping sharply from n=8 (92-96% -> 16-28%) and
-  predicted would keep dropping or hold at ceiling sizes, instead SURGES
-  BACK UP at n=16 (72-88%) for all 3 algorithms -- not monotonic in n,
-  not root-caused (candidate hypothesis: a per-family fidelity-backend
-  switch that activates only above n=13, untested). This complicates the
-  n=12 hybrid-LAS mechanism story -- nsga2's hybrid-LAS benefit reverts
-  toward its n=8 "wash" in step with this reversal, but nsga3/smsemoa's
-  doesn't, despite their greedy-win-rates reversing just as sharply.
-  sa-injection's n=12 findings (fidelity ties, sa uniformly slower) both
-  extend cleanly to n=16. Also extended generate_report.py with n=16
-  mutation-scheme/hybrid-LAS tables+figures (mirroring the n=12 UPDATE),
-  fixing a latent bug along the way: the fair-HV run_id lookup would have
-  silently returned empty rows at n=16 for 4/5 circuit families (missing
-  CIRCUIT_FIDELITY_SETTINGS' per-family run_id suffix, harmless below
-  n=13 where the suffix doesn't apply). See "CEILING-SIZE (n=16) SWEEP
-  FOR MUTATION/HYBRID-LAS/SA-INJECTION -- RESUMED, COMPLETED, AND
-  ANALYZED".
-- 2026-09-03: Kicked off the n=16 ceiling-size extension of the mutation-
-  scheme/hybrid-LAS ablations and the sa-injection comparison (closing the
-  ceiling-size gap flagged open in the n=12 write-ups below) -- paused
-  partway through by user request, to resume the next session. Mutation-
-  scheme phase 164/225 configs done (0 failed) when paused: weak_random/
-  qaoa_maxcut/w_state complete, qft partial, hw_efficient_ansatz not
-  started; hybrid-LAS and sa-injection phases not yet started. See
-  "CEILING-SIZE (n=16) SWEEP FOR MUTATION/HYBRID-LAS/SA-INJECTION --
-  STARTED, PAUSED".
-- 2026-09-03: Extended sa-injection to n=12 for all 3 algorithms
-  (status.txt's next-research-point #6) -- 75 new runs, 0 failed. Headline:
-  fidelity_final ties between sa/stochastic survives from n=8 to n=12 (67/75
-  circuit x seed x algorithm pairs bit-identical, remaining 8 differ by
-  <7.2e-05 -- floating-point/scheduling noise, not systematic) even though
-  fidelity_driven_injection's greedy pass now wins only ~16-28% of runs at
-  n=12 (vs 92-96% at n=8) -- i.e. sa and stochastic reach the same fidelity
-  even in the majority of runs where the injection method's own result wins,
-  not just because the greedy pass papers over the difference. Wall-clock
-  reverses from n=8's mixed picture (sa cheaper under nsga2, stochastic
-  cheaper under nsga3): at n=12, sa is uniformly SLOWER than stochastic
-  across all 3 algorithms and all 5 circuits (14-38% slower per
-  circuit/algorithm cell, 21-28% slower in the per-algorithm mean). See
-  "SA-INJECTION EXTENDED TO n=12".
-- 2026-09-01: Extended the mutation-scheme and hybrid-LAS ablations
-  (status.txt's next-research-point #5) from n=8-only to n=12, all 3
-  algorithms -- 225 new runs, 0 failed. Two findings beyond n=8: (1) the
-  per-algorithm best mutation scheme is NOT stable across scale either --
-  only nsga2 keeps n=8's point > swap_add_delete > swap_add ordering;
-  smsemoa and nsga3 both reorder at n=12 -- extends "no universally-best
-  mutation operator" to "not stable across scale" too. (2) hybrid-LAS's
-  effect on fidelity_final FLIPS from n=8: nsga2's n=8 "wash" (16/25
-  improved, mean delta -0.00075) becomes a consistent gain at n=12 (22/25,
-  +0.00273), and all 3 algorithms now show similar-sized gains (22-24/25,
-  +0.0027 to +0.0036) rather than nsga3 uniquely benefiting most. Root
-  cause: fidelity_driven_injection's greedy pass, which dominates 92-96%
-  of n=8 runs (point/stochastic subset), only dominates ~21% of n=12
-  runs -- at n=12 the injection_method's own (stochastic) result usually
-  wins instead, so hybrid-LAS's per-block fidelity gains propagate into
-  fidelity_final far more often. See "MUTATION-SCHEME AND HYBRID-LAS
-  ABLATIONS EXTENDED TO n=12".
-- 2026-08-31: Data-hygiene pass on runs/ (user request: audit every sweep,
-  flag what's no longer relevant, intent to delete) -- found and moved
-  (not deleted) 94 stale/superseded/orphaned run directories across 4
-  categories into runs_backup_*/ folders; results_master.csv now 525
-  canonical rows, every row consistent with current codebase defaults.
-  See "SCALING VERIFICATION: NSGA-III/SMS-EMOA AT n=12 AND FAMILY
-  CEILINGS, PLUS RUNS/ DATA-HYGIENE CLEANUP".
-- 2026-08-31: Verified NSGA-III/SMS-EMOA scaling (status.txt's
-  next-research-point #2) -- 124 new runs, 0 failed, extending both from
-  n=8-only to n=12 and each family's ceiling. Same nsga2>smsemoa>nsga3
-  fidelity ranking as n=8 mostly holds (nsga2 highest in 9/10 cells).
-  Caught and fixed a real confound while building the comparison table:
-  all prior NSGA-II n=12 data predated the same-day injection_fidelity_
-  exact_threshold fix and silently used the old (slower) tier -- fixing
-  it REVISES the n=8-based "NSGA-III is ~2x cheaper" finding: that
-  wall-clock gap fully closes by n=12 and stays closed at each family's
-  ceiling. See same section below.
-- 2026-08-31: Re-benchmarked injection_fidelity_exact_threshold -- lowered
-  12->7 and raised injection_fidelity_samples 2->8 (the exact tier is no
-  longer competitive past n=7-8 now that a statevector fast path exists;
-  the old "may be raisable" note was backwards). Validated on a real 5-seed
-  run: 45% faster, fidelity_final unchanged within noise. See "SCALING --
-  INJECTION_FIDELITY_EXACT_THRESHOLD RE-BENCHMARKED".
-- 2026-08-28: Closed the smsemoa+sa sweep gap (25 runs, 0 failed) -- matches
-  the nsga2>nsga3>smsemoa ranking already seen under stochastic. See
-  "NSGA-III ADDED AS THIRD PER-BLOCK OPTIMIZER".
-- 2026-08-28: Extended the fair (shared-reference) hypervolume comparison to
-  the mutation-scheme and hybrid-LAS ablations (225 more runs). swap_add
-  keeps the highest fair HV for all 3 algorithms (real coverage, not just a
-  normalization artifact); hybrid_las structurally cannot affect per-block
-  HV (verified). See "HYPERVOLUME COMPARABILITY ACROSS ALGORITHMS".
-- 2026-08-28: Root-caused why nsga3's hypervolume looks lower than nsga2's:
-  evaluate_run's HV uses a per-run ADAPTIVE reference point, not comparable
-  across algorithms. Added front_raw + a fair shared-reference HV table;
-  nsga2-vs-smsemoa ranking FLIPS under the fair metric, nsga2-vs-nsga3's gap
-  shrinks (11.2%->6.4%) but doesn't vanish. See "HYPERVOLUME COMPARABILITY
-  ACROSS ALGORITHMS".
-- 2026-08-28: Added NSGA-III as a third per-block optimizer via a new
-  BLOCK_OPTIMIZERS registry dict (built for easy future extension). Reaches
-  ~nsga2 fidelity at half the wall-clock (a DEAP non-dominated-sort default,
-  not an inherent algorithm advantage), pairs best with hybrid LAS of the
-  three. See "NSGA-III ADDED AS THIRD PER-BLOCK OPTIMIZER".
-- 2026-08-28: Raised run_sweep.py's qubit-size grid via real per-family
-  pilots -- found 3/4 families were silently sitting at the fidelity
-  estimator's floor and qft never finished at n=20. Fixed per family,
-  validated with reruns. See "SCALING" (2026-08-28 entry).
-- 2026-08-27: Scaling pass -- replaced the injection stage's SWAP-test
-  backend with a cheaper "fidelity-echo" estimator, cached redundant
-  operator rebuilds, gave fidelity_driven_injection and the 5 reporting
-  checks their own exact/statevector fast paths. qaoa_maxcut now reaches
-  n=20; practical qubit ceiling is family-dependent (8-32q). See "SCALING".
-- 2026-08-25: Chose SMS-EMOA as a second per-block optimizer vs. NSGA-II,
-  plus mutation-operator and hybrid-GA+LAS ablations. See "RESEARCH ANGLE
-  CHOSEN AND IMPLEMENTED".
-- 2026-08-27: Web research into the wider Pareto-dominance MOO landscape
-  (moo.txt). See "FUTURE WORK — PARETO-DOMINANCE-BASED MOO ALGORITHMS".
-- 2026-08-25: Reviewed NSGA-III/AG_multi_objectifs_NSGA3.ipynb, confirmed
-  correct, fixed 4 minor bugs. See "OPEN ITEM — RESOLVED".
+NOTE ON THIS FILE (2026-09-07): condensed from a much longer (~1700-line)
+narrative at user request -- it had grown too big to be useful. Kept: current
+findings, what's superseded and why, current config defaults not already in
+CLAUDE.md, and open items. Cut: step-by-step debugging narratives for claims
+that were later retracted/corrected, and duplicate numeric tables from
+intermediate stages of an analysis. The full pre-refactor history is in git
+(this file's own history, e.g. commit 002a3ad1 and earlier) if ever needed.
 
 =====================================================================
 PROJECT REFERENCE
 =====================================================================
 Project overview, repository structure, the M1_finale/final_m1_script.py
 pipeline architecture, codebase conventions, and setup/running instructions
-are maintained in CLAUDE.md, not duplicated here -- this file is the
-narrative history of how the tooling and research evolved, not a static
-reference. See CLAUDE.md for all of that; the sections below assume it.
+are maintained in CLAUDE.md, not duplicated here. See CLAUDE.md first.
 
 =====================================================================
-OPEN ITEM — RESOLVED (2026-08-25)
+PROJECT OBJECTIVE AND RESEARCH ROADMAP
 =====================================================================
-Confirmed NSGA-III/AG_multi_objectifs_NSGA3.ipynb (only on this branch,
-ULBS_qiea, commit 2e445cef -- hence "missing" against a main checkout) is a
-genuine, correct, independently hand-rolled NSGA-III (Deb & Jain 2014 --
-Das & Dennis reference points, ASF-based normalization with nadir fallback,
-perpendicular-distance association, niching per the paper's Algorithm 4/5),
-not DEAP's built-in selNSGA3. Fixed 4 minor issues: mutate()'s structural
-mutation ignored mutation_rate (now scales with it); gene tuple order
-didn't match the project's (gate, target, ctrl, angle) convention;
-leftover pip-install cells removed; parallel_evaluation opened a fresh
-joblib pool every call (now one pool per run). Verified byte-identical
-output at default settings after the fixes. Not done: no diff against an
-alleged prior-session version (never available to compare against).
+OBJECTIVE: make quantum circuit optimization scale to larger circuits than
+standard methods allow: split a target circuit into qubit blocks, use a
+multi-objective GA to evolve a cheaper/shallower circuit per block that still
+reproduces the original's behavior with high fidelity, then reassemble.
+Matters for near-term (noisy, limited-connectivity) devices, where shallower
+accurate circuits are hard to get via standard, non-partitioned optimization.
+Timeline: ~4 months, laptop-only, targeting a December 2026 empirical results
+paper submission (started 2026-08-18).
 
-=====================================================================
-NEXT STEPS — CANDIDATE MOO ALGORITHMS TO ADD
-=====================================================================
-Beyond NSGA-II/SMS-EMOA/NSGA-III (all three now BLOCK_OPTIMIZERS entries in
-M1_finale/final_m1_script.py, done — see "NSGA-III ADDED AS THIRD PER-BLOCK
-OPTIMIZER" for how NSGA-III was wired in as a registry entry for exactly
-this kind of future addition), these would slot into the same pluggable
-per-block-optimizer / injection-strategy pattern:
-1. MOSA (multi-objective SA) — extends existing sa_injection machinery
-   with Pareto-dominance acceptance + archive. Lowest lift.
-2. SMS-EMOA — DONE, see "RESEARCH ANGLE CHOSEN AND IMPLEMENTED".
-2b. NSGA-III — DONE, see "NSGA-III ADDED AS THIRD PER-BLOCK OPTIMIZER".
-3. IBEA — generalizes SMS-EMOA; could plug in the already-implemented
-   compute_epsilon as the driving indicator instead of hypervolume.
-4. MOEA/D — pymoo (already a dependency) ships a ready implementation;
-   weight-vector decomposition maps naturally onto per-block regions.
-5. SPEA2 — classic strength+density baseline vs. NSGA-II's crowding
-   distance. If implemented, cite the 2025 IJCAI "SPEA2 Beats NSGA-II"
-   result rather than only the 2001 paper (see FUTURE WORK below).
-6. MOPSO — different paradigm (swarm, not GA); needs a continuous-
-   relaxation or discrete-PSO adaptation of the gate-sequence encoding.
-   Highest implementation cost of this list.
-Priority by reuse/cost: MOSA > SMS-EMOA [done] > NSGA-III [done] > IBEA >
-MOEA/D > SPEA2 > MOPSO. MOSA is next up whenever this list is picked back
-up — same lowest-lift reasoning as before NSGA-III was added.
+A separate survey/critical-analysis paper ("State-of-the-art and critical
+analysis of Quantum-Inspired Evolutionary Algorithms for multi-objective
+optimization: Taxonomy, Features, and Limitations", see journal.txt) is also
+in progress, using this pipeline's results as an illustrative case study, not
+as that paper's primary evidence. The two papers are separate deliverables.
 
-=====================================================================
-NEXT STEPS — IMPROVEMENTS FROM RELATED WORK (web research, 2026-08-18)
-=====================================================================
-Grounded in 2024-2026 literature on GA/MOO quantum circuit optimization:
-1. Hyperedge-aware partitioning (models gates as hyperedges, sweeps
-   block-count K with METIS instead of fixed modularity) — arXiv 2506.09963.
-2. Cheaper fidelity proxy past the 15-qubit cutoff [substantially
-   addressed by the 2026-08-27 fidelity-echo work, see "SCALING"] —
-   nature.com/articles/s41598-026-47674-5.
-3. Classical-shadow / tensor-network fidelity estimation for scale
-   [still open beyond what "SCALING" covers] — arXiv 2209.02093.
-4. Mutation operator ablation (swap+add vs swap+add+delete) — DONE, see
-   "RESEARCH ANGLE CHOSEN AND IMPLEMENTED" — arXiv 2504.06413.
-5. Formalized pure-GA vs hybrid-GA+LAS comparison — DONE, same section —
-   arXiv 2504.17561.
-6. RL + ZX-calculus as a compression-stage alternative to compress_custom's
-   hand-rolled passes (scales to 80q, PyZX/Qiskit integration exists) —
-   arXiv 2312.11597.
-7. Noise/crosstalk-aware objective (CQC, CCMap) — could become a 4th
-   NSGA-II objective or extend _sa_energy's crosstalk term placeholder —
-   arXiv 2207.05751, arXiv 2505.09036.
-8. Noise-weighted partition cuts (DisMap/FitCut-style) complementing #7.
-Priority given remaining budget: #4/#5 (done) > #1 (moderate effort) >
-#7/#8 (new evaluation dimension, needs a noise model) > #6 (biggest
-compression win, but an external RL+ZX dependency chain — stretch goal).
+ROADMAP:
+1. OPEN: start empirical-paper results write-up.
+2. DONE: NSGA-III/SMS-EMOA scaling verified -- per-family fidelity-backend
+   settings transfer from NSGA-II with no changes needed.
+3. Candidate next per-block algorithm, in priority order: MOSA (cheapest,
+   reuses existing sa_injection machinery) > IBEA / a decomposition-based
+   method (e.g. MOEA/D, already a pymoo dependency) > SPEA2 as a classic
+   baseline (cite the 2025 IJCAI "SPEA2 Beats NSGA-II" result alongside the
+   2001 paper if implemented) > MOPSO (different paradigm, highest lift).
+   SMS-EMOA and NSGA-III already done, both as BLOCK_OPTIMIZERS entries.
+4. DONE: NSGA-III's wall-clock advantage over NSGA-II never exceeded ~5-9%
+   (block-optimization stage only) -- an earlier "half the wall-clock"
+   headline was a stale-vs-fresh measurement artifact, retracted.
+5. DONE pre-fix, SUPERSEDED: mutation-scheme/hybrid-LAS ablations exist at
+   n=8/12/16 for all 3 algorithms, but predate the 2026-09-04 injection-stage
+   bug fix (see below) and need re-running before citing.
+6. DONE pre-fix, SUPERSEDED: sa-vs-stochastic injection comparison exists at
+   n=8/12/16, same caveat as item 5.
+7. DONE: found and fixed two real injection-stage bugs (2026-09-04, see
+   below); re-ran and re-verified the core 225-run algorithm-comparison
+   baseline on the fixed code (2026-09-06).
+8. OPEN: items 5/6's ablations still need re-running on the fixed code at
+   every size before their findings can be re-cited. Scope not yet decided
+   (~900 configs / ~55-60h for a full re-run at every size; partial options
+   discussed 2026-09-06: n=8+12 only ~10-11h, or one phase at a time). Pick
+   up next session.
 
 =====================================================================
-NEXT STEPS — REPOSITORY SETUP ROADMAP FOR A DECEMBER JOURNAL SUBMISSION
+CURRENT STATUS OF RESULTS (as of 2026-09-06) — READ THIS FIRST
 =====================================================================
-Goal: laptop-only compute, ~4 months (from 2026-08-18) to produce
-simulation results for a scientific journal. Addresses: no shared code
-(every notebook redefines its own functions), no experiment runner/
-structured output, no smoke tests.
+CRITICAL CAVEAT: two real bugs in the injection stage were found and fixed
+2026-09-04 (commit e766aecf): (a) stochastic_injection/sa_injection/
+fidelity_driven_injection all hardcoded candidate gates to blocks[0]/
+blocks[1] only, ignoring every other block pair (partitions above ~n=8
+routinely have >2 blocks); (b) extract_interblock_gates miscounted
+weak_random's full-width barrier() calls as inter-block gates (barriers
+touch all qubits, so trivially "span" every block -- one checked instance
+had all 20 reported "inter-block gates" turn out to be barriers, true count
+0). Impact was confirmed large and circuit/seed-dependent (+526%
+fidelity_final on one n=8 seed, negligible on others). Every quantitative
+finding dated before 2026-09-04 anywhere in this file's history is
+SUPERSEDED -- do not cite old numbers without re-deriving them on the fixed
+code (fix applied in final_m1_script.py: extract_interblock_gates skips
+barriers; a new _rand_two_blocks(blocks, rng) helper replaces the
+blocks[0]/blocks[1] hardcoding everywhere it appeared. This also changes RNG
+stream consumption, so old runs aren't bit-reproducible against the new
+code even for 2-block partitions).
 
-Phase 0 — foundation — DONE (2026-08-18): M1_finale made importable as a
-  module; run_experiment.py added (circuit + config + --seed ->
-  runs/<run_id>/{config,metrics}.json + final_circuit.qpy); generations/
-  pop_size exposed as real params (were hardcoded); stochastic_injection's
-  RNG properly seeded (previously unseeded); fixed an IndexError from
-  Louvain singleton blocks; tests/test_pipeline_smoke.py added. Discovered:
-  DEAP's tournament selection requires pop_size % 4 == 0 — now validated
-  at the CLI.
+VERIFIED POST-FIX (225-run core baseline: nsga2/nsga3/smsemoa x 5 circuits x
+each family's own ceiling size x 5 seeds, point mutation, no hybrid-LAS,
+stochastic injection; results_master.csv, 225 rows; pytest 19/19 passing):
+- fidelity_final ranking: nsga2 highest in most circuit x size cells,
+  mirroring the pre-fix ranking's general shape, but absolute numbers and
+  the nsga3-vs-smsemoa runner-up order are not directly comparable to any
+  pre-fix table.
+- fidelity_driven_injection's greedy-pass win rate, previously reported as
+  non-monotonic in n (dip at n=12, recovery at n=16), does NOT reproduce
+  post-fix -- that dip-and-recover shape was itself an artifact of the two
+  bugs. Post-fix it looks roughly monotonically increasing with n (24-40% @
+  n=8, 8-28% @ n=12, 65-100% @ each family's own ceiling), though only
+  confirmed on an uneven per-family size grid so far (not a matched uniform
+  n=16 across all 5 families).
+- Root cause of why n=8 moved as much as n=12 post-fix: qft/weak_random
+  already averaged 4.0 blocks at n=8 (the bug was already live there, not
+  only "above ~n=8" as first assumed); the other 3 families average ~2
+  blocks at n=8 but still shifted, due to the fix's RNG-stream side effect.
 
-Phase 1 — experiment infrastructure — DONE (2026-08-19): per-stage
-  wall-clock timing (stage_timings_s); chromosome-level memoization in
-  optimise_block_nsga2; run_sweep.py added (resumable, subprocess-per-
-  config); aggregate_results.py added. Discovered: update_rotation_angles
-  ("LAS") was dead code until SMS-EMOA later wired it in via hybrid_las.
+NOT YET RE-VERIFIED post-fix (pre-fix numbers only, do not cite as current):
+- Mutation-scheme ranking per algorithm ("no universally-best operator, not
+  stable across scale") -- ablation exists at n=8/12/16, pre-fix.
+- Hybrid-LAS's effect on fidelity_final -- its mechanism was tied to the
+  greedy-pass win rate, which behaves differently post-fix, so the old
+  n=8/12/16 hybrid-LAS story cannot be assumed to still hold.
+- sa-vs-stochastic injection comparison (fidelity ties, wall-clock
+  crossover) -- exists at n=8/12/16, pre-fix.
 
-Phase 2 — fixed benchmark suite — PARTIALLY DONE (2026-08-19): 4 parametric
-  circuit generators added (qaoa_maxcut_circuit, w_state_circuit —
-  closed-form angles, qft_circuit — via synth_qft_full since
-  circuit.library.QFT is deprecated, hw_efficient_ansatz_circuit). Key
-  finding from the 8-qubit/50-run baseline: fidelity_driven_injection (runs
-  unconditionally) produced the final circuit in 48/50 runs regardless of
-  --injection-method; sa vs. stochastic were bit-identical in most cases
-  despite sa taking 3-6x longer — sa was wasted compute at this fidelity
-  regime. REVISITED 2026-08-27 after the sa_injection fix (~1000x cheaper):
-  re-ran the same comparison — finding INVERTED, sa is now cheaper (mean
-  wall_clock_s 37.2 vs stochastic's 52.4) at essentially the same fidelity
-  (0.1465 vs 0.1491, bit-identical in 23/25 paired runs). Also fixed:
-  meta["kept_injections"] always reported the sa/stochastic path even when
-  the greedy pass won — now records injection_path_used and both paths'
-  fidelities. Not started: paper-scale comparisons (resolved by "RESEARCH
-  ANGLE CHOSEN AND IMPLEMENTED" below). Not done: no noise model; scaling
-  past 8 qubits deferred (see "SCALING").
-
-Phase 3 — paper writing (November-December) — NOT STARTED. Plan: generate
-  all figures/tables directly from results_master.csv via script.
-
-=====================================================================
-SCALING
-=====================================================================
-The pipeline's fidelity computation has two tiers — exact (dense Operator
-trace, n <= fidelity_exact_threshold, default 13) and approximate
-(Monte-Carlo above it). All fixes below were redundant-computation fixes,
-not new algorithms, verified byte-identical or algebraically exact before
-adoption.
-
-- 2026-08-25: pivoted to a fixed 8-qubit benchmark set after 12/16/20-qubit
-  attempts repeatedly hung (deferred rather than debugged blind).
-- 2026-08-26: profiled the injection stage and found its three strategies
-  each rebuilt/resimulated whole circuits every trial when a cheap
-  closed-form/cached shortcut existed: sa_injection's energy check compares
-  a candidate to its own unchanged base, so the base cancels algebraically
-  (~1000x+, exact); fidelity_driven_injection caches the candidate/target
-  operator product and updates it incrementally via a partial-trace
-  identity (~40x+, exact, bit-identical); stochastic_injection's one-gate-
-  diff fidelity reduces to a 4x4 local trace independent of circuit size
-  (~900x+, exact). Result: qaoa_maxcut n=12/13 pilots (previously
-  infeasible) completed in <10 min; n=12 became practical at full GA
-  settings for all 5 families (~80-240s/run).
-- 2026-08-27: cached the 5 reporting-level fidelity checks' shared
-  target-circuit operator (was rebuilt every call) — ~1.4x faster at
-  n=12/13, byte-identical.
-- 2026-08-27: replaced the approximate tier's SWAP-test estimator with an
-  algebraically equivalent "fidelity-echo" circuit (same quantity
-  |<psi|U^dagger V|psi>|^2, computed on n qubits instead of 2n+1, no
-  CSWAP-induced entanglement) — the SWAP test's own construction, not
-  target-circuit entanglement, was what made it exponentially expensive
-  for entangled families. Verified against exact values and the old
-  estimator; a 5+min/call case now takes ~0.06s. Renamed fidelity_backend
-  swap_test_mc -> echo_test_mc, CLI --fidelity-swap-* -> --fidelity-echo-*.
-- 2026-08-27: mapped the new backend's reach — qaoa_maxcut is the one
-  family still genuinely hard past ~n=16 (a physical entanglement limit,
-  not software); the other 4 scale to n=20-32+. Root-caused why QAOA still
-  stalled at n=16: fidelity_driven_injection's max_trials was hardcoded at
-  300 with no incremental-cache fast path above the approximate threshold.
-  Exposed --fidelity-driven-max-trials; a stuck n=16 run completed in ~200s
-  once it and reporting sample/shot counts were turned down.
-- 2026-08-27: gave fidelity_driven_injection's per-trial loop its own fast
-  path above the exact tier (up to statevector_fast_path_threshold,
-  default 24): each trial only needs <chi|G_trial^dagger|phi> for a
-  handful of fixed random product states, computed EXACTLY (no shot noise)
-  via _statevector_pair_reduce/_apply_local_gate_to_statevector as an
-  O(2^n) partial trace on cached state vectors (chi updated incrementally
-  on acceptance). Verified 3 ways (brute-force outer-product, direct
-  re-simulation, and convergence against the old MPS estimator at high
-  shot count). The n=16 QAOA case above now runs the full 300 trials in
-  ~21s (was ~175s at 20 trials); total wall clock dropped from "didn't
-  finish in 280s" to ~50s. New flag --fidelity-driven-statevector-
-  threshold; new meta field fidelity_driven_tier. Did NOT yet touch the 5
-  pipeline-level reporting calls (fixed next).
-- 2026-08-27: gave those 5 reporting calls the same exact-statevector
-  option, as an explicit opt-in (benchmarked first: statevector is ~150x+
-  faster than MPS for qaoa_maxcut at n=16, but ~250-400x SLOWER than MPS
-  for w_state/hw_efficient_ansatz at n=24 — entanglement-dependent,
-  opposite strengths, so no auto-detection). New
-  approximate_gate_fidelity_statevector_mc + safe_fidelity_between_circuits'
-  approximate_backend param ("mps" default, "statevector" new); CLI
-  --fidelity-approximate-backend. Verified bit-identical against exact
-  ground truth and convergent against the old estimator at high shot
-  count. The n=20 QAOA case that previously timed out now completes in
-  37.8s.
-- 2026-08-28: raised run_sweep.py's CIRCUIT_QUBIT_SIZES grid via a real
-  pilot per family (not just the cost benchmarks above, which never
-  checked whether reported fidelity was informative). Every family but
-  weak_random failed: w_state@20, hw_efficient_ansatz@20, qaoa_maxcut@16
-  completed fine but at/below the echo estimator's resolution floor
-  (1/1024 at defaults — w_state hit 0.000977, the other two hit exactly
-  0.0); qft@20 never finished (killed after 47+ min) because its
-  inherently global entanglement left 180 cross-block gates to reinject
-  (vs 3-20 for other families) and hit the same MPS wall QAOA needed
-  statevector for. Fixed per family, validated with real reruns:
-  qaoa_maxcut and qft -> statevector backend (entanglement-agnostic, no
-  shot noise); w_state and hw_efficient_ansatz -> --fidelity-echo-
-  samples/shots raised 8->32/128->2048 (floor to 1/65536, MPS was never
-  the problem there). Results: qaoa_maxcut@16 91.7s (was 236-256s),
-  fidelity_final 2.2e-05 (was 0.0); qft@20 354.0s (was a 47+min kill),
-  6.7e-05; w_state@20 226.3s (was ~60-70s), 9.2e-05 (was 0.000977, still
-  floor); hw_efficient_ansatz@20 204.6s (was ~50-60s), 3.2e-04 (was 0.0).
-  Wired into run_sweep.py as CIRCUIT_FIDELITY_SETTINGS, applied ONLY above
-  fidelity_exact_threshold (an early unconditional version would have
-  silently duplicated n=8/12 data — caught by a smoke test). Grid is now
-  weak_random/w_state/qft/hw_efficient_ansatz=[8,12,20],
-  qaoa_maxcut=[8,12,16] (150 configs for `python run_sweep.py`).
-
-Current practical qubit ceiling (validated by real pilot reruns, not cost
-benchmarks alone): weak_random reaches n=20 at plain defaults; w_state and
-hw_efficient_ansatz reach n=20 with raised echo samples/shots (resolution,
-not speed); qaoa_maxcut (n=16) and qft (n=20) need the statevector backend
-(speed and, for qaoa_maxcut, resolution). All encoded as run_sweep.py
-defaults, no manual per-family flags needed. None tried past its validated
-size; qaoa_maxcut becomes memory-bound under statevector past ~n=24-28
-regardless.
-
-Not done / open:
-- injection_fidelity_exact_threshold RE-BENCHMARKED 2026-08-31 — see
-  "SCALING — INJECTION_FIDELITY_EXACT_THRESHOLD RE-BENCHMARKED" below;
-  lowered 12->7 (opposite of what was speculated here).
-- Not attempted: pushing qaoa_maxcut past ~n=24-28 (statevector becomes
-  memory-bound regardless of entanglement) — classical-shadow/tensor-
-  network fidelity estimation (arXiv 2209.02093) is the more fundamental
-  answer there, not a threshold tweak.
-- louvain_partition has no seed of its own — reproducible only because
-  run_experiment.py seeds global random/np.random first. Fine for real
-  experiments; would bite direct callers.
+FINDINGS NOT AFFECTED by the injection-stage bug (independent subsystem,
+still current -- see SCALING and HYPERVOLUME sections below for detail):
+- Fidelity-estimation scaling fixes (echo-test estimator, per-family
+  backend selection, injection_fidelity_exact_threshold=7/samples=8).
+- Hypervolume methodology finding: evaluate_run's adaptive per-run reference
+  point is not comparable across algorithms/runs; use the fair
+  (shared-reference) hypervolume table for cross-algorithm comparison
+  instead. This is structural (about how HV is computed), not data-
+  dependent, so it holds regardless of the injection fix.
+- NSGA-III's block-optimization stage is genuinely ~5-9% cheaper than
+  NSGA-II's at every tested size, due to DEAP's selNSGA3 defaulting to a
+  cheaper non-dominated-sort algorithm than selNSGA2/this codebase's
+  hand-rolled SMS-EMOA both use -- an implementation detail of this
+  codebase's current setup, not a general NSGA-III-is-more-efficient claim.
+  This is a block-optimization-stage-only, fidelity-independent effect, so
+  it should still hold post-fix (not re-verified, but nothing ties it to
+  the injection stage).
 
 =====================================================================
-RESEARCH ANGLE CHOSEN AND IMPLEMENTED: SMS-EMOA + operator/hybrid
-ablations (2026-08-25)
+SCALING (fidelity-estimation performance -- still current, independent of
+the injection-stage bug fix above)
 =====================================================================
-Closed Phase 2's biggest blocker (no research-contribution angle). Picked,
-over a noise/crosstalk-aware objective: SMS-EMOA as a new per-block
-optimizer vs. NSGA-II, plus mutation-operator (GECCO 2025, arXiv
-2504.06413) and pure-GA-vs-hybrid-GA+LAS (GECCO 2025 companion, arXiv
-2504.17561) ablations — reuses already-tested code (compute_hv, the
-injection stage's pluggable-strategy pattern), no new dependencies or
-noise modeling.
+Two-tier fidelity computation: exact (dense Operator trace, n <=
+fidelity_exact_threshold, default 13) and approximate (Monte-Carlo above
+it). Current approximate-tier backends: "echo_test_mc" (default, an
+algebraically-equivalent replacement for an earlier SWAP-test estimator --
+same quantity, computed on n qubits instead of 2n+1, no CSWAP-induced
+entanglement -- ~1000x+ faster for entangled circuits) and
+"statevector_mc" (opt-in per circuit family, exact per-sample/no shot
+noise, much faster for highly-entangled families but much slower than echo
+for low-entanglement ones -- no auto-selection, pick per family).
 
-Implemented optimise_block_smsemoa (binary tournament by Pareto rank;
-environmental selection stacks fronts then trims the boundary front by
-least-hypervolume-loss, hand-rolled rather than pymoo's SMSEMOA class, by
-choice); mutation_scheme ("point"/"swap_add"/"swap_add_delete" via new
-mut_swap/mut_addition/mut_deletion, swap schemes make chromosomes
-variable-length); hybrid_las (runs the previously-dead LAS local search on
-the GA's winner). Wired through the pipeline, CLI, sweep, and aggregation.
-Fixed a pre-existing bug: optimise_block_nsga2 was double-appending to
-history_moo every generation. SMS-EMOA's hypervolume-trim wasn't a
-wall-clock blocker (8.2s vs NSGA-II's 10.7s, same-size test).
+fidelity_driven_injection's per-trial loop has its own fast paths: exact
+below injection_fidelity_exact_threshold (lowered 12->7, since statevector
+already wins by n=8 and the gap grows exponentially with n), a statevector
+fast path up to statevector_fast_path_threshold (default 24), each trial
+computed exactly via cached/incrementally-updated state vectors.
+injection_fidelity_samples raised 2->8 (better tracks the exact tier's
+accept/reject decisions at n=12/13, ~100-700x cheaper than exact).
 
-Ran 3 staged single-axis sweeps (not a 600+-run factorial), 8-qubit x
-5-circuit x 5-seed, injection_method=stochastic, ~175 runs:
+Per-family qubit ceilings (validated by real pilot reruns, wired into
+run_sweep.py's CIRCUIT_FIDELITY_SETTINGS, applied only above
+fidelity_exact_threshold): weak_random reaches n=20 at plain defaults;
+w_state and hw_efficient_ansatz reach n=20 with raised echo samples/shots
+(8->32 samples, 128->2048 shots -- a resolution fix, not a speed one);
+qaoa_maxcut (ceiling n=16) and qft (reaches n=20) need the statevector
+backend (speed, and for qaoa_maxcut also resolution). qaoa_maxcut becomes
+memory-bound under statevector past ~n=24-28 regardless of entanglement --
+not a software limit to chase further; classical-shadow/tensor-network
+fidelity estimation (arXiv 2209.02093) would be the real next step there.
+Current run_sweep.py grid: weak_random/w_state/qft/hw_efficient_ansatz =
+[8,12,20], qaoa_maxcut = [8,12,16].
 
-(a) nsga2 vs smsemoa (point, no hybrid_las):
-  block_algorithm  fidelity_final  depth_after  cost_after  mean_hv  total_n_pareto  wall_clock_s
-  nsga2                    0.1491        16.04       82.12   0.0520          121.84       52.41
-  smsemoa                  0.1230        15.20       78.24   0.0596          171.72       50.95
-  NSGA-II wins peak fidelity in every family (16/25 vs 9/25 seed-runs);
-  SMS-EMOA gives a larger, more diverse front at no wall-clock cost —
-  complementary, not a strict winner.
-
-(b) mutation ablation: under nsga2, point 0.1491 > swap_add_delete 0.1293
-  > swap_add 0.1140 (matches GECCO 2025's claim that deletion balances
-  bloat). Under smsemoa: swap_add_delete 0.1420 > swap_add 0.1295 > point
-  0.1230 — the OPPOSITE ranking, a genuine algorithm x operator
-  interaction (not noise — consistent in depth/cost too). No universally-
-  best mutation operator. (Caveat: swap_add's outlier mean_hv both times
-  is a per-run-normalization/bloat artifact — cost_after is highest for it
-  both times.)
-
-(c) hybrid GA+LAS: under nsga2, effect on fidelity_final is a wash (16/25
-  improved, mean delta -0.00075) despite reliably improving per-block
-  fidelity (+0.9% relative) — the gain doesn't survive into the final
-  circuit because fidelity_driven_injection's greedy pass dominates
-  regardless of pre-injection quality (a paper-worthy negative result).
-  Under smsemoa: small but consistently positive (18/25 improved, mean
-  delta +0.00186).
-
-Common thread: block-optimization-stage choices have SECONDARY effects on
-end-to-end fidelity_final vs. the injection stage's own greedy pass at
-this 8-qubit regime — worth reporting as a finding itself, and worth
-reporting the paper's headline comparison on a block-stage metric
-(per-block fidelity/HV, already in moo_metrics_per_block) rather than only
-fidelity_final. All ~260 rows in runs/results_master.csv. Not done: no
-combined best-of-both-axes run per algorithm.
+Not done / open: sa_injection and stochastic_injection accept
+injection_fidelity_exact_threshold as a kwarg but, per code inspection
+(not verified empirically), never reach the branch it gates in real use --
+only fidelity_driven_injection is affected by that threshold in practice.
+louvain_partition has no seed of its own -- reproducible only because
+run_experiment.py/run_sweep.py seed global random/np.random first; a direct
+caller of the pipeline functions would need to replicate that.
 
 =====================================================================
-NSGA-III ADDED AS THIRD PER-BLOCK OPTIMIZER (2026-08-28)
+HYPERVOLUME COMPARABILITY ACROSS ALGORITHMS (methodology finding, still
+current)
 =====================================================================
-User request: add NSGA-III as a per-block optimizer, designed for further
-extension (more MOO algorithms later), not bolted on as a third if/elif.
+evaluate_run's hypervolume uses a PER-RUN ADAPTIVE reference point/
+normalization (derived from that run's own final population) -- fine for
+tracking one run's own convergence, but not valid for ranking different
+algorithms/runs against each other, since the same absolute HV value means
+something different per run. Fixed by adding front_raw (the Pareto front in
+natural, unnormalized units) to evaluate_run's output, and a fair
+(shared-reference) hypervolume table in generate_report.py that pools all
+algorithms' front points per block, derives one shared min/max
+normalization, and evaluates HV against one shared fixed reference point.
+On the pre-fix dataset this flipped the nsga2-vs-smsemoa ranking entirely
+and shrank (but didn't erase) the nsga2-vs-nsga3 gap -- exact numbers not
+repeated here since they're pre-injection-fix data; the METHODOLOGICAL
+point (always use fair HV for cross-algorithm comparison, adaptive HV only
+for single-run convergence plots) is what's still load-bearing.
+Also verified as a genuine structural property, independent of any data:
+hybrid_las structurally cannot affect the recorded Pareto front (front_raw
+is computed on `pop` before hybrid_las runs; hybrid_las only refines a copy
+of the winning individual afterward) -- so fair/adaptive HV are always
+identical between hybrid_las on/off, by construction, at any n.
 
-Implementation: new optimise_block_nsga3, matching optimise_block_nsga2/
-optimise_block_smsemoa's exact signature and conventions, but
-environmental selection uses DEAP's built-in tools.selNSGA3 (Deb & Jain
-2014) with tools.uniform_reference_points(nobj=3, p=12) — 91 points, the
-same p=12 already reviewed/used by NSGA-III/AG_multi_objectifs_NSGA3.ipynb.
-Deliberately reuses DEAP's tested implementation rather than that
-notebook's independently hand-rolled one (the notebook's point was a
-from-scratch correctness demonstration, not a block-optimizer candidate).
-Parent selection needs no crowding-distance tournament (unlike NSGA-II's
-selTournamentDCD) — reference-point niching maintains diversity, so the
-population is just shuffled and paired.
-
-Extensibility: replaced the block_algorithm if/elif/else dispatch with a
-BLOCK_OPTIMIZERS registry dict. Adding a further algorithm is now: write a
-matching function, add one dict entry. run_experiment.py's
---block-algorithm choices read sorted(BLOCK_OPTIMIZERS) directly.
-run_sweep.py doesn't import final_m1_script (subprocess-only by design),
-so its --block-algorithms choices still need one manual addition per new
-algorithm — documented in that flag's help text. generate_report.py needed
-zero changes (already groups by block_algorithm generically).
-
-Verified before sweeping: smoke-tested nsga3 end-to-end (plain and
-hybrid); confirmed run_sweep.py --dry-run builds correct run_ids; added
-nsga3/nsga3_combo smoke-test cases — 15/15 passing.
-
-Extended all 3 of the SMS-EMOA sweeps with nsga3 at the same settings
-(100 new runs, 0 failed):
-
-(a) algorithm comparison (point, no hybrid_las) — nsga2/smsemoa rows
-  unchanged from above:
-  block_algorithm  fidelity_final  depth_after  cost_after  mean_hv  total_n_pareto  wall_clock_s
-  nsga3                    0.1419        15.16       81.32   0.0462           92.20       25.34
-  nsga3 reaches close to nsga2's fidelity (within ~5%) at roughly HALF the
-  wall-clock of either nsga2 or smsemoa — a distinct trade-off point, not
-  simply better/worse. Front size (92.20) sits between nsga2's (121.84)
-  and smsemoa's (171.72).
-  [RETRACTED 2026-08-31 — see "SCALING VERIFICATION: NSGA-III/SMS-EMOA AT
-  n=12 AND FAMILY CEILINGS" below. The "HALF the wall-clock" claim was a
-  stale-vs-fresh measurement artifact, not a real algorithmic property:
-  nsga2/smsemoa's 52.41/50.95 numbers here were never re-measured when
-  nsga3 was added ("rows unchanged from above", literally) and predate
-  the 2026-08-26/27 injection-stage speedups; nsga3, added after those
-  speedups, was fast for an unrelated reason. Once all three are measured
-  on the same codebase (as they now are), the total-wall-clock gap is
-  ~5-9%, not ~50%, and holds equally at every tested size, not just n=8.]
-
-(b) mutation ablation: nsga3 swap_add 0.1428 ~= point 0.1419 >
-  swap_add_delete 0.1302 — a THIRD distinct ranking (nsga2: point >
-  swap_add_delete > swap_add; smsemoa: swap_add_delete > swap_add >
-  point). Strengthens "no universally-best mutation operator": now 3
-  algorithms, 3 different rankings.
-
-(c) hybrid GA+LAS: nsga3 False 0.1419, True 0.1475 — 21/25 improved, mean
-  delta +0.0056 — pairs BEST with hybrid LAS of the three (vs smsemoa's
-  18/25 and nsga2's wash).
-
-Root cause of nsga3's speed — RESOLVED same day: two independent
-measurements agree. cProfile on a real block-optimizer call: selNSGA2
-2.27-2.40s/100-101 calls; SMS-EMOA's sortNondominated (called twice/gen)
-2.82s/201 calls; selNSGA3 only 0.07-0.19s/100 calls. An isolated
-profiler-free timing test on matched synthetic populations confirms it:
-selNSGA2 11.40ms/call, selNSGA3 2.16ms/call (~5.2x cheaper),
-sortNondominated 11.62ms/call (SMS-EMOA's 2x/gen usage costs 23.20ms/gen,
-~10.5x nsga3's). Cause: DEAP's selNSGA3 defaults to nd="log"
-(tools.sortLogNondominated, Fortin & Buzdalov's O(N log^(M-1)N) sort)
-while selNSGA2 and this codebase's hand-rolled SMS-EMOA both call the
-classic O(M.N^2) tools.sortNondominated. CAVEAT: this is a DEAP
-default-parameter difference, NOT evidence NSGA-III is inherently more
-efficient — sortLogNondominated is a standalone function nothing stops
-rank_by_front/environmental_select from also calling. Report "nsga3 is
-~2x cheaper in this codebase's current implementation, due to its default
-non-dominated-sort algorithm", not a general algorithm claim. Not
-investigated: how much of the remaining gap comes from other overhead
-(assignCrowdingDist, joblib dispatch) — evaluate_population's own cProfile
-cumtime differed too (8.59s/6.72s/6.16s for nsga2/nsga3/smsemoa) but
-that's more exposed to profiler skew, treat as suggestive only.
-
-nsga3 x injection_method — RESOLVED same day: ran the missing nsga3+sa
-configs (25 runs, 0 failed); generalized generate_report.py's
-injection_method figures from a nsga2-only filter to group by
-[block_algorithm, injection_method]:
-  block_algorithm  injection_method  fidelity_final  wall_clock_s
-  nsga2             sa                       0.1465         37.17
-  nsga2             stochastic               0.1491         52.41
-  nsga3             sa                       0.1419         33.99
-  nsga3             stochastic               0.1419         25.34
-  smsemoa           sa                       0.1230         34.93
-  smsemoa           stochastic               0.1230         50.95
-nsga3's fidelity_final is BIT-IDENTICAL between sa/stochastic (full float
-precision) — fidelity_driven_injection's greedy pass dominates regardless
-of --injection-method (25/25 and 24/25 runs), same known behavior nsga2
-already showed. New nuance: nsga3's sa/stochastic wall-clock ratio
-INVERTS nsga2's — under nsga2 sa (37.17s) is cheaper than stochastic
-(52.41s); under nsga3 sa (33.99s) is the SLOWER one (stochastic 25.34s),
-because nsga3's block-optimization stage is ~2x faster regardless of
-injection method while sa_injection's own cost is roughly constant
-(~34-37s) across block algorithms — large enough relative to total
-wall-clock to flip which method looks cheaper once paired with a faster
-block optimizer.
-
-smsemoa+sa gap closed (same day): ran the missing 25 smsemoa+sa configs
-(0 failed; results_master.csv now 472 rows, up from 422 — first attempt
-failed all 25 on a wrong-interpreter mistake, bare system python3 instead
-of .venv). smsemoa's fidelity_final under sa (0.1230) matches its
-stochastic value, same nsga2>nsga3>smsemoa ranking — not an
-injection-method artifact. injection_path_used was fidelity_driven_greedy
-in 24/25 runs. Wall-clock (34.93s) lands between nsga3's (33.99s) and
-nsga2's (37.17s) sa times, unlike under stochastic where smsemoa was
-slowest — not further root-caused.
-
-Not done / open:
-- Whether swapping SMS-EMOA to tools.sortLogNondominated would close most
-  of the wall-clock gap to nsga3 — not tried.
-- No combined best-of-both-axes run for nsga3 either (each axis ablated
-  independently by design, across all 3 algorithms).
-- Not attempted at any qubit size other than 8 — SCALING's per-family
-  fixes were validated under nsga2 only.
-- Whether the "why is nsga3 faster" root cause matters for interpreting
-  wall_clock_s project-wide depends on whether it's a per-block-count/
-  per-generation effect rather than algorithm-inherent — open.
+Not done / open: no investigation of WHY nsga3's front is genuinely smaller
+under a fair comparison (e.g. Das & Dennis niching vs. NSGA-II's crowding
+distance) -- open if it matters for the paper.
 
 =====================================================================
-HYPERVOLUME COMPARABILITY ACROSS ALGORITHMS (2026-08-28)
+CANDIDATE PIPELINE EXTENSIONS FROM RELATED WORK (web research, 2026-08-18
+and 2026-08-27; not yet done unless noted)
 =====================================================================
-Supervisor question: why is nsga3's mean_hv (0.0462) lower than nsga2's
-(0.0520) — shouldn't higher HV mean a better front? Correct in general,
-but not valid to conclude from this codebase's mean_hv as computed.
-
-Root cause: evaluate_run computes HV with a PER-RUN ADAPTIVE reference
-point and normalization (f_min/f_max from that run's own final
-population; ref = that run's own normalized front's worst point + 0.1
-margin). Fine for tracking one run's convergence (plot_moo_history's use
-case) but invalid for ranking different algorithms — the same absolute HV
-means something different per run. Same mechanism already flagged for
-swap_add's outlier HV in "RESEARCH ANGLE CHOSEN AND IMPLEMENTED".
-
-Fix: added front_raw to evaluate_run's output (the Pareto front in
-natural, unnormalized units) — purely additive, doesn't change existing
-HV/Spread/Spacing behavior. Flows into metrics.json automatically. Added
-table_fair_hv_comparison to generate_report.py: pools all present
-algorithms' front points per block index (blocks are identical across
-algorithms for the same circuit+seed), derives one shared min/max
-normalization, evaluates HV against one shared fixed reference point
-([1.1,1.1,1.1] normalized). Required regenerating the 75-run
-algorithm-comparison baseline for front_raw (old runs moved to
-runs_backup_pre_front_raw/, not deleted — bulk rm -rf was blocked by the
-permission classifier), re-run via run_sweep.py, 0 failed, deterministic.
-
-Result, full 25-seed comparison (a single matched-block spot-check was
-tried first and shown to be too small a sample to trust):
-  block_algorithm  mean_hv (adaptive)  fair_mean_hv (shared reference)
-  nsga2                        0.0520                           0.8149
-  nsga3                        0.0462                           0.7630
-  smsemoa                      0.0596                           0.8081
-1. nsga2-vs-smsemoa ranking FLIPS: smsemoa wins adaptive (0.0596>0.0520),
-   nsga2 wins fair (0.8149>0.8081, ~0.8% margin, near-tie but direction
-   reversed) — direct proof the adaptive metric distorts comparisons for
-   a pair that was never even in question.
-2. nsga2-vs-nsga3 gap SHRINKS but doesn't disappear: 11.2% adaptive ->
-   6.4% fair — nsga3 genuinely has a somewhat smaller fair HV, consistent
-   with its smaller total_n_pareto (92.20 vs 121.84). The adaptive metric
-   exaggerated a real gap for this pair while getting the other pair's
-   ranking backwards entirely.
-An earlier single-block spot-check had suggested the nsga2-vs-nsga3
-ranking might fully reverse (0.919 vs 1.015) — the full 25-seed result
-shows that was small-sample noise. Lesson: a single matched-seed check
-confirms a MECHANISM exists but isn't reliable for the actual
-magnitude/direction of a gap. Report fidelity_final as the primary
-cross-algorithm metric going forward; mean_hv only with the
-adaptive-scheme caveat, or fair_mean_hv when HV specifically is needed.
-
-Extended to mutation-scheme/hybrid-LAS ablations (same day): regenerated
-225 runs the same way (moved aside, re-ran, 0 failed). generate_report.py
-gained table_fair_hv_mutation_ablation/table_fair_hv_hybrid_las_ablation,
-refactored to share pooling logic with the baseline table.
-
-Mutation-scheme ablation, fair HV:
-  nsga2:   swap_add 0.8944 > point 0.8149 > swap_add_delete 0.8088
-  nsga3:   swap_add 0.8823 > swap_add_delete 0.7755 > point 0.7630
-  smsemoa: swap_add 0.9073 > swap_add_delete 0.8252 > point 0.8081
-swap_add gives the highest fair HV for all three algorithms — refines
-(doesn't overturn) the earlier "outlier/bloat artifact" caveat: under a
-fair metric the elevated HV survives, so it's not purely a normalization
-artifact. But cost_after is still highest for swap_add every time — it
-genuinely covers more objective-space volume (variable-length
-chromosomes reach wider depth/cost trade-offs), which isn't the same as
-finding more EFFICIENT solutions (fidelity_final/cost_after still favor
-point or swap_add_delete). Bigger fair HV means wider coverage, not
-better trade-offs — both legitimate readings, be explicit about which
-one a figure claims.
-
-Hybrid-LAS ablation, fair HV: IDENTICAL between hybrid_las=False/True for
-every algorithm (nsga2 0.8149/0.8149, nsga3 0.7630/0.7630, smsemoa
-0.8081/0.8081). Verified as a genuine structural property: evaluate_run
-(producing front_raw) runs on `pop` BEFORE hybrid_las is applied;
-hybrid_las only refines a copy of best_ind afterward, never touching
-`pop`. So hybrid_las structurally cannot affect per-block Pareto-front
-metrics — its entire effect is on fidelity_final via the final circuit
-(already shown in the hybrid_las_ablation table).
-
-Also noticed while regenerating: baseline fidelity_final/wall_clock_s
-shifted slightly from originally-reported values (e.g. nsga2's mean
-fidelity_final 0.1491->0.1465) purely from re-executing the same seeds
-through today's codebase instead of the state it was in when first
-measured. Verified NOT live non-determinism (one exact config run twice
-back-to-back: bit-identical). results_master.csv/report/ are the current
-source of truth; older log entries reflect what was measured at the
-time.
-
-Not done / open:
-- No investigation of WHY nsga3's front is genuinely smaller under fair
-  comparison — e.g. whether Das & Dennis niching converges to fewer
-  distinct solutions by design vs. NSGA-II's crowding distance.
-- swap_add's higher fair HV (coverage) vs. worse cost_after (bloat)
-  reported as two coexisting readings, not reconciled — a paper verdict
-  needs to pick one explicitly.
-- Injection-method and scaling-related fair-HV extensions not started.
+- Hyperedge-aware partitioning (hypergraph gate model + METIS block-count
+  sweep instead of fixed-modularity Louvain) -- arXiv 2506.09963.
+- Classical-shadow / tensor-network fidelity estimation for scale beyond
+  what the echo/statevector backends cover -- arXiv 2209.02093.
+- RL + ZX-calculus as a compression-stage alternative to compress_custom's
+  hand-rolled passes (scales to 80q, PyZX/Qiskit integration exists) --
+  arXiv 2312.11597. Biggest potential compression win, but an external
+  RL+ZX dependency chain -- treat as a stretch goal.
+- Noise/crosstalk-aware objective (could become a 4th NSGA-II objective, or
+  extend _sa_energy's existing crosstalk-term placeholder) -- arXiv
+  2207.05751, arXiv 2505.09036 -- plus noise-weighted partition cuts
+  (DisMap/FitCut-style) as a complementary idea. Needs a noise model, which
+  the project doesn't have yet.
+- Wider Pareto-dominance MOO lineage reviewed (VEGA->MOGA->NPGA->SPEA->
+  PAES->PESA->PESA-II->SPEA2->weak constraint-Pareto dominance, 2026-08-27,
+  full detail in moo.txt): no change to the priority order above. PAES
+  (a (1+1) evolution strategy, no population/crossover) doesn't fit this
+  project's population-parallel/joblib design -- not prioritized, but worth
+  naming as evidence the population-GA design was a deliberate choice. Weak
+  constraint-Pareto dominance doesn't apply (all 3 objectives here are
+  soft, not hard constraints).
+- Mutation-operator ablation (arXiv 2504.06413) and pure-GA-vs-hybrid-GA+LAS
+  (arXiv 2504.17561) -- DONE, pre-fix (see CURRENT STATUS above for the
+  supersession caveat).
 
 =====================================================================
-FRAMEWORK/DEPENDENCY AUDIT (2026-08-18)
+REPO INFRASTRUCTURE HISTORY (M1_finale/ tooling, mostly done)
 =====================================================================
-Checked the working .venv against PyPI: all 14 direct dependencies
-current or one patch behind, no urgent bumps needed. Fixed two
-compatibility issues: (1) M1_finale/final_m1_script.py used Qiskit's
-deprecated CircuitInstruction 3-tuple unpacking in 13 places (slated for
-removal in Qiskit 3.0) — replaced with .operation/.qubits/.clbits
-attribute access, verified byte-identical behavior; (2) requirements.txt
-had no version pins — pinned every entry to the working, smoke-tested
-.venv's exact versions. Minor, not acted on: qiskit-aer is listed but
-only used by one throwaway notebook (Final_test/nex_formula), not the
-main pipeline.
+Phase 0 (DONE, 2026-08-18): M1_finale made importable; run_experiment.py
+added; generations/pop_size exposed as real CLI params; stochastic_
+injection's RNG properly seeded; fixed a Louvain-singleton-block IndexError;
+tests/test_pipeline_smoke.py added. DEAP's tournament selection requires
+pop_size % 4 == 0 -- validated at the CLI.
 
-=====================================================================
-FUTURE WORK — PARETO-DOMINANCE-BASED MOO ALGORITHMS (2026-08-27)
-=====================================================================
-Web research (full detail/sources in moo.txt) into the rest of the
-Pareto-dominance MOO lineage NSGA-II/III and SPEA2 belong to: VEGA
-(1985) -> MOGA -> NPGA -> SPEA -> PAES -> PESA -> PESA-II -> SPEA2
-(2001) -> weak constraint-Pareto dominance (2025). Assessment: VEGA
-through PESA are historical only (superseded by later entries already
-covered) — useful only for the paper's related-work lineage paragraph.
-PAES (a (1+1) evolution strategy, no population/crossover) is the one
-structurally different option, but doesn't fit this project's
-population-parallel/joblib execution model — not prioritized, but worth
-naming as evidence the population-GA design was a real choice. Weak
-constraint-Pareto dominance doesn't apply (this project's 3 objectives
-are all soft, not hard constraints) — revisit only if an objective ever
-becomes a hard pass/fail cutoff. Net effect: no change to the existing
-priority order (MOSA > SMS-EMOA [done] > IBEA > MOEA/D > SPEA2 > MOPSO).
-One concrete upgrade if/when SPEA2 is implemented: cite the 2025 IJCAI
-"SPEA2 Beats NSGA-II" result instead of only the 2001 paper.
+Phase 1 (DONE, 2026-08-19): per-stage wall-clock timing; chromosome-level
+memoization in optimise_block_nsga2; run_sweep.py (resumable, subprocess-
+per-config) and aggregate_results.py added. update_rotation_angles ("LAS")
+was dead code until SMS-EMOA wired it in via hybrid_las.
+
+Phase 2 (DONE, 2026-08-19 through 2026-08-28): 4 parametric circuit
+generators added (qaoa_maxcut, w_state, qft via synth_qft_full, hw_efficient_
+ansatz). Framework/dependency audit (2026-08-18): all 14 direct dependencies
+current or one patch behind; fixed 2 Qiskit-3.0-deprecation issues
+(CircuitInstruction 3-tuple unpacking) and pinned requirements.txt.
+
+Phase 3 (paper writing, November-December) -- NOT STARTED. Plan: generate
+all figures/tables directly from results_master.csv via generate_report.py.
 
 =====================================================================
-SCALING — INJECTION_FIDELITY_EXACT_THRESHOLD RE-BENCHMARKED (2026-08-31)
+OPEN ITEMS (consolidated)
 =====================================================================
-Picked up SCALING's flagged "not yet re-benchmarked, may be raisable"
-item: injection_fidelity_exact_threshold (12) gates, inside
-fidelity_driven_injection's per-trial loop, whether a trial's fidelity
-uses tier 1 (exact dense-operator, n<=threshold) or tier 2 (statevector
-fast path, added 2026-08-27, threshold<n<=fidelity_driven_statevector_
-threshold=24). 12 predated tier 2 and was never checked against it.
-
-Method: forced each tier explicitly on identical (base_qc, target_qc,
-blocks) pairs — qaoa_maxcut and weak_random, n=4-13, 300 trials each,
-base_qc = target_qc with 5 two-qubit gates stripped (mimics an imperfect
-block-optimized candidate). Wall-clock, exact vs statevector:
-  n        6      7      8      9      10     11     12      13
-  exact   0.03s  0.04s  0.07s  0.24s  1.13s  4.61s  24.6s  146.2s   (qaoa_maxcut)
-  sv      0.04s  0.04s  0.04s  0.09s  0.09s  0.11s  0.14s    0.20s
-  exact   0.04s  0.05s  0.10s    --     --     --   30.6s  158.4s   (weak_random)
-  sv      0.05s  0.05s  0.05s    --     --     --    0.17s    0.23s
-Exact is only marginally cheaper up to n=6-7; by n=8 statevector already
-wins, and the gap grows exponentially (exact rebuilds+multiplies a dense
-2^n x 2^n operator per acceptance; statevector only touches
-O(2^n)-sized vectors). ~700-750x slower by n=13. The "may be raisable"
-note was backwards — lowered the threshold to 7 (last-parity point, with
-a small safety margin below the exact crossover at 8).
-
-Second finding: at the old default injection_fidelity_samples=2, the
-statevector tier's accept/reject decisions visibly diverged from the
-exact tier's ground truth at n=12/13 (different SETS of kept gates, e.g.
-qaoa_maxcut n=13: exact kept 16, samples=2 kept a different 9). Sweeping
-samples in {2,8,32,128} at n=12/13: samples=8 tracks the exact tier's
-kept-gate set much more closely while staying ~100-700x cheaper. Raised
-injection_fidelity_samples 2->8 alongside the threshold change.
-
-Applied to final_m1_script.py's optimise_circuit_pipeline defaults and
-comments, run_experiment.py's CLI defaults/help text, run_sweep.py's
-pass-through help text and docstring. Verified via pytest (15/15 pass,
-including 2 smoke tests that force the statevector tier explicitly,
-unaffected by the default change).
-
-Real-run validation (same day): ran the full pipeline at qaoa_maxcut
-n=12 (nsga2/point/no-hybrid-LAS/stochastic), all 5 seeds already in
-results_master.csv. Old defaults (threshold=12, samples=2) vs. new
-(threshold=7, samples=8), mean over 5 seeds:
-  fidelity_final: 0.05529 (old) vs 0.05489 (new) — 0.7% difference (noise)
-  wall_clock_s:   125.31 (old) vs  68.65 (new)   — 45% faster
-Per-seed fidelity_final moved by small, inconsistent amounts in both
-directions — no systematic regression.
-
-Not done / open:
-- Only qaoa_maxcut@12 validated end-to-end (the family/size with the
-  largest kept-gate divergence in the micro-benchmark); other families/
-  sizes are expected to behave at least as well but not independently
-  confirmed.
-- sa_injection and stochastic_injection accept this threshold as a
-  passed-through kwarg but, per code inspection, never reach the branch
-  it gates in real use (sa_injection's energy check always takes the
-  closed-form self-fidelity path; stochastic_injection's per-trial
-  fidelity is a constant independent of n) — this re-benchmark only
-  targeted fidelity_driven_injection, the one place it has real effect.
-  Not verified empirically that sa/stochastic ignore it, only by reading
-  the code.
-- Threshold (7) chosen from a synthetic base/target pair, not a real
-  GA-produced candidate — the true crossover could differ by 1-2 qubits,
-  not confirmed against a real candidate circuit.
-
-=====================================================================
-SCALING VERIFICATION: NSGA-III/SMS-EMOA AT n=12 AND FAMILY CEILINGS,
-PLUS RUNS/ DATA-HYGIENE CLEANUP (2026-08-31)
-=====================================================================
-Picked up status.txt's NEXT RESEARCH POINTS #2: whether NSGA-III/SMS-EMOA
-need the same per-family qubit-scaling fixes (statevector backend / raised
-echo-samples) that NSGA-II needed at n=16-20, since both were only ever
-run at n=8 (125 runs each, from the algorithm/mutation/hybrid-LAS
-ablations — see "RESEARCH ANGLE CHOSEN" and "NSGA-III ADDED").
-
-Method: ran run_sweep.py --block-algorithms nsga3 smsemoa
---injection-methods stochastic (fills n=12 and each family's ceiling using
-the existing CIRCUIT_FIDELITY_SETTINGS, unchanged since it's keyed by
-circuit, not block_algorithm) — 100 new runs, 0 failed. Then filled
-NSGA-II's own ceiling-size coverage from 1-2 seeds/family up to 5 (the
-original 2026-08-28 scaling pilot only ran a handful of seeds per family,
-not a full 5-seed sweep) — 24 more runs, 0 failed.
-
-RESULT 1 (the actual research question): the fidelity-backend/sample
-settings tuned for NSGA-II transfer to NSGA-III/SMS-EMOA with zero new
-fixes needed — no floor-clipping, no timeouts, all 124 runs completed
-cleanly.
-
-RESULT 2 (a confound caught while building the comparison table, then
-fixed): every existing NSGA-II n=12 run predated the same-day
-injection_fidelity_exact_threshold fix (12->7, see "SCALING —
-INJECTION_FIDELITY_EXACT_THRESHOLD RE-BENCHMARKED") — their metrics.json
-recorded injection_fidelity_exact_threshold=12, while the freshly-run
-NSGA-III/SMS-EMOA n=12 data correctly used the new default (7). n=12 is
-exactly the size this threshold changes behavior for (exact tier for
-n<=12 under the old default vs. n<=7 under the new one); n=8 is
-unaffected either way (both defaults select the exact tier there, and
-it's cheap regardless), and n=16/20 is unaffected either way (both
-defaults select the statevector tier there) — so the confound was
-isolated to n=12 specifically. It inflated NSGA-II's apparent n=12
-wall-clock via the injection stage's more expensive exact-tier per-trial
-fidelity checks. Moved the 30 affected run dirs (25 standard-named + 5
-hash-named validation runs left over from the original threshold
-re-benchmark) to runs_backup_stale_ifet12_n12/ and re-ran all 25 NSGA-II
-n=12 configs under current defaults (0 failed).
-
-Corrected numbers (mean wall_clock_s, 5 seeds each, stochastic/point/no
-hybrid-LAS):
-  circuit               n   nsga2   nsga3  smsemoa
-  hw_efficient_ansatz   12   65.8    60.6     63.4
-  qaoa_maxcut           12   69.5    67.0     69.0
-  qft                   12  156.2   151.9    152.8
-  w_state               12   62.8    58.6     61.6
-  weak_random           12  114.0   110.4    117.7
-All three algorithms are now within a few percent of each other at n=12
-— and stay that close at each family's ceiling too (e.g. qft@20: 296.0 /
-292.3 / 296.2; weak_random@20: 141.7 / 140.7 / 155.8).
-
-CORRECTION (2026-08-31, same day, after tracing this further): the above
-was first written up as "NSGA-III's n=8 wall-clock advantage narrows and
-closes by n=12" — that framing is itself wrong. Re-examining "NSGA-III
-ADDED AS THIRD PER-BLOCK OPTIMIZER"'s own text: its n=8 table explicitly
-says "nsga2/smsemoa rows unchanged from above" when nsga3 was added —
-i.e. nsga2's 52.41s and smsemoa's 50.95s were literal carry-overs from
-the 2026-08-25 SMS-EMOA comparison, NEVER re-measured, and so still
-reflect the pipeline BEFORE the 2026-08-26/27 injection-stage speedups
-(the ~1000x sa_injection fix, the fidelity-echo estimator — both
-documented as "exact"/"bit-identical", i.e. speed-only changes). NSGA-III
-was added AFTER those speedups and was fast for an unrelated reason: it
-was simply measured on a faster codebase. The "HYPERVOLUME
-COMPARABILITY" work (same day) coincidentally regenerated all 3
-algorithms' n=8 data from scratch for front_raw — that regeneration is
-what's still on disk today, confirmed by its runs' 2026-08-28 mtimes —
-and its own caveat noted a "slight" fidelity_final shift (0.1491->0.1465,
-~1.7%) from re-running on today's codebase, but never checked wall-clock
-drift. Checking it now: nsga2 dropped 52.41s->27.83s and smsemoa
-50.95s->28.56s once actually re-measured post-speedup, landing right on
-top of nsga3's 25.34s->26.55s (which barely moved, since it was already
-post-speedup) — i.e. n=8 ALSO shows near-parity today, same as n=12+.
-There was never a real n=8-only advantage to narrow.
-The genuine, consistent effect (stage_block_optimization_s specifically,
-the DEAP-selection-algorithm-only comparison the original profiling
-targeted): nsga3 is ~5-9% cheaper than nsga2 at EVERY tested size (8:
-5.0%, 12: 8.4%, 16: 9.1%, 20: 7.9%) — small but real and scale-stable
-(not shrinking with n), consistent with selNSGA3's cheaper non-dominated
-sort (still the correct root cause from "NSGA-III ADDED", just far
-smaller in impact than first measured) being a small fraction of a
-generation's total cost, which is dominated by population fitness
-evaluation — identical across all 3 algorithms, hence no algorithm
-difference there. Answers status.txt's "why does the advantage narrow"
-research question: it doesn't narrow, because it was never large to begin
-with once measured consistently — report ~5-9% block-optimization-stage
-savings, not "half the wall-clock", in the paper.
-
-Fidelity ranking (mean fidelity_final, same 5 seeds), corrected:
-  hw_efficient_ansatz  n=12: nsga2(0.0292) > smsemoa(0.0214) > nsga3(0.0146)
-  hw_efficient_ansatz  n=20: nsga2(0.00045) > smsemoa(0.00022) > nsga3(0.00019)
-  qaoa_maxcut          n=12: nsga2(0.0549) > smsemoa(0.0355) > nsga3(0.0194)
-  qaoa_maxcut          n=16: nsga2(0.0292) > nsga3(0.0142) > smsemoa(0.0093)
-  qft                  n=12: smsemoa(0.0163) > nsga3(0.0159) > nsga2(0.0150)
-  qft                  n=20: nsga2(0.00022) > smsemoa(0.00020) > nsga3(0.00012)
-  w_state              n=12: nsga2(0.0560) > smsemoa(0.0367) > nsga3(0.0306)
-  w_state              n=20: nsga2(0.00069) > smsemoa(0.00040) ~= nsga3(0.00040)
-  weak_random          n=12: nsga2(0.3869) > smsemoa(0.3637) > nsga3(0.3365)
-  weak_random          n=20: nsga2(0.4170) > smsemoa(0.3602) > nsga3(0.3496)
-NSGA-II has the highest mean fidelity_final in 9/10 cells (the sole
-exception, qft@12, was the cell most exposed to the Result 2 confound —
-correcting it moved NSGA-II from first to last there: smsemoa(0.0163) >
-nsga3(0.0159) > nsga2(0.0150)). The full nsga2>smsemoa>nsga3 ordering
-holds in 8/10 cells; qaoa_maxcut@16 swaps nsga3/smsemoa (nsga2 still
-wins), qft@12 reorders all three. Net effect: the n=8-established
-fidelity ranking is confirmed as scale-independent for NSGA-II's win
-specifically, but the smsemoa-vs-nsga3 runner-up ordering is not stable
-across sizes/families — don't generalize it beyond "no universally-best
-runner-up" (consistent with this file's existing "no universally-best
-mutation operator" framing).
-
-RESULT 3 (runs/ data-hygiene cleanup, found while auditing for the
-above): user request ("check all the sweeps ... tell me which are not
-relevant anymore ... my intention is to delete"). Audited every directory
-in runs/ against current run_sweep.py naming/defaults; found 4 categories
-of stale/superseded/orphaned data (94 dirs total, on top of a first pass
-of 7 backend-tier duplicates already moved earlier the same session).
-Moved (not deleted, per user's choice) into separate runs_backup_*/
-folders rather than one bucket, so each stays independently
-inspectable/restorable:
-  - runs_backup_pre_fidelity_settings_fix/ (7 dirs, moved first): n=16/20
-    duplicates from before the 2026-08-28 per-family fidelity-backend
-    fix — e.g. a qaoa_maxcut@16 seed still sitting at fidelity_final=0.0
-    under the old mps backend, superseded by its statevector-backend
-    rerun.
-  - runs_backup_legacy_preflag_baseline/ (60 dirs): the original Phase 2
-    "8-qubit/50-run baseline" (all 5 circuits x sa/stochastic x 5 seeds)
-    plus an early weak_random n=12/20 probe — all predate
-    --block-algorithm/--mutation-scheme existing as CLI flags at all.
-    Fully superseded by equivalent current-format NSGA-II data; the one
-    finding they ever produced (sa~=stochastic fidelity at n=8) is
-    already written up in "NEXT STEPS — REPOSITORY SETUP ROADMAP"'s
-    Phase 2 entry.
-  - runs_backup_stale_ifet12_n12/ (30 dirs): the confounded NSGA-II n=12
-    data from Result 2, regenerated under current defaults.
-  - runs_backup_orphaned_sa_scale_probes/ (4 dirs): single-seed,
-    NSGA-II-only sa-injection runs at each family's ceiling size (n=16 or
-    20), no NSGA-III/SMS-EMOA counterpart and not part of any completed
-    comparison — an abandoned probe, never referenced as a result
-    anywhere in this file.
-results_master.csv regenerated via aggregate_results.py after each move:
-601 rows (peak, after the two new scaling sweeps) -> 594 (after the
-first 7-dir pass) -> 500 (after moving the 94-dir B/C/D batch) -> 525
-(after regenerating category C's 25 NSGA-II n=12 configs). Every
-remaining row now reflects current codebase defaults.
-
-Not done / open:
-- DONE (same day, see CORRECTION above): root-caused why the n=8
-  wall-clock advantage seemed to narrow at n=12 — it never really
-  existed past ~5-9%, a stale-vs-fresh measurement artifact in the
-  original n=8 headline, not a scale effect.
-- Mutation-scheme and hybrid-LAS ablations (see "HYPERVOLUME
-  COMPARABILITY") still only exist at n=8 for all 3 algorithms — not
-  extended to n=12/ceiling in this pass (only the point/no-hybrid-LAS
-  baseline needed for the scaling question was).
-- sa-injection at scale (n=12+) has zero current data for any algorithm
-  after moving the 4 orphaned probes aside — an open axis, not
-  prioritized in status.txt's NEXT RESEARCH POINTS.
-- runs_backup_pre_front_raw/ (mentioned in "HYPERVOLUME COMPARABILITY")
-  no longer exists on disk (removed at some point outside this session,
-  runs/ is gitignored so there's no git history to check) — out of
-  scope for this cleanup, nothing in the current runs/ tree depended on
-  it.
-
-=====================================================================
-MUTATION-SCHEME AND HYBRID-LAS ABLATIONS EXTENDED TO n=12 (2026-09-01)
-=====================================================================
-Picked up status.txt's NEXT RESEARCH POINTS #5: the mutation-scheme and
-hybrid-LAS ablations (see "RESEARCH ANGLE CHOSEN AND IMPLEMENTED" and
-"NSGA-III ADDED AS THIRD PER-BLOCK OPTIMIZER") existed only at n=8 for all
-3 algorithms, even though per-algorithm scaling data now exists up to n=12
-and each family's ceiling (see "SCALING VERIFICATION"). Scoped to n=12
-only, not each family's ceiling (16-20q) -- a deliberate reduction from the
-full extension to keep this pass to ~225 runs (~6 hours) instead of
-600-750; ceiling-size coverage for these two axes remains open (see below).
-
-Method: two staged single-axis run_sweep.py invocations (not a full
-factorial), matching the original n=8 design -- mutation ablation fixes
-hybrid_las=0 and varies mutation_scheme over all 3 algorithms x 5 circuits
-x 5 seeds; hybrid-LAS ablation fixes mutation_scheme=point and varies
-hybrid_las over the same grid. injection_method=stochastic throughout,
-matching the original ablations. 225 configs were new (150 mutation +
-75 hybrid-LAS); the point/las0 baseline cells (75) already existed from
-"SCALING VERIFICATION"'s n=12 coverage and were skipped by run_sweep.py's
-existing-metrics.json check. 0 failed.
-
-MUTATION-SCHEME ABLATION, n=12 (mean fidelity_final, 25 runs/cell = 5
-circuits x 5 seeds, stochastic injection, no hybrid-LAS):
-  nsga2:   point 0.1084 > swap_add_delete 0.0904 > swap_add 0.0824
-  smsemoa: point 0.0947 > swap_add 0.0825 > swap_add_delete 0.0803
-  nsga3:   swap_add_delete 0.0913 > point 0.0834 > swap_add 0.0776
-Comparing to n=8's rankings (point > swap_add_delete > swap_add for
-nsga2; swap_add_delete > swap_add > point for smsemoa; swap_add ~= point
-> swap_add_delete for nsga3): nsga2 is the ONLY algorithm that keeps its
-n=8 ordering at n=12. smsemoa's ranking fully reverses (point moves from
-worst to best). nsga3's ranking reorders (swap_add_delete moves from
-worst to best; swap_add moves from a near-tie for best to worst). Net
-effect: this codebase's existing "no universally-best mutation operator"
-finding (true across algorithms at n=8) now extends to "not stable across
-scale either" for 2 of 3 algorithms -- a stronger and more surprising
-result than the n=8-only version, worth its own callout in the paper
-rather than folding into the n=8 finding as a footnote.
-
-HYBRID-LAS ABLATION, n=12 (point mutation, stochastic injection, paired
-by circuit+seed, 25 pairs/algorithm):
-  nsga2:   22/25 improved, mean delta +0.00273, median +0.00059
-  smsemoa: 22/25 improved, mean delta +0.00361, median +0.00092
-  nsga3:   24/25 improved, mean delta +0.00334, median +0.00095
-Compare to n=8 (nsga2 16/25 improved, mean delta -0.00075, i.e. a wash;
-smsemoa 18/25, +0.00186; nsga3 21/25, +0.0056, the best pairing of the
-three): at n=12, hybrid-LAS is a consistent, similarly-sized win for ALL
-THREE algorithms (mean deltas within +0.0027 to +0.0036 of each other) --
-nsga2's n=8 "wash" is gone, and nsga3 no longer stands out as uniquely
-benefiting most (smsemoa's n=12 mean delta is actually slightly larger).
-Both n=8 claims ("nsga2+hybrid-LAS washes out", "nsga3 pairs best with
-hybrid-LAS") are scale-specific, not general -- report the n=12 numbers as
-a correction/refinement, not a replacement, since the underlying mechanism
-(below) is now understood well enough to predict which will hold at other
-sizes.
-
-ROOT CAUSE of the hybrid-LAS reversal (verified via injection_path_used,
-same point/stochastic subset used above, so directly comparable):
-  n=8,  fidelity_driven_greedy wins:  nsga2 23-24/25, nsga3 24/25, smsemoa 24/25
-  n=12, fidelity_driven_greedy wins:  nsga2  7/25,    nsga3  5/25, smsemoa  4/25
-At n=8, fidelity_driven_injection's greedy pass produces the final circuit
-in 92-96% of runs regardless of hybrid_las -- consistent with the existing
-"greedy pass dominates" finding from "RESEARCH ANGLE CHOSEN AND
-IMPLEMENTED" (48/50 there was the broader Phase-2-baseline figure; this
-225-run point/stochastic subset gives the same picture at finer
-resolution). At n=12 that flips: the injection_method's own (stochastic)
-result wins in ~79-84% of runs instead, so more of a run's final fidelity
-comes from the state fidelity_driven_injection's greedy pass started
-from -- i.e. the post-block-optimization circuit, which is exactly what
-hybrid-LAS improves. This is a mechanistic explanation, not just a
-correlation: it directly predicts hybrid-LAS mattering more as n grows
-past 8, and is consistent with "HYPERVOLUME COMPARABILITY"'s independent
-finding that hybrid_las never touches the recorded Pareto front (`pop`),
-only the final individual fed into injection -- the more that
-individual's own quality matters downstream, the more hybrid-LAS's gain
-shows through. Not root-caused further: WHY fidelity_driven_injection's
-greedy pass wins less often at larger n (e.g. whether its fixed
---fidelity-driven-max-trials=300 budget covers proportionally less search
-space as block circuits grow, or whether stochastic_injection's
-solutions simply get harder to beat as blocks get more complex) -- open.
-
-Not done / open:
-- Not extended to each family's ceiling size (16-20q) -- n=12 only, per
-  scoped-down decision above. The mechanism found here (greedy-pass
-  dominance share) predicts hybrid-LAS's advantage should persist or grow
-  further at ceiling sizes, but not confirmed.
-- generate_report.py's fair-HV mutation/hybrid-LAS ablation tables
-  (table_fair_hv_mutation_ablation/table_fair_hv_hybrid_las_ablation) are
-  hardcoded to n=8 run_ids (`_8q_stochastic_` string, BASELINE_N_QUBITS
-  filter) -- not parameterized to also cover n=12. This write-up used
-  results_master.csv's existing adaptive mean_hv/fidelity_final columns
-  directly rather than extending the report generator; the n=8-vs-n=12
-  fair-HV comparison (e.g. does swap_add's coverage-vs-bloat tradeoff
-  also hold at n=12) is unanswered.
-- WHY fidelity_driven_injection's greedy-pass win rate drops from n=8 to
-  n=12 (see ROOT CAUSE paragraph) -- not investigated further.
-- injection_method=sa not covered by this extension (matches the
-  original n=8 ablation's own scope, which was stochastic-only).
-
-UPDATE (same day): extended generate_report.py to cover this data --
-table_mutation_ablation/table_hybrid_las_ablation and their fair-HV
-counterparts now take an n_qubits parameter (default unchanged, still 8);
-main() additionally writes mutation_ablation_n12/hybrid_las_ablation_n12
-(+fair_hv_ variants) tables and figures, closing the "hardcoded to n=8"
-gap noted above. Confirms two more n=8 findings hold at n=12: swap_add
-still gives the highest fair_mean_hv for all 3 algorithms (nsga2 0.883,
-nsga3 0.863, smsemoa 0.894, vs. point's/swap_add_delete's ~0.73-0.81), and
-fair_mean_hv is still exactly identical between hybrid_las False/True per
-algorithm (structural, not a coincidence -- see "HYPERVOLUME
-COMPARABILITY"'s explanation, which is scale-independent by construction).
-algorithm_comparison/fair_hv_comparison/injection_method/scaling tables
-remain n=8-only in the report generator -- not extended, out of scope for
-this pass (those axes' n=12+ coverage already exists as hand-built tables
-in "SCALING VERIFICATION" and earlier sections, just not wired into
-generate_report.py).
-
-=====================================================================
-SA-INJECTION EXTENDED TO n=12 (2026-09-03)
-=====================================================================
-Picked up status.txt's NEXT RESEARCH POINTS #6: sa-injection had zero data
-at n=12+ for any algorithm (the only n=12+ sa runs that ever existed were 4
-single-seed NSGA-II-only probes moved to runs_backup_orphaned_sa_scale_
-probes/ during the 2026-08-31 data-hygiene pass). All existing sa-vs-
-stochastic comparisons (see "NSGA-III ADDED AS THIRD PER-BLOCK OPTIMIZER"
-and its smsemoa+sa follow-up) were n=8-only.
-
-Method: run_sweep.py --injection-methods sa --n-qubits 12
---block-algorithms nsga2 smsemoa nsga3 --n-seeds 5 (5 circuits x 5 seeds x
-3 algorithms, point mutation, no hybrid-LAS -- mirrors the existing
-stochastic n=12 baseline exactly). 75 new runs, 0 failed. results_master.csv
-now 825 rows (up from 750).
-
-RESULT 1 (fidelity ties, and why they're stronger evidence than the n=8
-version): paired fidelity_final by (circuit, seed, block_algorithm), sa vs
-stochastic:
-  nsga2:   mean 0.108400 (sa) vs 0.108398 (stochastic)
-  nsga3:   mean 0.083380 (sa) vs 0.083379 (stochastic)
-  smsemoa: mean 0.094718 (sa) vs 0.094718 (stochastic)
-67/75 pairs bit-identical (<1e-9); the remaining 8 differ by at most
-7.13e-05 (mean abs diff 1.18e-06) -- consistent with float/parallel-
-scheduling noise, not a systematic gap. This looks like the same "injection
-method barely matters" finding already reported at n=8 (see "NSGA-III
-ADDED", nsga3's sa/stochastic fidelity_final bit-identical there too), but
-the mechanism is different and the n=12 result is the stronger claim: at
-n=8, fidelity_driven_injection's greedy pass wins 92-96% of runs regardless
-of injection_method, so the tie was largely explained by both paths being
-overridden by the same third path. At n=12, injection_path_used shows the
-greedy pass winning only 16/25 (nsga2 7, nsga3 5, smsemoa 4 -- more
-precisely 28%/20%/16%) of runs -- IDENTICAL win counts on the sa and
-stochastic sides of the same algorithm (confirming greedy-dominance rate is
-driven by pre-injection candidate quality, not by which injection method
-ran) -- yet fidelity_final still ties in the ~72-84% of runs where sa's or
-stochastic's own result is what's kept. So sa and stochastic aren't just
-being overridden identically at n=12 -- they're independently converging to
-the same fidelity when each gets to keep its own result. Not root-caused
-further: whether this is because sa_injection's simulated-annealing energy
-and stochastic_injection's greedy accept-if-improves rule both end up
-accepting the same set of inter-block gates in practice at this circuit/
-size regime (plausible, not verified gate-by-gate).
-
-RESULT 2 (wall-clock reverses from n=8's mixed picture): at n=8, sa was
-cheaper than stochastic under nsga2 (37.17s vs 52.41s) but slower under
-nsga3 (33.99s vs 25.34s) -- attributed there to nsga3's faster block-
-optimization stage exposing sa_injection's roughly-constant own cost more.
-At n=12, sa is uniformly SLOWER than stochastic for all 3 algorithms:
-  block_algorithm  sa (mean s)  stochastic (mean s)  sa slower by
-  nsga2                 113.71                 93.68         21.4%
-  nsga3                 115.19                 89.70         28.4%
-  smsemoa               113.86                 92.89         22.6%
-Per-circuit breakdown shows the gap holds everywhere (5.7%-37.9% slower,
-every circuit x algorithm cell), largest in absolute terms for qft
-(48-56s slower) and smallest for weak_random (6.5-12s). Not root-caused
-further: whether sa_injection's simulated-annealing loop structurally scales
-worse than stochastic_injection's per-trial accept/reject as block circuits
-grow from n=8 to n=12 (more candidate inter-block gates to anneal over), or
-whether this is specific to injection_fidelity_exact_threshold=7/samples=8
-(the 2026-08-31 re-benchmark, whose defaults this sweep used) interacting
-differently with sa's energy-check loop than with stochastic's -- not
-investigated, no A/B against the pre-2026-08-31 threshold defaults was run.
-
-Not done / open:
-- Only n=12 covered, matching the recommended scope for this pass (see
-  status.txt) -- ceiling sizes (16-20q) for sa-injection remain open, same
-  gap that already exists for the mutation-scheme/hybrid-LAS ablations
-  (see "MUTATION-SCHEME AND HYBRID-LAS ABLATIONS EXTENDED TO n=12").
-- WHY sa's wall-clock disadvantage flips from mixed-at-n=8 to uniform-at-
-  n=12 -- not root-caused (see RESULT 2's open question above).
-- WHY fidelity_final ties even outside greedy-pass dominance at n=12 -- not
-  verified at the gate level (see RESULT 1's open question above).
-- generate_report.py's injection_method table remains n=8-only (already
-  noted as out-of-scope in the prior UPDATE above) -- this n=12 sa-vs-
-  stochastic comparison exists only as this hand-built write-up and in
-  results_master.csv, not wired into the report generator.
-
-=====================================================================
-CEILING-SIZE (n=16) SWEEP FOR MUTATION/HYBRID-LAS/SA-INJECTION --
-STARTED, PAUSED (2026-09-03)
-=====================================================================
-Picked up the ceiling-size gap flagged open in both "MUTATION-SCHEME AND
-HYBRID-LAS ABLATIONS EXTENDED TO n=12" and "SA-INJECTION EXTENDED TO n=12"
-above: those three axes (mutation scheme, hybrid-LAS, sa-vs-stochastic
-injection) existed only at n=8/n=12 for all 3 block algorithms, while the
-baseline algorithm comparison itself already had ceiling-size (16-20q)
-coverage (see "SCALING VERIFICATION").
-
-Method: three staged run_sweep.py invocations, same design as the n=12
-passes, all at a uniform --n-qubits 16 (not each family's own ceiling --
-qaoa_maxcut's ceiling IS 16, and mixing n=16/n=20 into one ablation table
-across families would confound the comparison, so 16 was picked as the
-shared size for this round rather than re-running qaoa_maxcut in isolation
-at a different size from the other four):
-  1. Mutation-scheme ablation: --block-algorithms nsga2 smsemoa nsga3
-     --mutation-schemes point swap_add swap_add_delete --hybrid-las-options 0
-     --injection-methods stochastic --n-seeds 5 (225 configs; 15 already
-     existed from the earlier qaoa_maxcut-ceiling scaling sweep's point/las0
-     baseline).
-  2. Hybrid-LAS ablation: same grid with --mutation-schemes point
-     --hybrid-las-options 0 1 (150 configs, mostly overlapping phase 1's
-     point/las0 cells -- run_sweep.py's existing-metrics.json skip makes
-     this a no-op re-check, not duplicate compute).
-  3. sa-injection: --injection-methods sa --n-qubits 16 --block-algorithms
-     nsga2 smsemoa nsga3 --n-seeds 5, point mutation, no hybrid-LAS
-     (75 configs, all new -- sa-injection has no n=16 data of any kind yet).
-Run strictly sequentially, not concurrently: every BLOCK_OPTIMIZERS entry
-always uses joblib.Parallel(-1) (all cores, no CLI throttle, per CLAUDE.md's
-explicit note not to add one without asking) -- overlapping sweeps would
-just contend for the same cores rather than run in true parallel.
-
-PAUSED (same day, user request, to resume in a later session): stopped
-after phase 1 (mutation-scheme ablation) partially completed, before
-phases 2/3 started. State at pause, verified against runs/*/metrics.json
-directly (not just the sweep's own stdout):
-  circuit               done/total (of 15 = 3 mutation schemes x 5 seeds, per algorithm)
-  weak_random           45/45 (nsga2/smsemoa/nsga3 all complete)
-  qaoa_maxcut           45/45 (nsga2/smsemoa/nsga3 all complete)
-  w_state               45/45 (nsga2/smsemoa/nsga3 all complete)
-  qft                   29/45 (nsga2 15/15, smsemoa 14/15, nsga3 0/15)
-  hw_efficient_ansatz    0/45 (not started)
-164/225 phase-1 configs done, 0 failed. One run was mid-optimization when
-the background process was killed (qft/smsemoa/swap_add_delete/seed4) --
-it had no metrics.json (only partial circuit-diagram PNGs from early
-pipeline stages), so it wasn't at risk of being mistaken for complete by
-run_sweep.py's resume check (which keys on metrics.json existing, not on
-directory existence); its partial output directory was removed as
-just-generated debris, not real data. Phases 2 (hybrid-LAS) and 3
-(sa-injection) were never started.
-
-Not done / open:
-- Resume by re-running the same three run_sweep.py commands above --
-  the skip-if-metrics.json-exists logic means this picks up exactly where
-  it left off (61 remaining phase-1 configs: qft's last smsemoa seed +
-  all of nsga3, plus all of hw_efficient_ansatz), then proceeds to phases
-  2 and 3 automatically since they were chained in the same invocation.
-- No results/analysis yet -- 164 rows is a partial, uneven-per-circuit
-  sample (three families complete, two not even started for two of three
-  algorithms), not something to draw any n=16 conclusion from yet.
-- generate_report.py not yet extended with n=16 table/figure variants
-  (mirroring the n=12 additions) -- deferred until the sweep actually
-  finishes, per the same reasoning as the n=12 UPDATE entry above.
-
-=====================================================================
-CEILING-SIZE (n=16) SWEEP FOR MUTATION/HYBRID-LAS/SA-INJECTION --
-RESUMED, COMPLETED, AND ANALYZED (2026-09-04)
-=====================================================================
-Resumed the sweep paused mid-run in "CEILING-SIZE (n=16) SWEEP ... STARTED,
-PAUSED" above. Re-ran the same three staged run_sweep.py invocations
-unchanged; the metrics.json skip-check picked up exactly where phase 1 left
-off (164/225 done) and proceeded through phases 2/3 automatically without
-further intervention. Total: 211 new runs across the three phases (61
-mutation-scheme + 75 hybrid-LAS + 75 sa-injection), 0 failed.
-results_master.csv regenerated: 1185 rows (up from 825), 375 of them at
-n=16 (75 per circuit: 300 stochastic + 75 sa).
-
-Phase-by-phase sweep completion (run_sweep.py's own tallies):
-  1. Mutation-scheme ablation: 61 run, 164 skipped, 0 failed (of 225 total).
-  2. Hybrid-LAS ablation: 75 run, 75 skipped, 0 failed (of 150 total).
-  3. sa-injection: 75 run, 0 skipped, 0 failed (of 75 total, all new).
-
-RESULT 1 (mutation-scheme ranking, n=16 vs n=8/n=12): mean fidelity_final,
-25 runs/cell (5 circuits x 5 seeds), point/las0/stochastic baseline unless
-noted:
-  nsga2:   point 0.0843 > swap_add_delete 0.0688 > swap_add 0.0619
-  nsga3:   swap_add_delete 0.0682 ~= point 0.0666 > swap_add 0.0560
-  smsemoa: point 0.0724 > swap_add 0.0706 > swap_add_delete 0.0565
-Comparing all three sizes: nsga2 keeps the SAME point > swap_add_delete >
-swap_add ordering at n=8, n=12, AND n=16 -- the one algorithm whose ranking
-never moves. nsga3 and smsemoa each reordered once, between n=8 and n=12
-(see "MUTATION-SCHEME AND HYBRID-LAS ABLATIONS EXTENDED TO n=12"), then
-HOLD that same n=12 ordering unchanged at n=16 (nsga3: swap_add_delete >
-point > swap_add both times; smsemoa: point > swap_add > swap_add_delete
-both times). Refines "no universally-best mutation operator, not stable
-across scale" to a more specific shape: for nsga3/smsemoa the ranking
-appears to settle by n=12 and hold at the next size tested, rather than
-continuing to drift -- though only one further size point (n=16) confirms
-that, not proof of a general stabilization.
-
-Fair (shared-reference) hypervolume, n=16: swap_add still gives the highest
-fair_mean_hv for all 3 algorithms (nsga2 0.876, nsga3 0.859, smsemoa 0.894),
-same as at n=8/n=12 -- now confirmed at every tested size.
-
-RESULT 2 (hybrid-LAS, n=16 -- the surprising one): paired by circuit+seed,
-point mutation, stochastic injection, 25 pairs/algorithm:
-  nsga2:   13/25 improved (52%), mean delta +0.00299
-  nsga3:   20/25 improved (80%), mean delta +0.00407
-  smsemoa: 21/25 improved (84%), mean delta +0.00254
-Compare to n=12 (nsga2 22/25=88%, +0.00273; nsga3 24/25=96%, +0.00334;
-smsemoa 22/25=88%, +0.00361) and n=8 (nsga2 16/25=64% but mean delta
-NEGATIVE -0.00075, i.e. a wash; nsga3 21/25=84%, +0.0056; smsemoa 18/25=72%,
-+0.00186): nsga2's improved-fraction drops back down to a near-coin-flip
-(52%) at n=16, partially reverting toward its n=8 "wash" (though the mean
-delta stays positive here, unlike n=8's negative one). nsga3 and smsemoa
-both stay strongly positive (80%/84% improved), continuing their n=12
-behavior rather than reverting.
-
-ROOT CAUSE, and why it complicates rather than confirms the n=12 story:
-checked injection_path_used (same method as "MUTATION-SCHEME AND
-HYBRID-LAS ABLATIONS EXTENDED TO n=12"'s ROOT CAUSE section) for the
-point/stochastic subset across all three sizes now tested:
-  fidelity_driven_greedy win rate   n=8      n=12     n=16
-  nsga2                             92%      28%      88%
-  nsga3                             96%      20%      72%
-  smsemoa                           96%      16%      84%
-This is NOT monotonic in n. The n=12 write-up's mechanistic story ("greedy
-pass dominates less as n grows, so hybrid-LAS's per-block gains propagate
-into fidelity_final more often") explicitly predicted this should persist
-or grow further at ceiling sizes ("Not extended... but the mechanism found
-here... predicts hybrid-LAS's advantage should persist or grow further at
-ceiling sizes, but not confirmed") -- instead greedy-pass dominance SURGES
-BACK UP at n=16, most of the way back to n=8's level, for all three
-algorithms. nsga2's hybrid-LAS fraction-improved (52%) tracks this reversal
-closely (its greedy-win-rate at n=16, 88%, is the closest of the three to
-n=8's 92%) -- consistent with the mechanism. But nsga3/smsemoa's
-hybrid-LAS fraction-improved stays high (80%/84%) DESPITE their own
-greedy-win-rates also rising sharply (20%->72%, 16%->84%) -- inconsistent
-with a pure "greedy-dominance-rate predicts hybrid-LAS benefit" story, or
-at least incomplete for those two algorithms. Not root-caused further: why
-greedy-pass dominance is non-monotonic in n at all (candidate hypothesis,
-UNTESTED: qft/w_state/hw_efficient_ansatz's fidelity-backend settings
-(CIRCUIT_FIDELITY_SETTINGS -- statevector or raised echo-samples/shots)
-only activate above fidelity_exact_threshold=13, i.e. exactly between n=12
-and n=16 for 3 of 5 families -- a fidelity-estimator switch could shift
-which path's fidelity reads higher independent of which candidate is
-actually better, confounding this comparison the same way the injection_
-fidelity_exact_threshold confound did at n=12, see "SCALING VERIFICATION"'s
-RESULT 2); why nsga3/smsemoa don't track the reversal the way nsga2 does.
-Flag this prominently in the paper as an open, unresolved, and
-mechanistically incomplete result -- the "greedy pass dominates less at
-larger n" claim from the n=12 write-up should NOT be generalized past n=12
-without this caveat.
-
-RESULT 3 (sa-injection, n=16): paired fidelity_final by (circuit, seed,
-block_algorithm), sa vs stochastic, 25 pairs/algorithm:
-  nsga2:   mean 0.084278 (sa) vs 0.084278 (stochastic)
-  nsga3:   mean 0.066559 (sa) vs 0.066555 (stochastic)
-  smsemoa: mean 0.072439 (sa) vs 0.072439 (stochastic)
-74/75 pairs bit-identical (<1e-9); the one exception differs by 9.16e-05 --
-same order of magnitude as n=8/n=12's noise-level differences, not a
-systematic gap. The fidelity-tie finding now holds at all three tested
-sizes (n=8, 12, 16), even though the injection_path_used split underneath
-it is NOT stable across those sizes (see RESULT 2's table above -- the same
-92%/28%/88% greedy-win-rates apply here, since fidelity_driven_injection's
-competition is identical regardless of which injection_method supplied the
-other candidate).
-Wall-clock: sa remains uniformly SLOWER than stochastic at n=16, same
-direction as n=12 (reversing n=8's mixed nsga2/nsga3 picture):
-  block_algorithm  sa (mean s)  stochastic (mean s)  sa slower by
-  nsga2                  74.35                 62.07         19.9%
-  nsga3                  71.74                 58.64         24.2%
-  smsemoa                75.93                 65.17         18.0%
-Magnitude (18-24% slower) is comparable to n=12's (21-28%) -- this
-direction now looks stable from n=12 onward. Worth noting explicitly: the
-two n=12 sa-injection headlines ("fidelity ties" and "sa is uniformly
-slower") turn out to have different robustness once a third size is
-checked -- the wall-clock direction held, but the fidelity-tie's own
-underlying mechanism (injection_path_used split) did not stay put, it just
-happened to still produce a tie at n=16 too (both paths converging to
-similar fidelity regardless of which one "wins" more often).
-
-UPDATE (same day): extended generate_report.py to cover the mutation-scheme
-and hybrid-LAS ablations at n=16, mirroring the n=12 UPDATE exactly --
-table_mutation_ablation/table_hybrid_las_ablation and their fair-HV
-counterparts already took an n_qubits parameter, so this was mostly wiring
-(4 new table entries + 4 new figures in main()). One real fix needed along
-the way: _pooled_fair_hv_rows built each run's run_id with a hardcoded
-f-string that never included run_sweep.py's CIRCUIT_FIDELITY_SETTINGS
-suffix (e.g. "_statevector", "_es32_sh2048") -- silently correct at n=8/n=12
-(both <= fidelity_exact_threshold=13, where the suffix is never applied)
-but would have SILENTLY RETURNED EMPTY rows at n=16 for qaoa_maxcut/qft/
-w_state/hw_efficient_ansatz (only weak_random has no suffix at any size).
-Fixed by importing and reusing run_sweep.run_id_for/CIRCUIT_FIDELITY_
-SETTINGS directly instead of re-deriving the naming scheme a second time --
-verified by inspecting the resulting n=16 fair-HV tables (all 9
-mutation-scheme cells and all 6 hybrid-LAS cells populated with n_runs=25,
-none empty). Re-ran the full pytest suite after the change (19/19 pass) and
-confirmed fair_hv_hybrid_las_ablation_n16 reproduces the same structural
-False/True-identical property already verified at n=8/n=12 (a check on the
-new code path, not just the new data). sa-injection at n=16 is NOT wired
-into generate_report.py (same out-of-scope decision as
-table_injection_method_comparison, still n=8-only) -- this write-up's
-RESULT 3 numbers exist only here and in results_master.csv.
-
-Not done / open:
-- WHY fidelity_driven_greedy's win rate is non-monotonic in n (92-96% @
-  n=8 -> 16-28% @ n=12 -> 72-88% @ n=16) -- the single most important open
-  question from this pass; the candidate hypothesis above (a fidelity-
-  backend switch at n=13 for 3/5 families) is untested. This should be the
-  next thing investigated before drawing any hybrid-LAS or injection-
-  method conclusion that assumes a monotonic trend with n.
-- No ceiling-size algorithm-comparison table beyond what the mutation
-  ablation's own point/las0/stochastic cells already give (nsga2 0.0843 >
-  smsemoa 0.0724 > nsga3 0.0666, same nsga2>smsemoa>nsga3 ordering as
-  n=12) -- not cross-checked against each family's OWN higher ceiling
-  (qft/w_state/hw_efficient_ansatz go to n=20; this sweep used a uniform
-  n=16 for all 5 families instead, per the design choice already noted in
-  the PAUSED section above).
-- generate_report.py's injection_method_comparison table remains n=8-only;
-  the n=12 and n=16 sa-vs-stochastic comparisons exist only as hand-built
-  write-ups (this section and "SA-INJECTION EXTENDED TO n=12").
-
-=====================================================================
-INJECTION STAGE BLOCK-PAIR COVERAGE FIX + BARRIER-MISCOUNTING FIX
-(2026-09-04) -- FULL RE-RUN IN PROGRESS, PAUSED MID-SWEEP
-=====================================================================
-Follow-up to the previous section's open item: investigated WHY
-fidelity_driven_injection's greedy-pass win rate is non-monotonic in n
-(92-96% @ n=8 -> 16-28% @ n=12 -> 72-88% @ n=16). Ended up finding two real,
-previously-undocumented bugs in the injection stage instead of resolving
-the original question -- both now fixed, and the fix's real-world impact is
-large enough that the entire existing results_master.csv (1185 rows, every
-run this project has ever recorded) is being treated as superseded.
-
-STEP 1 -- fidelity-backend hypothesis REJECTED: the leading candidate
-explanation (CIRCUIT_FIDELITY_SETTINGS' per-family backend/sample overrides
-only activate above fidelity_exact_threshold=13, i.e. between n=12 and
-n=16 for 3 of 5 families) was tested against weak_random as a control,
-since weak_random's CIRCUIT_FIDELITY_SETTINGS entry is empty (no override
-at any tested size). weak_random showed the IDENTICAL dip-then-recover
-pattern (80-100% @ n=8 -> 0% @ n=12 -> 40-80% @ n=16, per-algorithm) as the
-4 backend-switching families -- ruling out the fidelity backend as the
-cause.
-
-STEP 2 -- correction to an intermediate claim: n_kept_injections (in
-results_master.csv) was initially treated as an independent lead (it
-collapses to ~0 at n=12 for weak_random). Tracing the actual code
-(optimise_circuit_pipeline, "kept_injections_used = kept1 if fid_i > fid_inj
-else kept") showed this field is simply WHICHEVER path's kept-list won --
-i.e. it's a restatement of injection_path_used flipping, not an independent
-signal. Retracted as a lead; correctly identified as a symptom, not a
-cause.
-
-STEP 3 -- two real bugs found while digging into the actual mechanism:
-
-(a) BLOCK-PAIR COVERAGE BUG (the more consequential one): stochastic_
-injection, sa_injection (via _sa_generate_pool/_sa_rand_move), and
-fidelity_driven_injection ALL hardcoded candidate gates to be drawn only
-from blocks[0] and blocks[1] -- entirely ignoring every other block pair,
-regardless of how many blocks a partition actually has. This was never
-documented anywhere (checked CLAUDE.md/logs.txt/status.txt -- no mention).
-Partitions above ~n=8 routinely have >2 blocks (e.g. weak_random's mean
-block count runs 4.0 -> 7.6 -> 11.8 across n=8/12/16), so most inter-block
-reconnection opportunities were structurally unreachable by ANY injection
-strategy at scale -- a limitation of the whole injection stage, not
-specific to sa vs stochastic vs greedy.
-
-(b) BARRIER-MISCOUNTING BUG (weak_random-specific): extract_interblock_
-gates classifies a gate as "inter-block" if its qubits span >1 block.
-Qiskit's qc.barrier() with no explicit qubits touches ALL qubits by
-default, so it ALWAYS trivially "spans multiple blocks" for any partition
-with >1 block, regardless of whether any real entangling gate crosses a
-block boundary. weak_random_circuit is the only one of the 5 generators
-that calls .barrier() (after every depth layer) -- grep confirmed no other
-generator does. Concretely verified on one real instance (weak_random,
-n=8, seed=0): all 20 gates the pipeline reported as "inter-block gates
-extracted for later reinjection" were barriers; the ACTUAL real 2-qubit
-gate count crossing blocks was 0 (all 10 real cz gates were entirely
-intra-block -- Louvain had already found a perfect zero-cut partition for
-this instance). Barriers are unitary no-ops, so this bug never corrupted
-fidelity_final directly, but it did inflate every "N inter-block gates
-extracted" figure reported throughout this project's logs for weak_random,
-and wasted a reinjection pass on inert instructions.
-
-Both bugs found via direct code tracing plus minimal controlled repros
-(a 4-qubit toy circuit confirming extract_interblock_gates's barrier
-mislabeling; a Monte-Carlo check of stochastic_injection's accept-rate
-baseline; a real weak_random n=8/12/16 probe pinning down the actual
-mechanism) -- not by speculation. Neither bug explains the original
-non-monotonic win-rate question: (a) is a constant limitation at every n
-(not something that changes between n=12 and n=16 specifically), and (b)
-only affects weak_random, yet all 4 barrier-free families show the same
-reversal pattern. That original question remains OPEN -- see "Not done /
-open" below.
-
-QUANTIFIED IMPACT (before deciding whether to fix vs. just document):
-re-ran the exact same weak_random/nsga2/point/stochastic/seed=0 probe used
-to find the bugs, pre-fix vs. post-fix:
-  n    old fidelity_final   new fidelity_final   real interblock gates
-  8         0.0362               0.2265 (+526%)   2 (was reported as 20)
-  12        0.3494               0.3495 (+0.03%)  0 (was reported as 20)
-  16        0.3984               0.4004 (+0.5%)   0 (was reported as 20)
-At n=8, the fix let fidelity_driven_injection reach gates between
-previously-unreachable block pairs (e.g. cz(5,7), where qubit 5 lived in a
-THIRD block never reachable under the old blocks[0]/blocks[1]-only code) --
-a 6.3x fidelity swing for one seed. At n=12/16 the effect was negligible
-for this seed specifically because the real (post-barrier-fix) interblock
-gate count was genuinely zero -- nothing was there to recover regardless of
-which block pairs were reachable. Confirms the fix's impact is highly
-circuit/seed/partition-dependent, sometimes dramatic, and -- combined with
-finding (b) -- that this project's own "N inter-block gates extracted"
-statistics for weak_random were not measuring what they claimed to.
-
-DECISION (user, given this impact): fix now and accept re-running affected
-sweeps, rather than only documenting the limitation for later.
-
-FIX IMPLEMENTED (M1_finale/final_m1_script.py):
-- extract_interblock_gates: skip ci.operation.name == "barrier" before the
-  block-membership check.
-- New _rand_two_blocks(blocks, rng) helper: picks two DISTINCT blocks
-  uniformly at random from the full block list (verified via a 4-block
-  Monte-Carlo check -- all 12 ordered pairs hit roughly uniformly over
-  4000 draws).
-- stochastic_injection, fidelity_driven_injection, _sa_generate_pool, and
-  _sa_rand_move's "shift" move all now call _rand_two_blocks per
-  trial/candidate instead of hardcoding blocks[0]/blocks[1]. Updated the
-  fidelity_driven_injection docstring's stale "first two blocks" comment
-  to match.
-- This deliberately changes RNG stream consumption (and hence exact
-  reproducibility) even for circuits with exactly 2 blocks, not only
-  those with >2 -- a single shared mechanism was chosen over special-
-  casing the 2-block case, since introducing block-order randomization is
-  itself part of the fix (the old code always favored blocks[0] as q1's
-  source and blocks[1] as q2's, an arbitrary asymmetry worth removing too).
-- Verified: full pytest suite still 19/19 passing after the change.
-
-RE-RUN STARTED, THEN PAUSED (user request, same day, to resume next
-session): given the fix's impact, results_master.csv's entire 1185 rows
-(every run this project has ever recorded) predate it and are considered
-superseded -- moved the whole runs/ directory (1186 dirs, 4.6GB) to
-runs_backup_pre_injection_blockpair_fix/ (not deleted; added
-"runs_backup_*/" to .gitignore, since these backup dirs were previously
-untracked-but-not-ignored -- a latent risk of an accidental large commit).
-
-Scoped the re-run to the core algorithm-comparison baseline first (not the
-full historical dataset in one shot, given the Dec deadline and how much
-compute a full re-run of every ablation would cost): nsga2/smsemoa/nsga3,
-point mutation, no hybrid-LAS, stochastic injection, all 5 circuits at
-each family's own ceiling grid (weak_random/w_state/qft/hw_efficient_
-ansatz = [8,12,20], qaoa_maxcut = [8,12,16]), 5 seeds -- 225 configs
-(`python run_sweep.py --block-algorithms nsga2 smsemoa nsga3
---injection-methods stochastic`). Mutation-scheme/hybrid-LAS/sa-injection
-ablations (at every size) remain to be re-run after this baseline lands.
-
-PAUSED (same day, user request): stopped after 122/225 configs complete,
-0 failed, via SIGTERM to the run_sweep.py process -- it has a proper
-signal handler (_handle_terminate) that kills the in-progress subprocess's
-whole process group (including joblib workers) before exiting, so this is
-the intended, safe way to interrupt it, not a raw kill. The one
-in-progress config at the moment of interruption
-(w_state_20q_stochastic_nsga2_point_las0_seed2) left no metrics.json (as
-designed -- run_sweep.py's resume check keys on metrics.json existing, not
-directory existence) and its partial output directory was removed as
-just-generated debris, matching the same handling as the earlier n=16
-ceiling-sweep pause. Remaining: 103 configs (w_state seeds 2-4 at n=20,
-plus all of qft and hw_efficient_ansatz at every size). Resume with the
-exact same command above -- the skip-if-metrics.json-exists logic picks up
-exactly where this left off.
-
-Not done / open:
-- The ORIGINAL question (why fidelity_driven_injection's win rate is
-  non-monotonic in n) is still unresolved -- neither bug found here
-  explains it (see STEP 3's note above). Once the re-run lands, this
-  should be re-checked on the FIXED codebase, since the old win-rate
-  numbers were measured on code with both bugs present and may not
-  reproduce the same pattern at all.
-- Core baseline re-run incomplete (122/225) -- no new fidelity_final/
-  algorithm-ranking conclusions should be drawn until it finishes.
-- Mutation-scheme, hybrid-LAS, and sa-injection ablations (at every size:
-  n=8/12/16) all still need re-running under the fixed code -- deliberately
-  deferred until the core baseline re-run is done and reviewed, per the
-  phased scope decision above.
-- The code fix (final_m1_script.py, .gitignore) has NOT been committed
-  yet -- deliberately held until the re-run produces real results to write
-  up alongside it, per this session's normal per-change commit pattern.
-- Not verified whether the fix's impact is systematically larger at
-  smaller n (fewer, bigger blocks -> a partition more likely to have
-  exactly 2 blocks, where the bug was a no-op) or at larger n (more blocks
-  -> more unreachable pairs, but also -- per finding (b) -- often less
-  real interblock connectivity to begin with) -- only one seed's worth of
-  before/after data exists so far (see QUANTIFIED IMPACT above); the full
-  225-run re-run will give a real distribution once it completes.
-- Whether the same "mostly barrier, no real interblock connectivity"
-  pattern found for weak_random n=12/16 seed=0 generalizes to other seeds,
-  or to the barrier-free families (whose "N inter-block gates extracted"
-  counts were never inflated to begin with, but whose TRUE interblock
-  counts are now unknown until their post-fix numbers are compared against
-  their own pre-fix "N inter-block gates extracted" prints) -- not checked.
-
-=====================================================================
-GREEDY-PASS WIN-RATE RE-CHECKED ON FIXED INJECTION CODE (2026-09-06)
-=====================================================================
-Resumed the core baseline re-run paused mid-sweep in the previous section
-(122/225 at pause): re-ran `python run_sweep.py --block-algorithms nsga2
-smsemoa nsga3 --injection-methods stochastic`, which skipped the 214
-already-done configs and ran the 11 remaining (all hw_efficient_ansatz@20q:
-nsga2 seed4, all 5 seeds of nsga3 and smsemoa) -- 0 failed. Regenerated
-results_master.csv (225 rows, all on the fixed injection-stage code -- see
-previous section for the fix itself). pytest 19/19 still passing.
-
-With the full 225-row fixed-code baseline in hand, re-checked the ORIGINAL
-question that motivated finding the two injection-stage bugs: whether
-fidelity_driven_injection's greedy-pass win rate is non-monotonic in n.
-Win rate (fraction of runs where injection_path_used ==
-fidelity_driven_greedy), pooled across the circuits present at each size
-(this baseline uses each family's own ceiling grid, not a uniform size --
-qaoa_maxcut's ceiling is 16, the other 4 families' is 20; n=16 below is
-qaoa_maxcut only, n=20 is the other 4 families only):
-  block_algorithm   n=8    n=12   n=16(qaoa only)   n=20(4 families)
-  nsga2             40%    28%    100% (5 runs)     65% (20 runs)
-  nsga3             24%     8%    100% (5 runs)     65% (20 runs)
-  smsemoa           32%    16%    100% (5 runs)     70% (20 runs)
-
-Compare to the pre-fix numbers from the previous section (92-96% @ n=8,
-16-28% @ n=12, 72-88% @ a UNIFORM n=16 across all 5 families): the n=12
-numbers barely moved (still 8-28%), but n=8 COLLAPSED from 92-96% to
-24-40% -- i.e. the fix changed n=8 by roughly as much as it left n=12
-alone. The pre-fix "dip at n=12, partial recovery at n=16" shape is GONE;
-post-fix the shape looks like a roughly monotonic rise with n (low at
-8/12, high at each family's ceiling), not a dip-and-recover. No pre-fix
-non-monotonicity conclusion survives this recheck -- the entire curve was
-an artifact of the two now-fixed bugs, not a real property of the
-algorithm/injection-method interaction.
-
-ROOT CAUSE of why n=8 moved as much as n=12: checked mean n_blocks per
-circuit x n_qubits directly from results_master.csv:
-  circuit               n=8   n=12   n=16   n=20
-  hw_efficient_ansatz   2.2    3.0    --     4.6
-  qaoa_maxcut           2.0    3.0    3.4    --
-  qft                   4.0    6.0    --    10.0
-  w_state               2.2    3.0    --     4.6
-  weak_random           4.0    7.6    --    15.8
-qft and weak_random already average 4.0 blocks at n=8 -- the block-pair-
-coverage bug (hardcoded to blocks[0]/blocks[1]) was already fully live for
-those two families at the SMALLEST tested size, not only "above ~n=8" as
-the previous section's own bug writeup assumed (that framing came from
-weak_random's specific block-count curve, quoted there as "4.0 -> 7.6 ->
-11.8 across n=8/12/16" -- true for weak_random alone, but wrongly
-generalized to "partitions above ~n=8 routinely have >2 blocks" as if n=8
-itself were mostly exempt). The other 3 families do average close to
-exactly 2 blocks at n=8 (2.0-2.2), so for THOSE families the coverage bug
-proper was closer to a no-op there -- but the fix also changes block-order
-RNG consumption even in the exactly-2-block case (a deliberate side effect
-of the fix, noted in the previous section), so their n=8 numbers moved too
-(e.g. nsga2 w_state n=8: 60% win rate post-fix; qaoa_maxcut n=8 dropped to
-20% across all 3 algorithms). Net effect: don't assume any pre-fix
-per-family qubit-size threshold for when the bugs "started mattering" --
-empirically all 5 families' n=8 numbers moved.
-
-Per-circuit breakdown (win rate, 5 runs/cell) confirms the drop is broad,
-not confined to weak_random/qft (the block-count outliers) or to weak_random
-(the barrier-bug family):
-  n=8:  nsga2   hw_efficient_ansatz 40%, qaoa_maxcut 20%, qft 20%, w_state
-        60%, weak_random 60%
-  n=12: nsga2   hw_efficient_ansatz 40%, qaoa_maxcut 20%, qft  0%, w_state
-        60%, weak_random 20%
-(nsga3/smsemoa show the same broad, uneven-but-universal drop -- see
-results_master.csv for the full table; not reproduced here for space.)
-
-weak_random's n_kept_injections (now meaningful post-barrier-fix, since it
-no longer counts inert barriers) confirms the earlier single-seed finding
-generalizes across seeds: mean 2.93 real kept injections at n=8, dropping
-to 0.33 at n=12 and 0.40 at n=20 -- real interblock connectivity for
-weak_random is genuinely much sparser above n=8, consistent with (but not
-the same mechanism as) the n=12/16 single-seed check in the previous
-section.
-
-fidelity_final means (pooled across circuits, fixed code), for reference
-against pre-fix values elsewhere in this file -- NOT directly comparable
-to any earlier table since every prior fidelity_final in this log predates
-both bugs' fixes:
-  block_algorithm   n=8      n=12     n=16(qaoa)  n=20(4 fam.)
-  nsga2             0.1349   0.1066   0.0293      0.1040
-  nsga3             0.1201   0.0833   0.0144      0.0879
-  smsemoa           0.1080   0.0944   0.0093      0.0907
-nsga2 > nsga3/smsemoa ordering at n=8/12/20 matches the pre-fix ranking's
-general shape (nsga2 highest), but absolute numbers and the nsga3-vs-
-smsemoa runner-up order are not meaningfully comparable to pre-fix tables
-without re-deriving them on this same fixed-code data -- treat every
-fidelity_final number in this file dated before 2026-09-04's fix as
-describing the OLD, buggy injection stage, not the current pipeline.
-
-Not done / open:
-- Only 5 seeds/cell and an uneven size grid (n=16 has only qaoa_maxcut's 5
-  runs, n=20 only the other 4 families' 20) -- the "roughly monotonic rise"
-  read on the post-fix curve is suggestive, not confirmed at matched
-  sample sizes across all cells the way n=8/n=12 are.
-- No uniform-n=16-across-all-5-families data point exists yet on the fixed
-  code (the pre-fix uniform-n=16 ceiling sweep is entirely superseded) --
-  can't yet directly compare "does the fixed code still show a dip-then-
-  recover shape when size is held identical across families" the same way
-  the pre-fix analysis could. Would need a dedicated n=16 sweep for the
-  4 non-qaoa families to check.
-- Mutation-scheme, hybrid-LAS, and sa-injection ablations still need
-  re-running on the fixed code at every size (n=8/12/ceiling) -- deferred,
-  per the previous section's phased plan; the greedy-win-rate mechanism
-  those ablations' n=12 root-cause analysis relied on (see "MUTATION-SCHEME
-  AND HYBRID-LAS ABLATIONS EXTENDED TO n=12"'s ROOT CAUSE paragraph) should
-  be re-derived on fixed-code ablation data before trusting hybrid-LAS
-  conclusions built on the old win-rate numbers.
-- The fix (final_m1_script.py, .gitignore) was already committed earlier the
-  same day (commit e766aecf, before this section's re-run/analysis) --
-  correcting this file's own prior "still uncommitted" note.
-
-SCOPING DISCUSSION (same day): asked the user how much of the mutation-
-scheme/hybrid-LAS/sa-injection re-run to kick off next. Full re-run at every
-size (n=8/12/ceiling, all 3 phases) is 900 new configs; using this machine's
-measured per-size averages from the fresh 225-run baseline (28s @ n=8, 95s @
-n=12, 624s @ n=20 -- n=20 alone dominates), that's an estimated ~55-60 hours
-of sequential wall-clock time (run_sweep.py launches one subprocess at a
-time; each subprocess uses all cores internally via joblib(-1), so sweeps
-don't parallelize across configs). Options discussed: n=8+n=12 only now
-(~450 new runs, ~10-11h, ceiling deferred), full re-run in the background
-across pause/resume cycles (~900 runs, ~55-60h), or one phase at a time
-(mutation-scheme ablation alone first, ~450 new runs across all sizes,
-~26h). DECISION: paused here, to be decided and started next session --
-runs_backup_pre_injection_blockpair_fix/ (4.6GB, the full pre-fix runs/
-snapshot from the previous section) was removed from disk same day per user
-request, now that the fix's impact is fully documented in this file and the
-post-fix baseline (225 rows) is the current source of truth; nothing in the
-current runs/ tree depends on it.
-
-Not done / open:
-- Which scope to run next (n=8+12 only / full n=8-ceiling / one phase at a
-  time) -- not decided yet, to be picked up next session.
-- Everything else already listed above (uniform-n=16 comparison, ablations
-  re-run on fixed code) remains open.
+- Decide and start the mutation-scheme/hybrid-LAS/sa-injection re-run scope
+  on the fixed injection code (roadmap item 8 above) -- next session's
+  first task.
+- Re-check the greedy-pass win-rate's "roughly monotonic" read at a matched
+  uniform size across all 5 families (only an uneven per-family ceiling
+  grid exists post-fix so far).
+- Start the empirical-paper results write-up (roadmap item 1) -- blocked on
+  the above re-runs for anything beyond the core algorithm-comparison
+  baseline.
+- Candidate next per-block algorithm: MOSA next up (see ROADMAP item 3).
+- runs/ directory hygiene: superseded run backups are periodically moved to
+  runs_backup_*/ (gitignored) rather than deleted; the pre-injection-fix
+  full backup (runs_backup_pre_injection_blockpair_fix/, 4.6GB) was removed
+  from disk 2026-09-06 once its findings were fully written up and the
+  post-fix baseline became the source of truth.

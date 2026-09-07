@@ -1,0 +1,77 @@
+Title: State-of-the-art and critical analysis of Quantum-Inspired Evolutionary
+Algorithms for multi-objective optimization: Taxonomy, Features, and
+Limitations
+
+Type: survey / critical-analysis paper, with the project's own pipeline
+(M1_finale/) used as an illustrative case study, not as the paper's primary
+results. A separate empirical results paper, built around results_master.csv
+and the ablations tracked in logs.txt, is planned for later and is out of
+scope here.
+
+=====================================================================
+PROPOSED STRUCTURE
+=====================================================================
+
+1. Introduction
+   - Motivation for surveying QIEA-for-MOO.
+   - Scope and inclusion criteria for the literature covered.
+   - Contributions of this survey.
+   - Paper organization.
+
+2. Background
+   - Quantum computing concepts needed for QIEA (qubit-representation
+     encoding of solutions, e.g. Han & Kim-style Q-bit chromosomes,
+     rotation-gate update rules).
+   - MOO fundamentals: Pareto dominance, hypervolume, IGD, spread/spacing.
+   - Classical MOEAs used as the baseline QIEA methods are compared
+     against: NSGA-II, NSGA-III, SMS-EMOA, SPEA2, MOEA/D.
+
+3. Taxonomy
+   - Classification axes for QIEA-MOO methods: representation scheme,
+     quantum-inspired operator type (rotation gate vs. interference vs.
+     entanglement-inspired), selection/diversity mechanism, hybridization
+     with classical MOEAs, application domain.
+
+4. Feature comparison
+   - Systematic table across taxonomy categories: representation,
+     complexity, scalability, convergence properties, benchmark problems
+     used, reported performance.
+
+5. Critical analysis / limitations
+   - Per-category weaknesses.
+   - Cross-cutting open problems: reproducibility gaps, weak benchmarking
+     practices, scalability claims not empirically stress-tested.
+
+6. Case study: block-partitioned quantum circuit optimization
+   - Illustrative use of the project's own pipeline (partition -> per-block
+     MOO -> inter-block injection -> compression) to ground abstract
+     taxonomy claims in a concrete worked example.
+   - Candidate grounding points (pending re-verification on the fixed
+     injection-stage code before being cited -- see logs.txt):
+     - NSGA-II vs. SMS-EMOA vs. NSGA-III as a worked example of
+       crowding-distance vs. hypervolume-driven vs. reference-point
+       selection trade-offs.
+     - "No universally-best mutation operator, not stable across scale"
+       as a concrete instance of a taxonomy/limitations claim.
+     - Hypervolume comparability across algorithms being metric-sensitive
+       (adaptive vs. fair/shared-reference HV) as an illustration of the
+       benchmarking-practice limitations raised in section 5.
+   - Framed explicitly as illustrative, not as this paper's primary
+     evidence -- full empirical validation deferred to the planned
+     empirical results paper.
+
+7. Open challenges and future directions
+
+8. Conclusion
+
+=====================================================================
+NOT DONE / OPEN
+=====================================================================
+- Literature inclusion criteria and search scope for sections 2-5 not yet
+  defined.
+- Taxonomy axes (section 3) are a first draft, not validated against a
+  systematic literature pass yet.
+- Which specific case-study findings from section 6 to include still
+  depends on the mutation-scheme/hybrid-LAS/sa-injection re-run on the
+  fixed injection-stage code (see logs.txt's "CURRENT STATUS OF RESULTS"
+  and roadmap item 8) -- do not cite pre-fix numbers.

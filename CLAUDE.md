@@ -44,7 +44,7 @@ python run_sweep.py --circuits weak_random qft --n-seeds 5
 python aggregate_results.py
 ```
 
-See the README's "Running experiments" section for the full flag reference (fidelity backend selection, injection trial counts, parallelism notes) — it's kept current there rather than duplicated here. `logs.txt` has the full narrative history of how this tooling and the scaling/research work evolved; `status.txt` has the latest supervisor-facing status snapshot.
+See the README's "Running experiments" section for the full flag reference (fidelity backend selection, injection trial counts, parallelism notes) — it's kept current there rather than duplicated here. `logs.txt` has the full narrative history of how this tooling and the scaling/research work evolved, plus the current project status and research roadmap.
 
 `pytest.ini` (root-level, `pythonpath = .`) exists because `M1_finale` isn't `pip install -e`'d — bare `pytest` (unlike `python -m pytest`) doesn't add the repo root to `sys.path` on its own, so `tests/`'s `from M1_finale.final_m1_script import ...` would otherwise raise `ModuleNotFoundError` when running the exact `pytest tests/...` commands documented above. Keep this file; it stops being necessary only if the project is ever properly packaged.
 
