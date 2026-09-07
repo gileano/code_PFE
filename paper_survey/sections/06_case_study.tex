@@ -1,0 +1,41 @@
+\section{Case Study: Block-Partitioned Quantum Circuit Optimization}
+\label{sec:case-study}
+
+% TODO: illustrative use of the project's own pipeline (partition ->
+% per-block MOO -> inter-block injection -> compression, see
+% M1\_finale/final\_m1\_script.py) to ground abstract taxonomy claims in a
+% concrete worked example. Framed explicitly as illustrative, not as this
+% paper's primary evidence -- full empirical validation is deferred to the
+% planned separate empirical results paper.
+%
+% IMPORTANT: any number cited here must be re-verified on the
+% post-2026-09-04 injection-stage-bug-fix codebase before being written
+% down -- see logs.txt's "CURRENT STATUS OF RESULTS" section. Do not copy
+% pre-fix figures into this section.
+
+\subsection{Pipeline Overview}
+\label{sec:case-study:pipeline}
+% TODO: brief description of the partition/optimize/inject/compress
+% pipeline for readers of the survey (not a full method section -- that
+% belongs to the separate empirical paper).
+
+\subsection{NSGA-II vs.\ SMS-EMOA vs.\ NSGA-III as a Worked Example}
+\label{sec:case-study:algorithms}
+% TODO: use the three interchangeable per-block optimizers as a concrete
+% illustration of crowding-distance vs.\ hypervolume-driven vs.\
+% reference-point selection trade-offs (Section~\ref{sec:taxonomy:selection}).
+
+\subsection{No Universally-Best Mutation Operator}
+\label{sec:case-study:mutation}
+% TODO: the project's mutation-scheme ablation (point / swap\_add /
+% swap\_add\_delete) as a concrete instance of a taxonomy/limitations
+% claim. Pending re-run on the fixed injection-stage code.
+
+\subsection{Hypervolume Comparability Across Algorithms}
+\label{sec:case-study:hypervolume}
+% TODO: adaptive vs.\ fair/shared-reference hypervolume as an illustration
+% of the benchmarking-practice limitations raised in
+% Section~\ref{sec:critical-analysis:cross-cutting}. This finding is
+% structural (about how HV is computed), not tied to the injection-stage
+% bug fix, so it can be cited as-is -- see logs.txt's "HYPERVOLUME
+% COMPARABILITY ACROSS ALGORITHMS" section.
