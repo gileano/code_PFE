@@ -3,17 +3,146 @@
 
 \subsection{Quantum Computing Concepts for QIEA}
 \label{sec:background:quantum}
-% TODO: qubit-representation encoding of solutions (e.g. Han \& Kim-style
-% Q-bit chromosomes), rotation-gate update rules, and any other quantum
-% concepts QIEA methods borrow.
+
+Quantum-inspired evolutionary algorithms borrow their representation and
+update rules from the mathematics of a single qubit, without requiring
+quantum hardware to run. A qubit's state is a normalized superposition of
+the two classical basis states,
+\begin{equation}
+  \label{eq:qubit}
+  \lvert\psi\rangle = \alpha\lvert 0\rangle + \beta\lvert 1\rangle,
+  \qquad \lvert\alpha\rvert^2 + \lvert\beta\rvert^2 = 1,
+\end{equation}
+where $\lvert\alpha\rvert^2$ and $\lvert\beta\rvert^2$ are interpreted as
+the probability of the qubit collapsing to $0$ or $1$ upon observation.
+\citet{han2002qea} introduced the \emph{Q-bit chromosome}: an individual
+is encoded not as a fixed binary string but as a string of such
+probability-amplitude pairs $(\alpha_i,\beta_i)$, one per bit position.
+Observing (measuring) a Q-bit chromosome collapses it into an ordinary
+binary solution that can be evaluated by the problem's fitness function,
+while the amplitudes themselves are what the algorithm evolves --
+maintaining, in effect, a probabilistic superposition over the whole
+population's search history rather than a single discrete solution.
+
+The corresponding variation operator is the \emph{Q-gate}, a rotation
+applied to each Q-bit's amplitude pair,
+\begin{equation}
+  \label{eq:qgate}
+  \begin{pmatrix}\alpha_i'\\ \beta_i'\end{pmatrix}
+  =
+  \begin{pmatrix}\cos\theta_i & -\sin\theta_i\\ \sin\theta_i & \cos\theta_i\end{pmatrix}
+  \begin{pmatrix}\alpha_i\\ \beta_i\end{pmatrix},
+\end{equation}
+where the rotation angle $\theta_i$ and its sign are looked up from a
+predetermined table that compares the current bit's observed value and
+fitness contribution against the best solution found so far, nudging the
+amplitude pair toward whichever basis state that comparison favors. This
+rotation-gate mechanism is what most surveyed QIEA methods share
+regardless of application domain~\citep{vivek2025fss}, and it is the
+representation/operator combination
+Section~\ref{sec:taxonomy:representation} and
+Section~\ref{sec:taxonomy:operator} use as the taxonomy's reference
+point; variants that replace or augment it with interference- or
+entanglement-inspired operators are discussed there rather than here.
 
 \subsection{Multi-Objective Optimization Fundamentals}
 \label{sec:background:moo}
-% TODO: Pareto dominance, hypervolume, IGD, spread/spacing -- the
-% indicators used throughout the survey and in the case study
-% (Section~\ref{sec:case-study}).
+
+A multi-objective optimization problem (MOP) seeks to simultaneously
+optimize $m \geq 2$ objective functions
+$f_1(x), \dots, f_m(x)$ over a decision space $x \in \Omega$. Because the
+objectives typically conflict, there is generally no single $x$ that
+minimizes (or maximizes) all of them at once; instead, a solution
+$x_1$ is said to \emph{Pareto-dominate} $x_2$ if $x_1$ is at least as
+good as $x_2$ on every objective and strictly better on at least one. A
+solution is \emph{Pareto-optimal} if no other feasible solution
+dominates it, and the image of the set of all Pareto-optimal solutions
+in objective space is the \emph{Pareto front}. Rather than a single best
+answer, a multi-objective evolutionary algorithm (MOEA) therefore aims to
+return a population that approximates this front as closely and as
+evenly as possible~\citep{emmerich2018tutorial}.
+
+Comparing how well two algorithms' output populations approximate the
+true (or best-known) Pareto front requires quality indicators that
+capture both convergence and diversity, since neither alone is
+sufficient: a tightly clustered set of points on the front converges well
+but covers it poorly, while a widely spread set may cover a region no
+solution actually dominates. The indicators used throughout this survey
+and in the case study (Section~\ref{sec:case-study}) are:
+\begin{itemize}
+  \item \textbf{Hypervolume (HV)}: the volume of objective space
+    dominated by a solution set relative to a fixed reference point --
+    the only indicator that is strictly monotonic with Pareto dominance
+    on its own, and the basis of hypervolume-driven selection in
+    SMS-EMOA~\citep{beume2007smsemoa}. Its value is sensitive to the
+    reference point and normalization used, a methodological detail
+    Section~\ref{sec:case-study:hypervolume} returns to.
+  \item \textbf{Inverted Generational Distance (IGD)}: the average
+    distance from each point on a reference (true or best-known) Pareto
+    front to its nearest neighbor in the algorithm's output set,
+    rewarding both convergence and coverage but requiring that reference
+    front to be known or well-approximated.
+  \item \textbf{Spread and spacing}: measures of how evenly solutions are
+    distributed along the approximated front, independent of how close
+    that front is to the true optimum.
+\end{itemize}
+See \citet{emmerich2018tutorial} and \citet{hanne2025review} for a fuller
+treatment of these fundamentals and their formal definitions.
 
 \subsection{Classical MOEAs}
 \label{sec:background:moea}
-% TODO: NSGA-II, NSGA-III, SMS-EMOA, SPEA2, MOEA/D as the classical
-% baselines QIEA methods are compared against in the surveyed literature.
+
+The Pareto-dominance-based family of MOEAs -- the family every QIEA-MOO
+method surveyed here either builds on or is benchmarked against -- traces
+back to \citet{schaffer1985vega}'s Vector Evaluated Genetic Algorithm
+(VEGA), which optimized each objective in a separate sub-population and
+suffered from poor diversity as a result. Successive algorithms
+addressed this diversity problem in turn: \citet{fonseca1993moga}'s MOGA
+introduced Pareto-rank-based fitness with fitness sharing;
+\citet{horn1994npga}'s NPGA added dominance-based tournament selection
+with niching; \citet{zitzler1999spea}'s SPEA introduced an external
+archive of non-dominated solutions and strength-based fitness;
+\citet{knowles2000paes}'s PAES took a different design point entirely,
+a $(1+1)$ evolution strategy with no population or crossover, using an
+adaptive grid archive for diversity; and
+\citet{corne2000pesa,corne2001pesa2}'s PESA and PESA-II introduced a
+hyper-grid (``hyperbox'') archive with selection performed at the
+hyperbox level. This lineage matters for QIEA-MOO specifically because
+several surveyed methods graft a Q-bit/Q-gate representation onto one of
+these selection mechanisms rather than inventing a new one --
+understanding the mechanism being reused is a precondition for the
+taxonomy's hybridization axis (Section~\ref{sec:taxonomy:hybridization}).
+
+Five classical MOEAs recur most often as the baselines QIEA-MOO methods
+are compared against in the surveyed literature, and this survey adopts
+the same five as its background reference set:
+\begin{itemize}
+  \item \textbf{NSGA-II}~\citep{deb2002nsga2}: fast non-dominated
+    sorting (ranking the population into successive Pareto fronts) combined
+    with crowding-distance-based diversity preservation within each
+    front; the most widely used MOEA baseline, and the one this survey's
+    own case-study pipeline builds on (Section~\ref{sec:case-study}).
+  \item \textbf{NSGA-III}~\citep{debjain2014nsga3}: replaces
+    crowding distance with reference-point-based niching, extending
+    NSGA-II's non-dominated-sorting framework to many-objective problems
+    ($m \gg 3$) where crowding distance alone provides insufficient
+    selection pressure.
+  \item \textbf{SPEA2}~\citep{zitzler2001spea2}: refines SPEA with a
+    finer-grained strength-based fitness assignment, a $k$-th-nearest-
+    neighbor density estimator, and a fixed-size external archive.
+  \item \textbf{MOEA/D}~\citep{zhangli2007moead}: decomposes the
+    multi-objective problem into a set of scalar subproblems via weight
+    vectors, solving them cooperatively using neighborhood information --
+    a fundamentally different, decomposition-based design point from the
+    three Pareto-dominance-based algorithms above.
+  \item \textbf{SMS-EMOA}~\citep{beume2007smsemoa}: an indicator-based
+    method whose environmental selection removes whichever individual
+    contributes least to the population's dominated hypervolume, directly
+    optimizing for the HV indicator described in
+    Section~\ref{sec:background:moo} rather than a proxy for it.
+\end{itemize}
+Together these five span the main selection paradigms QIEA-MOO methods
+adopt or compare against: crowding-distance-based, reference-point-based,
+strength/density-based, decomposition-based, and hypervolume-driven.
+Section~\ref{sec:taxonomy:selection} uses this same set of paradigms as
+one of the taxonomy's classification axes.

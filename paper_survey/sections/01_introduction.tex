@@ -1,19 +1,149 @@
 \section{Introduction}
 \label{sec:introduction}
 
-% TODO: motivation for surveying quantum-inspired evolutionary algorithms
-% (QIEA) applied to multi-objective optimization (MOO).
+Quantum computing has progressed from a theoretical curiosity to a
+technology with working, if noisy, hardware, yet the currently available
+noisy intermediate-scale quantum (NISQ) devices remain limited in qubit
+count, connectivity, and coherence time~\citep{rehman2025evolutionary}.
+This gap between the algorithms quantum computing ultimately promises and
+the hardware available today has created a specific, practical need:
+classical heuristics capable of tuning, compiling, and optimizing quantum
+circuits and quantum-algorithm parameters well enough that near-term
+devices can run them at all. Evolutionary algorithms (EAs) are a natural
+fit for this role -- population-based, derivative-free, and already used
+to design and compress circuits directly, as this survey's own case study
+(Section~\ref{sec:case-study}) illustrates.
+
+A second, independent thread of research asks the opposite question: can
+ideas \emph{from} quantum mechanics -- superposition, interference,
+entanglement -- improve classical evolutionary algorithms themselves, on
+classical hardware, whether or not the resulting solutions ever touch a
+real qubit? This is the domain of \emph{quantum-inspired evolutionary
+algorithms} (QIEAs), founded on Han and Kim's Q-bit chromosome and
+Q-gate rotation operator~\citep{han2002qea} and since applied across
+combinatorial and continuous optimization
+alike~\citep{rehman2025evolutionary,vivek2025fss}. Following
+\citet{rehman2025evolutionary}, we adopt the terminology that separates
+\emph{quantum-inspired} evolutionary algorithms (QiEA: classical
+algorithms inspired by quantum phenomena) from \emph{quantum} evolutionary
+algorithms (QEA: algorithms designed for and executed on physical quantum
+hardware) -- this survey is scoped to the former.
+
+Most real engineering and scientific problems are not single-objective:
+they require trading off several competing criteria (e.g.\ fidelity
+against circuit depth, or cost against coverage) rather than optimizing
+one metric in isolation. Multi-objective optimization (MOO) has its own
+mature toolbox of classical evolutionary methods --
+NSGA-II~\citep{deb2002nsga2}, NSGA-III~\citep{debjain2014nsga3},
+SPEA2~\citep{zitzler2001spea2}, MOEA/D~\citep{zhangli2007moead}, and
+SMS-EMOA~\citep{beume2007smsemoa} chief among them -- and QIEA research
+has followed MOO into this territory since at least
+\citet{kim2006qmea}'s quantum-inspired multi-objective knapsack algorithm.
+Yet the literature applying QIEA specifically to multi-objective problems
+remains comparatively sparse and scattered across
+domains~\citep{olvera2023continuous,guzel2022qnsga2,kumar2026eahqnsga2},
+compared to the much larger body of QIEA work on single- or
+bi-objective problems such as feature subset
+selection~\citep{vivek2025fss}. No survey, to our knowledge, systematically
+taxonomizes and critically compares QIEA-for-MOO methods on their own
+terms. This is the gap this survey addresses.
+
+Beyond the mechanics of any one algorithm, the appeal of cheaper,
+shallower, more efficient optimization has a stake that outlives any
+individual benchmark result: computing's energy footprint. Large-scale
+classical compute -- from generative-AI training runs to combinatorial
+optimization on classical hardware -- carries real energy and
+sustainability costs~\citep{sai2026generative}, and reducing the resources
+a given optimization problem requires (fewer generations, cheaper fitness
+evaluations, shallower resulting circuits) is not merely a performance
+metric but part of a broader case for energy-efficient, sustainable
+computing~\citep{banciu2026aiot}. This is one of the underlying reasons
+QIEA-for-MOO is worth taking seriously as its own subfield rather than as
+a footnote to single-objective QIEA or to classical MOO.
+
+To ground the survey's more abstract taxonomy and critical-analysis
+claims in a concrete example, Section~\ref{sec:case-study} presents a
+case study built on this project's own quantum-circuit-optimization
+pipeline, which partitions a target circuit into qubit blocks, evolves a
+cheaper per-block circuit via a pluggable multi-objective optimizer, and
+reassembles the result. That pipeline is itself a direct extension of
+\citet{ghlib2026scalable}'s scalable, block-partitioned NSGA-II framework
+for quantum circuit optimization, adding NSGA-III and SMS-EMOA as
+alternative per-block optimizers. The case study is presented as an
+illustrative worked example, not as this survey's primary evidence; full
+empirical validation of that pipeline is the subject of a separate,
+forthcoming empirical results paper.
 
 \subsection{Scope and Inclusion Criteria}
 \label{sec:introduction:scope}
-% TODO: define the literature search scope and inclusion/exclusion
-% criteria for the survey (databases searched, date range, keywords).
+
+This survey covers literature at the intersection of quantum-inspired
+evolutionary computation and multi-objective optimization, identified
+through a combination of targeted literature search (arXiv, IEEE Xplore,
+Springer, ACM Digital Library, MDPI) and citation-chasing from the papers
+found, spanning publications from 1985 (the earliest Pareto-based MOEA,
+VEGA~\citep{schaffer1985vega}) to 2026. We include:
+\begin{itemize}
+  \item Papers proposing or surveying quantum-inspired evolutionary
+    algorithms (in the QiEA sense above) applied to multi-objective or
+    many-objective optimization problems, on continuous or combinatorial
+    search spaces.
+  \item Classical (non-quantum-inspired) multi-objective evolutionary
+    algorithms that QIEA-MOO methods are built on, hybridized with, or
+    benchmarked against -- including the full Pareto-dominance lineage
+    (VEGA through SPEA2 and beyond), indicator-based methods, and
+    decomposition-based methods -- since these form the baseline
+    vocabulary the taxonomy in Section~\ref{sec:taxonomy} depends on.
+  \item Papers on (multi-objective) genetic algorithms for quantum
+    circuit optimization specifically, since these motivate and inform
+    the case study in Section~\ref{sec:case-study}.
+  \item A small number of papers establishing the broader motivation for
+    energy-efficient and sustainable computing, cited only in this
+    introduction and not treated as QIEA/MOO-technical literature.
+\end{itemize}
+We exclude quantum evolutionary algorithms designed to run on physical
+quantum hardware (QEA in the strict sense), except where a paper
+explicitly discusses the QiEA/QEA distinction, and we exclude
+single-objective-only QIEA work except where it is foundational to the
+field (e.g.\ the original Q-bit/Q-gate representation) or directly
+informs the taxonomy's operator-type axis
+(Section~\ref{sec:taxonomy:operator}). Only English-language sources are
+included.
 
 \subsection{Contributions}
 \label{sec:introduction:contributions}
-% TODO: list this survey's contributions (taxonomy, feature comparison,
-% critical analysis, case study).
+
+This survey makes the following contributions:
+\begin{itemize}
+  \item A taxonomy of QIEA-for-MOO methods along five axes --
+    representation scheme, quantum-inspired operator type,
+    selection/diversity mechanism, hybridization with classical MOEAs,
+    and application domain (Section~\ref{sec:taxonomy}).
+  \item A systematic feature comparison of the surveyed methods against
+    that taxonomy, covering representation, complexity, scalability,
+    convergence properties, benchmark problems, and reported performance
+    (Section~\ref{sec:feature-comparison}).
+  \item A critical analysis of per-category weaknesses and cross-cutting
+    open problems in the field -- reproducibility gaps, weak
+    benchmarking practices, and scalability claims that are rarely
+    empirically stress-tested (Section~\ref{sec:critical-analysis}).
+  \item A worked case study that grounds several of these abstract claims
+    in a concrete block-partitioned quantum-circuit-optimization
+    pipeline, itself an extension of prior published
+    work~\citep{ghlib2026scalable} (Section~\ref{sec:case-study}).
+\end{itemize}
 
 \subsection{Paper Organization}
 \label{sec:introduction:organization}
-% TODO: one paragraph outlining Sections~\ref{sec:background}-\ref{sec:conclusion}.
+
+Section~\ref{sec:background} reviews the quantum-computing and
+multi-objective-optimization background needed to follow the rest of the
+survey, including the classical MOEA baselines QIEA methods are compared
+against. Section~\ref{sec:taxonomy} introduces the classification axes
+used throughout. Section~\ref{sec:feature-comparison} applies that
+taxonomy systematically across the surveyed literature.
+Section~\ref{sec:critical-analysis} discusses limitations and open
+problems, per taxonomy category and across the field as a whole.
+Section~\ref{sec:case-study} presents the illustrative case study.
+Section~\ref{sec:open-challenges} synthesizes open challenges and future
+directions, and Section~\ref{sec:conclusion} concludes.
