@@ -9,26 +9,30 @@ and the ablations tracked in logs.txt, is planned for later and is out of
 scope here.
 
 =====================================================================
-LITERATURE FROM Report1/ (added 2026-09-10; full bib data in
-paper_survey/references.bib -- this is just the role/section mapping)
+LITERATURE
 =====================================================================
-- ghlib2026scalable -- THE foundational paper (base NSGA-II + block-
-  partitioned fidelity approach this project's pipeline implements and
-  extends with NSGA-III/SMS-EMOA). Most important citation; Section 6
-  case study must be framed as an extension of this paper, not one
-  illustrative example among others.
-- gilea2026waste -- user's own first paper (QIEA on a real-world TSP).
-  Self-citation / Section 3 taxonomy example.
-- rehman2025evolutionary -- QiEA-vs-QEA terminology split. Sections 2-3.
-- olvera2023continuous -- NSGA-II vs. QIEA on continuous MOPs. Core
-  Sections 2/4/5 reference.
-- vivek2025fss -- QIEA survey (feature subset selection, not MOO). Use
-  for Section 3 (rotation-gate taxonomy) only, not MOO-specific results.
-- banciu2026aiot, sai2026generative -- MOTIVATION-ONLY citations (Section
-  1): ground the energy-efficiency/sustainability rationale for why
-  shallower/cheaper circuits matter (classical + NISQ compute cost).
-  banciu2026aiot is co-authored by the user's supervisor (Adrian Florea).
-  Keep both out of Sections 2-5 (QIEA/MOO-technical scope).
+Full literature list (48 entries) lives in paper_survey/references.bib,
+each entry's own `note` field carrying its role/section mapping and any
+TODOs -- not duplicated here. Sourced from Report1/, moo.txt ("future
+work" MOO-algorithm landscape), and web search (classical-MOEA/QIEA-MOO
+fills), all 2026-09-10; sorted per the bib file's own header comment
+(foundation paper -> Adrian Florea's papers, grouped -> core QIEA-MOO ->
+motivation-only -> classical MOEA baselines -> moo.txt landscape ->
+quantum-circuit-optimization extensions).
+
+Load-bearing points not obvious from the bib alone:
+- ghlib2026scalable is THE foundational paper this project's pipeline
+  extends (NSGA-III/SMS-EMOA added on top) -- Section 6's case study must
+  be framed as an extension of it, not one illustrative example among
+  others.
+- gilea2026waste (user's own first paper) has an unconfirmed venue/DOI --
+  ask the user before citing with a venue.
+- banciu2026aiot and sai2026generative are motivation-only (Section 1
+  energy-efficiency framing) -- keep out of Sections 2-5.
+
+None of this has been reviewed for actual citation-worthiness in the
+final paper text yet (sections/*.tex are still empty skeletons) -- treat
+the bib as a candidate pool, not a finalized bibliography.
 
 =====================================================================
 PROPOSED STRUCTURE
@@ -37,7 +41,7 @@ PROPOSED STRUCTURE
 1. Introduction
    - Motivation for surveying QIEA-for-MOO, including the energy-
      efficiency/sustainability rationale (banciu2026aiot, sai2026generative
-     -- see "LITERATURE FROM Report1/" above).
+     -- see "LITERATURE" above).
    - Scope and inclusion criteria for the literature covered.
    - Contributions of this survey.
    - Paper organization.
@@ -67,8 +71,8 @@ PROPOSED STRUCTURE
      practices, scalability claims not empirically stress-tested.
 
 6. Case study: block-partitioned quantum circuit optimization
-   - Framed as a direct extension of ghlib2026scalable (see "LITERATURE
-     FROM Report1/" above) -- lead with what M1_finale/ adds on top of
+   - Framed as a direct extension of ghlib2026scalable (see "LITERATURE"
+     above) -- lead with what M1_finale/ adds on top of
      that baseline (NSGA-III and SMS-EMOA as additional per-block
      optimizers, plus the inter-block injection and compression stages)
      before using the pipeline to ground abstract taxonomy claims in a

@@ -1,14 +1,25 @@
-% Placeholder bibliography. Entries below are stubs keyed by arXiv ID or a
-% short mnemonic; fill in title/author/venue fields before citing anything
-% in the paper. Do not trust auto-generated bibliographic metadata --
-% verify each entry against the actual paper before using it.
+% Bibliography for the QIEA-for-MOO survey paper. Some entries are still
+% TODO stubs (marked in their `note` field); fill in/verify before citing
+% anything in the paper. Do not trust auto-generated bibliographic
+% metadata -- verify each entry against the actual paper before using it.
+%
+% File order (sorted 2026-09-10 at user request): (1) the foundational
+% paper this project's pipeline extends, (2) papers by the user's
+% supervisor Adrian Florea, (3) core QIEA/QIEA-MOO literature
+% (chronological), (4) motivation-only literature, (5) classical MOEA
+% baselines named in the survey's Background section (chronological,
+% with each algorithm's later theoretical/companion papers kept next to
+% it), (6) the broader MOO algorithm landscape from moo.txt ("future
+% work" candidates, mirroring moo.txt's own section order: Pareto-
+% dominance lineage -> indicator-based -> decomposition-based -> other
+% metaheuristic paradigms -> recent surveys), (7) quantum-circuit-
+% optimization-extension literature from logs.txt's candidate pipeline
+% extensions (chronological). Role/section mapping for the paper itself
+% is tracked in journal.txt, not repeated here.
 
-% ---------------------------------------------------------------------
-% Papers sourced from Report1/ (parent dir), reviewed 2026-09-10.
-% Roles/section mapping tracked in journal.txt's "KEY LITERATURE BASIS" /
-% "CORE BACKGROUND / TAXONOMY LITERATURE" / "MOTIVATION LITERATURE"
-% sections -- full detail there, this file just holds the bib data.
-% ---------------------------------------------------------------------
+% =======================================================================
+% (1) FOUNDATIONAL PAPER
+% =======================================================================
 
 @article{ghlib2026scalable,
   title   = {Scalable multi-objective genetic algorithm for quantum circuit optimization},
@@ -21,22 +32,74 @@
   note    = {Foundational paper for this project's own NSGA-II + block-partitioned fidelity pipeline; this project extends it with NSGA-III/SMS-EMOA. Most important citation in the survey -- see journal.txt "KEY LITERATURE BASIS".}
 }
 
+% =======================================================================
+% (2) PAPERS BY THE USER'S SUPERVISOR, Adrian Florea
+% (grouped 2026-09-10 at user's request; ordered chronologically --
+% banciu2025icstcc is the predecessor/companion piece to gilea2026waste)
+% =======================================================================
+
+@inproceedings{banciu2025icstcc,
+  title     = {IoT-Enabled Waste Collection: Route Optimization and Environmental Impact Reduction Using Smart Technologies},
+  author    = {Banciu, Claudia and Florea, Adrian and Popa, M.},
+  booktitle = {2025 29th International Conference on System Theory, Control and Computing (ICSTCC)},
+  address   = {Cluj-Napoca, Romania},
+  pages     = {782--788},
+  year      = {2025},
+  doi       = {10.1109/ICSTCC66753.2025.11240462},
+  note      = {Companion/predecessor paper to gilea2026waste (cited as reference [1] in that paper's own bibliography) -- same IoT-waste-collection application, classical (non-quantum) route optimization. Possible sibling venue for gilea2026waste, NOT confirmed as that paper's actual venue -- do not assume.}
+}
+
 @unpublished{gilea2026waste,
   title  = {Scalable Quantum Inspired Evolutionary Algorithm for Multi-Objective Optimization Real World Problems},
   author = {Gilea, Olivian-Antonio and Florea, Adrian and Banciu, Claudia and Telcean, Alexandru},
   year   = {2026},
-  note   = {TODO: venue/DOI still unconfirmed after a 2026-09-10 web search -- no indexed listing found (IEEE Xplore, Springer, arXiv, dblp, ResearchGate all came up empty for this exact title), and the PDF itself carries no header/footer/DOI/copyright imprint, so it reads as a preprint or submitted (not yet published) manuscript. Companion/predecessor paper by the same group: C. Banciu, A. Florea \& M. Popa, "IoT-Enabled Waste Collection: Route Optimization and Environmental Impact Reduction Using Smart Technologies," ICSTCC 2025, Cluj-Napoca, doi:10.1109/ICSTCC66753.2025.11240462 -- possible sibling venue, NOT confirmed as this paper's venue, do not assume. Ask the user directly for submission/acceptance status before citing with a venue. User's first paper; QIEA applied to a real-world waste-collection TSP. Self-citation / taxonomy-section example, see journal.txt.}
+  note   = {TODO: venue/DOI still unconfirmed after a 2026-09-10 web search -- no indexed listing found (IEEE Xplore, Springer, arXiv, dblp, ResearchGate all came up empty for this exact title), and the PDF itself carries no header/footer/DOI/copyright imprint, so it reads as a preprint or submitted (not yet published) manuscript. Ask the user directly for submission/acceptance status before citing with a venue. User's first paper; QIEA applied to a real-world waste-collection TSP. Self-citation / taxonomy-section example, see journal.txt.}
 }
 
-@article{rehman2025evolutionary,
-  title   = {Evolutionary Algorithms and Quantum Computing: Recent Advances, Opportunities, and Challenges},
-  author  = {Rehman, Junaid Ur and Ulum, Muhammad Shohibul and Shaffar, Abdurrahman Wachid and Hakim, Amirul Adlil and Mujirin and Abdullah, Zaid and Al-Hraishawi, Hayder and Chatzinotas, Symeon and Shin, Hyundong},
-  journal = {IEEE Access},
-  volume  = {13},
-  pages   = {16649--16651},
-  year    = {2025},
-  doi     = {10.1109/ACCESS.2025.3530952},
-  note    = {Proposes QiEA (quantum-inspired, classical hardware) vs. QEA (real quantum hardware) terminology; use for Background/Taxonomy sections, see journal.txt.}
+@article{banciu2026aiot,
+  title   = {AIoT at the Frontline of Climate Change Management: Enabling Resilient, Adaptive, and Sustainable Smart Cities},
+  author  = {Banciu, Claudia and Florea, Adrian},
+  journal = {Climate},
+  volume  = {14},
+  number  = {1},
+  pages   = {19},
+  year    = {2026},
+  doi     = {10.3390/cli14010019},
+  note    = {Motivation-section citation only (sustainable/energy-efficient computing framing), not QIEA/MOO-technical -- see journal.txt "MOTIVATION LITERATURE".}
+}
+
+% =======================================================================
+% (3) CORE QIEA / QIEA-MOO LITERATURE (chronological)
+% =======================================================================
+
+@article{han2002qea,
+  title   = {Quantum-inspired evolutionary algorithm for a class of combinatorial optimization},
+  author  = {Han, Kuk-Hyun and Kim, Jong-Hwan},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {6},
+  number  = {6},
+  pages   = {580--593},
+  year    = {2002},
+  doi     = {10.1109/TEVC.2002.804320},
+  note    = {THE foundational QEA paper (Q-bit chromosome + Q-gate rotation operator) that essentially every later QIEA, including the MOO variants, builds on. Section 2 background -- cite before any QIEA-MOO variant. Confirmed via web search 2026-09-10.}
+}
+
+@inproceedings{kim2006qmea,
+  title     = {Quantum-inspired Multiobjective Evolutionary Algorithm for Multiobjective 0/1 Knapsack Problems},
+  author    = {Kim, Y. and Kim, J.H. and Han, K.H.},
+  booktitle = {Proceedings of the 2006 IEEE Congress on Evolutionary Computation (CEC 2006)},
+  pages     = {2601--2606},
+  year      = {2006},
+  note      = {QMEA -- one of the earliest QIEA-for-MOO papers (extends han2002qea's Q-bit/Q-gate representation to a Pareto-based multiobjective setting). Core Section 2/4 reference alongside olvera2023continuous. Confirmed via web search 2026-09-10.}
+}
+
+@inproceedings{guzel2022qnsga2,
+  title     = {QNSGA-II: A Quantum Computing-Inspired Approach to Multi-Objective Optimization},
+  author    = {G{\"u}zel, M. and Okay, F.Y. and K{\"o}k, {\.I}. and {\"O}zdemir, S.},
+  booktitle = {2022 International Symposium on Networks, Computers and Communications (ISNCC)},
+  year      = {2022},
+  doi       = {10.1109/ISNCC55209.2022.9851805},
+  note      = {Another quantum-inspired NSGA-II variant (qubit superposition to speed convergence). Core Section 4 (feature comparison) reference -- gives the survey more than one worked QIEA-MOO example beyond olvera2023continuous. Confirmed via web search 2026-09-10.}
 }
 
 @article{olvera2023continuous,
@@ -50,6 +113,17 @@
   note    = {Directly compares NSGA-II against quantum-inspired MOEAs on continuous MOPs; core Background/Feature-comparison reference, see journal.txt.}
 }
 
+@article{rehman2025evolutionary,
+  title   = {Evolutionary Algorithms and Quantum Computing: Recent Advances, Opportunities, and Challenges},
+  author  = {Rehman, Junaid Ur and Ulum, Muhammad Shohibul and Shaffar, Abdurrahman Wachid and Hakim, Amirul Adlil and Mujirin and Abdullah, Zaid and Al-Hraishawi, Hayder and Chatzinotas, Symeon and Shin, Hyundong},
+  journal = {IEEE Access},
+  volume  = {13},
+  pages   = {16649--16651},
+  year    = {2025},
+  doi     = {10.1109/ACCESS.2025.3530952},
+  note    = {Proposes QiEA (quantum-inspired, classical hardware) vs. QEA (real quantum hardware) terminology; use for Background/Taxonomy sections, see journal.txt.}
+}
+
 @article{vivek2025fss,
   title   = {Quantum-inspired evolutionary algorithms for feature subset selection: a comprehensive survey},
   author  = {Vivek, Yelleti and Ravi, Vadlamani and Radha Krishna, P.},
@@ -61,17 +135,20 @@
   note    = {Confirmed via web search 2026-09-10 (Springer + dblp; also arXiv:2407.17946, the version in Report1/). QIEA survey scoped to feature subset selection (mostly single/bi-objective); use for Taxonomy section (rotation-gate operators), not MOO-specific results.}
 }
 
-@article{banciu2026aiot,
-  title   = {AIoT at the Frontline of Climate Change Management: Enabling Resilient, Adaptive, and Sustainable Smart Cities},
-  author  = {Banciu, Claudia and Florea, Adrian},
-  journal = {Climate},
-  volume  = {14},
-  number  = {1},
-  pages   = {19},
+@article{kumar2026eahqnsga2,
+  title   = {Quantum-inspired NSGA-II for multi-objective optimization of electric vehicle charging stations},
+  author  = {Kumar, L. and Solanki, S. and Jhariya, M.K. and others},
+  journal = {Scientific Reports},
+  volume  = {16},
+  pages   = {14666},
   year    = {2026},
-  doi     = {10.3390/cli14010019},
-  note    = {Authored by the user's supervisor (Adrian Florea). Motivation-section citation only (sustainable/energy-efficient computing framing), not QIEA/MOO-technical -- see journal.txt "MOTIVATION LITERATURE".}
+  doi     = {10.1038/s41598-026-44141-z},
+  note    = {EAH-QNSGA-II: entanglement-driven crossover + adaptive quantum rotation + local search, applied to EV-charging-station siting. Recent (2026) real-world QIEA-MOO application -- good Section 4/5 example of the field's current state and of application-domain diversity in the taxonomy. Confirmed via web search 2026-09-10; author list may be incomplete (search result showed "et al.", not yet verified against the full paper).}
 }
+
+% =======================================================================
+% (4) MOTIVATION-ONLY LITERATURE
+% =======================================================================
 
 @article{sai2026generative,
   title   = {Generative AI in the age of quantum computing: A taxonomy, architectural elements and future directions},
@@ -84,93 +161,406 @@
   note    = {Motivation-section citation only (energy-cost-of-compute argument for classical vs.\ quantum), not QIEA/MOO-technical -- see journal.txt "MOTIVATION LITERATURE".}
 }
 
-@misc{deb2002nsga2,
-  title  = {TODO: verify exact title/venue},
-  author = {TODO},
-  year   = {2002},
-  note   = {NSGA-II -- background reference, see Section~\ref{sec:background:moea}}
+% =======================================================================
+% (5) CLASSICAL MOEA BASELINES named in the survey's Background section
+% (chronological; each algorithm's later theoretical/companion papers
+% are kept immediately after it)
+% =======================================================================
+
+@article{deb2002nsga2,
+  title   = {A fast and elitist multiobjective genetic algorithm: NSGA-II},
+  author  = {Deb, Kalyanmoy and Pratap, Amrit and Agarwal, Sameer and Meyarivan, T.},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {6},
+  number  = {2},
+  pages   = {182--197},
+  year    = {2002},
+  doi     = {10.1109/4235.996017},
+  note    = {NSGA-II -- background reference, see Section~\ref{sec:background:moea}. Confirmed via web search 2026-09-10.}
 }
 
-@misc{debjain2014nsga3,
-  title  = {TODO: verify exact title/venue},
-  author = {TODO},
-  year   = {2014},
-  note   = {NSGA-III (Deb \& Jain) -- background reference, see Section~\ref{sec:background:moea}}
+@article{debjain2014nsga3,
+  title   = {An Evolutionary Many-Objective Optimization Algorithm Using Reference-Point-Based Nondominated Sorting Approach, Part I: Solving Problems With Box Constraints},
+  author  = {Deb, Kalyanmoy and Jain, Himanshu},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {18},
+  number  = {4},
+  pages   = {577--601},
+  year    = {2014},
+  doi     = {10.1109/TEVC.2013.2281535},
+  note    = {NSGA-III (Deb \& Jain) -- background reference, see Section~\ref{sec:background:moea}. Confirmed via web search 2026-09-10; a Part II (constraints/adaptive extension) also exists, by Jain \& Deb, same venue/year, if needed.}
 }
 
-@misc{zitzler2001spea2,
-  title  = {TODO: verify exact title/venue},
-  author = {TODO},
-  year   = {2001},
-  note   = {SPEA2 -- background reference, see Section~\ref{sec:background:moea}}
-}
-
-@misc{spea2beatsnsga2_2025,
-  title  = {TODO: verify exact title (IJCAI 2025, ``SPEA2 Beats NSGA-II''-style result)},
-  author = {TODO},
-  year   = {2025},
-  note   = {cite alongside zitzler2001spea2 if SPEA2 is discussed, see logs.txt}
-}
-
-@misc{arxiv2504.06413,
-  title         = {TODO: verify exact title},
-  author        = {TODO},
-  year          = {2025},
-  eprint        = {2504.06413},
+@article{opris2024nsga3runtime,
+  title   = {Runtime Analyses of NSGA-III on Many-Objective Problems},
+  author  = {Opris, Andre and Dang, Duc-Cuong and Neumann, Frank and Sudholt, Dirk},
+  year    = {2024},
+  eprint  = {2404.11433},
   archivePrefix = {arXiv},
-  note          = {mutation-operator ablation reference, see logs.txt}
+  note    = {Listed in moo.txt's SOURCES; companion runtime-analysis citation for NSGA-III (debjain2014nsga3).}
 }
 
-@misc{arxiv2504.17561,
-  title         = {TODO: verify exact title},
-  author        = {TODO},
-  year          = {2025},
-  eprint        = {2504.17561},
+@article{deng2025nsga3guarantees,
+  title   = {The First Theoretical Approximation Guarantees for the Non-Dominated Sorting Genetic Algorithm III (NSGA-III)},
+  author  = {Deng, Renzhong and Zheng, Weijie and Doerr, Benjamin},
+  year    = {2025},
+  eprint  = {2504.21552},
   archivePrefix = {arXiv},
-  note          = {pure-GA vs.\ hybrid-GA+LAS reference, see logs.txt}
+  note    = {Accepted IJCAI 2025. Companion theoretical-guarantee citation for NSGA-III (debjain2014nsga3), listed in moo.txt's SOURCES (parallel to alghouass2025spea2beatsnsga2 for SPEA2).}
 }
 
-@misc{arxiv2506.09963,
-  title         = {TODO: verify exact title},
-  author        = {TODO},
+@article{zhangli2007moead,
+  title   = {MOEA/D: A Multiobjective Evolutionary Algorithm Based on Decomposition},
+  author  = {Zhang, Qingfu and Li, Hui},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {11},
+  number  = {6},
+  pages   = {712--731},
+  year    = {2007},
+  doi     = {10.1109/TEVC.2007.892759},
+  note    = {MOEA/D -- background reference for Section~\ref{sec:background:moea} (listed among classical MOEA baselines in journal.txt's proposed structure but previously had no bib entry). Confirmed via web search 2026-09-10.}
+}
+
+@article{beume2007smsemoa,
+  title   = {SMS-EMOA: Multiobjective selection based on dominated hypervolume},
+  author  = {Beume, Nicola and Naujoks, Boris and Emmerich, Michael},
+  journal = {European Journal of Operational Research},
+  volume  = {181},
+  number  = {3},
+  pages   = {1653--1669},
+  year    = {2007},
+  doi     = {10.1016/j.ejor.2006.08.008},
+  note    = {SMS-EMOA -- background reference for Section~\ref{sec:background:moea} (the classical, non-quantum-inspired hypervolume-driven method this project's optimise_block_smsemoa is modeled after; previously had no bib entry). Confirmed via web search 2026-09-10.}
+}
+
+% =======================================================================
+% (6) BROADER MOO ALGORITHM LANDSCAPE, from moo.txt ("future work"
+% candidates, added 2026-09-10 at user request -- not all necessarily
+% cited in the final paper text; mirrors moo.txt's own section order)
+% =======================================================================
+
+% --- 6.1 Pareto-dominance-based lineage (chronological + companions) ---
+
+@inproceedings{schaffer1985vega,
+  title     = {Multiple Objective Optimization with Vector Evaluated Genetic Algorithms},
+  author    = {Schaffer, J. David},
+  booktitle = {Proceedings of the 1st International Conference on Genetic Algorithms},
+  pages     = {93--100},
+  year      = {1985},
+  note      = {VEGA -- the original EA-for-MOO paper, historical baseline only (moo.txt Section 1). Confirmed via web search 2026-09-10.}
+}
+
+@inproceedings{fonseca1993moga,
+  title     = {Genetic Algorithms for Multiobjective Optimization: Formulation, Discussion and Generalization},
+  author    = {Fonseca, Carlos M. and Fleming, Peter J.},
+  booktitle = {Proceedings of the Fifth International Conference on Genetic Algorithms},
+  pages     = {416--423},
+  year      = {1993},
+  note      = {MOGA -- Pareto-rank-based fitness + fitness sharing, historical (moo.txt Section 1). Confirmed via web search 2026-09-10.}
+}
+
+@inproceedings{horn1994npga,
+  title     = {A Niched Pareto Genetic Algorithm for Multiobjective Optimization},
+  author    = {Horn, Jeffrey and Nafpliotis, Nicholas and Goldberg, David E.},
+  booktitle = {Proceedings of the First IEEE Conference on Evolutionary Computation, IEEE World Congress on Computational Intelligence},
+  year      = {1994},
+  note      = {NPGA -- Pareto-dominance tournament selection + fitness sharing (moo.txt Section 1). Confirmed via web search 2026-09-10; URL already listed in moo.txt's SOURCES section.}
+}
+
+@article{zitzler1999spea,
+  title   = {Multiobjective evolutionary algorithms: a comparative case study and the strength Pareto approach},
+  author  = {Zitzler, Eckart and Thiele, Lothar},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {3},
+  number  = {4},
+  pages   = {257--271},
+  year    = {1999},
+  doi     = {10.1109/4235.797969},
+  note    = {SPEA -- predecessor to SPEA2 (zitzler2001spea2), listed for lineage completeness (moo.txt Section 1). Confirmed via web search 2026-09-10.}
+}
+
+@article{knowles2000paes,
+  title   = {Approximating the Nondominated Front Using the Pareto Archived Evolution Strategy},
+  author  = {Knowles, Joshua D. and Corne, David W.},
+  journal = {Evolutionary Computation},
+  volume  = {8},
+  number  = {2},
+  pages   = {149--172},
+  year    = {2000},
+  doi     = {10.1162/106365600568167},
+  note    = {PAES -- (1+1) evolution strategy, no crossover/population, distinct design point from the GA-population algorithms elsewhere in this bib (moo.txt Section 1). Confirmed via web search 2026-09-10.}
+}
+
+@inproceedings{opris2025paes25,
+  title     = {A First Runtime Analysis of the PAES-25: An Enhanced Variant of the Pareto Archived Evolution Strategy},
+  author    = {Opris, Andre},
+  booktitle = {Proceedings of the 18th ACM/SIGEVO Conference on Foundations of Genetic Algorithms (FOGA 2025)},
+  year      = {2025},
+  eprint    = {2507.03666},
+  archivePrefix = {arXiv},
+  doi       = {10.1145/3729878.3746618},
+  note      = {Shows PAES is still an active research subject, not purely historical (moo.txt Section 1). Confirmed via web search 2026-09-10.}
+}
+
+@inproceedings{corne2000pesa,
+  title     = {The Pareto Envelope-Based Selection Algorithm for Multiobjective Optimization},
+  author    = {Corne, David W. and Knowles, Joshua D. and Oates, Martin J.},
+  booktitle = {Proceedings of the Sixth International Conference on Parallel Problem Solving from Nature (PPSN VI)},
+  pages     = {839--848},
+  year      = {2000},
+  note      = {PESA -- hyper-grid/hyperbox archive for diversity, precursor to PESA-II (moo.txt Section 1). Confirmed via web search 2026-09-10.}
+}
+
+@inproceedings{corne2001pesa2,
+  title     = {PESA-II: Region-based Selection in Evolutionary Multiobjective Optimization},
+  author    = {Corne, David W. and Jerram, Nick R. and Knowles, Joshua D. and Oates, Martin J.},
+  booktitle = {Proceedings of the Genetic and Evolutionary Computation Conference (GECCO 2001)},
+  pages     = {283--290},
+  year      = {2001},
+  note      = {PESA-II -- selection performed at the hyperbox level rather than per-individual (moo.txt Section 1). Confirmed via web search 2026-09-10.}
+}
+
+@techreport{zitzler2001spea2,
+  title      = {SPEA2: Improving the Strength Pareto Evolutionary Algorithm},
+  author     = {Zitzler, Eckart and Laumanns, Marco and Thiele, Lothar},
+  institution= {Computer Engineering and Networks Laboratory (TIK), ETH Zurich},
+  number     = {103},
+  year       = {2001},
+  note       = {SPEA2 -- background reference, see Section~\ref{sec:background:moea}. Confirmed via web search 2026-09-10 (TIK-Report 103, also presented at EUROGEN 2001).}
+}
+
+@inproceedings{alghouass2025spea2beatsnsga2,
+  title     = {Proven Approximation Guarantees in Multi-Objective Optimization: SPEA2 Beats NSGA-II},
+  author    = {Alghouass, Yasser and Doerr, Benjamin and Krejca, Martin S. and Lagmah, Mohammed},
+  booktitle = {Proceedings of the 34th International Joint Conference on Artificial Intelligence (IJCAI 2025)},
+  year      = {2025},
+  eprint    = {2505.01323},
+  archivePrefix = {arXiv},
+  note      = {Confirmed via web search 2026-09-10. Cite alongside zitzler2001spea2 if SPEA2 is discussed, see logs.txt -- theoretical (approximation-ratio proof on OneMinMax), not an empirical benchmarking result.}
+}
+
+@inproceedings{dang2026spea2plus,
+  title     = {SPEA2\textsuperscript{+}: Improved Density Estimation in SPEA2 with Provable Runtime Guarantees},
+  author    = {Dang, Duc-Cuong and Opris, Andre and Sudholt, Dirk},
+  booktitle = {Proceedings of Parallel Problem Solving from Nature (PPSN 2026)},
+  year      = {2026},
+  eprint    = {2606.12382},
+  archivePrefix = {arXiv},
+  note      = {2026 follow-up citation upgrade for SPEA2 (moo.txt Section 1) -- fixes an ONETRAPZEROTRAP coverage failure in the original SPEA2. Confirmed via web search 2026-09-10.}
+}
+
+@article{weakconstraintpareto2025,
+  title   = {A Constrained Multi-Objective Evolutionary Algorithm with Weak Constraint-Pareto Dominance and Angle Distance-Based Diversity Preservation},
+  author  = {TODO},
+  journal = {Mathematics},
+  volume  = {13},
+  number  = {22},
+  pages   = {3696},
+  year    = {2025},
+  doi     = {10.3390/math13223696},
+  note    = {TODO: author names not confirmed via web search (only institutional affiliations found: Wuhan Second Ship Design and Research Institute; Xi'an Polytechnic University) -- verify against the paper before citing. CMOEA-WA algorithm; not directly applicable to this project's unconstrained objectives today (moo.txt Section 1) -- revisit only if a future objective becomes a hard feasibility constraint.}
+}
+
+% --- 6.2 Indicator-based ---
+
+@inproceedings{zitzler2004ibea,
+  title     = {Indicator-Based Selection in Multiobjective Search},
+  author    = {Zitzler, Eckart and K{\"u}nzli, Simon},
+  booktitle = {Parallel Problem Solving from Nature (PPSN VIII)},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {3242},
+  year      = {2004},
+  doi       = {10.1007/978-3-540-30217-9_84},
+  note      = {IBEA -- generalizes SMS-EMOA's hypervolume-driven idea to any binary quality indicator (moo.txt Section 2). Confirmed via web search 2026-09-10; already on this project's candidate MOO-algorithm list (logs.txt), not yet implemented.}
+}
+
+% --- 6.3 Decomposition-based ---
+
+@inproceedings{falconcardona2016imoacor,
+  title     = {iMOACO\textsubscript{R}: A New Indicator-Based Multi-objective Ant Colony Optimization Algorithm for Continuous Search Spaces},
+  author    = {Falc{\'o}n-Cardona, Jes{\'u}s Guillermo and Coello Coello, Carlos A.},
+  booktitle = {Parallel Problem Solving from Nature (PPSN XIV)},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {9921},
+  year      = {2016},
+  doi       = {10.1007/978-3-319-45823-6_36},
+  note      = {iMOACO\textsubscript{R} -- ACO-based MOO, not previously on this project's candidate list (moo.txt Section 3). Different paradigm from GA-based methods; low implementation priority (no reuse of existing code).}
+}
+
+% --- 6.4 Other metaheuristic paradigms (non-GA) ---
+
+@article{coello2002mopso,
+  title   = {MOPSO: A Proposal for Multiple Objective Particle Swarm Optimization},
+  author  = {Coello Coello, Carlos A. and Lechuga, Maximino Salazar},
+  journal = {Proceedings of the 2002 Congress on Evolutionary Computation (CEC'02)},
+  volume  = {2},
+  pages   = {1051--1056},
+  year    = {2002},
+  doi     = {10.1109/CEC.2002.1004388},
+  note    = {MOPSO -- already on this project's candidate MOO-algorithm list (logs.txt \#6, moo.txt Section 4); flagged as highest implementation cost since chromosome encoding would need a continuous-relaxation or discrete-PSO adaptation. Confirmed via web search 2026-09-10.}
+}
+
+@article{ulungu1999mosa,
+  title   = {MOSA method: a tool for solving multiobjective combinatorial optimization problems},
+  author  = {Ulungu, E. L. and Teghem, J. and Fortemps, Ph. and Tuyttens, D.},
+  journal = {Journal of Multi-Criteria Decision Analysis},
+  volume  = {8},
+  number  = {4},
+  pages   = {221--236},
+  year    = {1999},
+  doi     = {10.1002/(SICI)1099-1360(199907)8:4<221::AID-MCDA247>3.0.CO;2-O},
+  note    = {MOSA -- extends single-objective SA with Pareto-dominance acceptance + non-dominated archive; already on this project's candidate MOO-algorithm list (logs.txt \#5, top priority, extends existing sa_injection/\_sa\_energy machinery). Confirmed via web search 2026-09-10; Serafini (1994) is the earlier, less-developed precursor if a fuller lineage is wanted.}
+}
+
+@article{garciamartinez2007moaco,
+  title   = {A taxonomy and an empirical analysis of multiple objective ant colony optimization algorithms for the bi-criteria TSP},
+  author  = {Garc{\'i}a-Mart{\'i}nez, Carlos and Cord{\'o}n, Oscar and Herrera, Francisco},
+  journal = {European Journal of Operational Research},
+  volume  = {180},
+  number  = {1},
+  pages   = {116--148},
+  year    = {2007},
+  doi     = {10.1016/j.ejor.2006.03.041},
+  note    = {MOACO taxonomy/survey (moo.txt Section 4) -- same low-priority rationale as iMOACO\textsubscript{R} above.}
+}
+
+% --- 6.5 Recent directions / surveys (chronological) ---
+
+@article{li2015manyobjective,
+  title   = {Many-Objective Evolutionary Algorithms: A Survey},
+  author  = {Li, Bingdong and Li, Jinlong and Tang, Ke and Yao, Xin},
+  journal = {ACM Computing Surveys},
+  volume  = {48},
+  number  = {1},
+  pages   = {13},
+  year    = {2015},
+  doi     = {10.1145/2792984},
+  note    = {Background/taxonomy survey, categorizes many-objective methods into 7 classes (relaxed-dominance, diversity, aggregation, indicator, reference-set, preference, dimensionality-reduction). Listed in moo.txt's SOURCES.}
+}
+
+@article{emmerich2018tutorial,
+  title   = {A tutorial on multiobjective optimization: fundamentals and evolutionary methods},
+  author  = {Emmerich, Michael T. M. and Deutz, Andr{\'e} H.},
+  journal = {Natural Computing},
+  volume  = {17},
+  number  = {3},
+  pages   = {585--609},
+  year    = {2018},
+  doi     = {10.1007/s11047-018-9685-y},
+  note    = {Listed in moo.txt's SOURCES -- good Section 2 background reference for MOO fundamentals (Pareto dominance, hypervolume, etc.) alongside the classical-MOEA papers above.}
+}
+
+@article{zheng2025weakparetoboundary,
+  title   = {Weak Pareto Boundary: The Achilles' Heel of Evolutionary Multi-Objective Optimization},
+  author  = {Zheng, Ruihao and Deng, Jingda and Wang, Zhenkun},
+  year    = {2025},
+  eprint  = {2505.13854},
+  archivePrefix = {arXiv},
+  note    = {Listed in moo.txt's SOURCES alongside the weak-constraint-Pareto-dominance paper -- a limitations/critical-analysis-section candidate (Section 5) about a structural weakness in Pareto-dominance-based EMO generally.}
+}
+
+@article{hanne2025review,
+  title   = {A Review of the Evolution of Multi-Objective Evolutionary Algorithms},
+  author  = {Hanne, Thomas and Moghaddam, Mostafa Jabbari},
+  journal = {Computers, Materials \& Continua},
+  volume  = {85},
+  number  = {3},
+  pages   = {4203--4236},
+  year    = {2025},
+  note    = {Listed in moo.txt's SOURCES -- general MOEA historical-evolution review, background/Section 2 support alongside emmerich2018tutorial.}
+}
+
+@article{asghariilani2025pmedm,
+  title   = {Multi-objective Evolutionary Algorithms (MOEAs) in PMEDM -- A Comparative Study in Pareto Frontier},
+  author  = {Asghari Ilani, Mohsen and Banad, Yaser Mike},
+  year    = {2025},
+  eprint  = {2509.01775},
+  archivePrefix = {arXiv},
+  note    = {TODO: web search returned an abstract about ML regression models (XGBoost/AdaBoost/DNN) for EDM manufacturing, which reads inconsistent with the MOEA/Pareto-frontier title -- verify the actual paper content before citing anything specific from it. Listed in moo.txt's SOURCES as a peripheral applied comparative study.}
+}
+
+@article{doerr2026paretoneural,
+  title   = {From Pareto to Neural: A Mathematical Survey of Multi-Objective Optimization Algorithms---With Applications to Software Testing},
+  author  = {TODO},
+  journal = {Mathematics},
+  volume  = {14},
+  number  = {15},
+  pages   = {2694},
+  year    = {2026},
+  doi     = {10.3390/math14152694},
+  note    = {TODO: author names not found via web search -- verify against the paper before citing. Proposes a 5-level taxonomy (Classical MOEA -> ML-Guided -> RL-Driven -> LLM-Driven -> Hybrid Neuro-Evolutionary) surveying 120+ approaches (moo.txt Section 5) -- context for where the field is moving past this project's current scope, not a near-term implementation target.}
+}
+
+% =======================================================================
+% (7) QUANTUM-CIRCUIT-OPTIMIZATION-EXTENSION LITERATURE, from logs.txt's
+% "CANDIDATE PIPELINE EXTENSIONS FROM RELATED WORK" (chronological)
+% =======================================================================
+
+@article{hua2022crosstalk,
+  title   = {A Synergistic Compilation Workflow for Tackling Crosstalk in Quantum Machines},
+  author  = {Hua, Fei and Jin, Yuwei and Li, Ang and Chen, Yanhao and Zhang, Chi and Hayes, Ari and Gao, Hang and Zhang, Eddy Z.},
+  year    = {2022},
+  eprint  = {2207.05751},
+  archivePrefix = {arXiv},
+  note    = {Noise/crosstalk-aware objective reference, see logs.txt. Confirmed via web search 2026-09-10 -- v1 was titled "CQC: A Crosstalk-Aware Quantum Program Compilation Framework"; later versions retitled and (per search) added co-authors (Liu, Wang, Stein, Guo, Huang) -- verify final author list against the paper before citing.}
+}
+
+@article{fu2022shadow,
+  title   = {Scalable and Flexible Classical Shadow Tomography with Tensor Networks},
+  author  = {Fu, Ge and Zhu, Hai-Long and Chen, Wen-Bo and Wu, Jian and Zhou, Ding-Fu and Fan, Heng and Yin, Zhang-Qi},
+  journal = {Quantum},
+  year    = {2023},
+  eprint  = {2209.02093},
+  archivePrefix = {arXiv},
+  note    = {TODO: author list from web search may not be exact/complete -- verify against the paper before citing. Classical-shadow / tensor-network fidelity estimation reference, see logs.txt. Confirmed venue via web search 2026-09-10 (published in Quantum, 2023-06-01).}
+}
+
+@article{riu2023rlzx,
+  title   = {Reinforcement Learning Based Quantum Circuit Optimization via ZX-Calculus},
+  author  = {Riu, Jordi and Nogu{\'e}, Jan and Vilaplana, Gerard and Garcia-Saez, Artur and Estarellas, Marta P.},
+  journal = {Quantum},
+  year    = {2025},
+  eprint  = {2312.11597},
+  archivePrefix = {arXiv},
+  note    = {RL + ZX-calculus compression reference, see logs.txt. Confirmed via web search 2026-09-10 (submitted 2023-12-18, published in Quantum 2025-05-28).}
+}
+
+@inproceedings{kolle2025mutation,
+  title     = {Evaluating Mutation Techniques in Genetic Algorithm-Based Quantum Circuit Synthesis},
+  author    = {K{\"o}lle, Michael and Bintener, Tom and Zorn, Maximilian and Stenzel, Gerhard and S{\"u}nkel, Leo and Gabor, Thomas and Linnhoff-Popien, Claudia},
+  booktitle = {Proceedings of the Genetic and Evolutionary Computation Conference (GECCO 2025)},
+  year      = {2025},
+  eprint    = {2504.06413},
+  archivePrefix = {arXiv},
+  doi       = {10.1145/3712256.3726402},
+  note      = {Mutation-operator ablation reference, see logs.txt. Confirmed via web search 2026-09-10 (GECCO 2025).}
+}
+
+@inproceedings{sunkel2025hybrid,
+  title     = {Quantum Circuit Construction and Optimization through Hybrid Evolutionary Algorithms},
+  author    = {S{\"u}nkel, Leo and Altmann, Philipp and K{\"o}lle, Michael and Stenzel, Gerhard and Gabor, Thomas and Linnhoff-Popien, Claudia},
+  booktitle = {Proceedings of the Genetic and Evolutionary Computation Conference (GECCO 2025)},
+  year      = {2025},
+  eprint    = {2504.17561},
+  archivePrefix = {arXiv},
+  doi       = {10.1145/3712256.3726392},
+  note      = {Pure-GA vs.\ hybrid-GA+LAS reference, see logs.txt. Confirmed via web search 2026-09-10 (GECCO 2025) -- directly analogous to this project's hybrid_las ablation.}
+}
+
+@article{arxiv2505.09036,
+  title   = {Hardware-aware Compilation for Chip-to-Chip Coupler-Connected Modular Quantum Systems},
+  author  = {TODO},
+  year    = {2025},
+  eprint  = {2505.09036},
+  archivePrefix = {arXiv},
+  note    = {TODO: author list not found via web search -- verify against the paper (CCMap framework) before citing. Noise/crosstalk-aware objective reference, see logs.txt. Title confirmed via web search 2026-09-10.}
+}
+
+@article{sweeney2025hypergraph,
+  title         = {Dynamic Hypergraph Partitioning of Quantum Circuits with Hybrid Execution},
+  author        = {Sweeney, Shane and Guha, Krishnendu},
   year          = {2025},
   eprint        = {2506.09963},
   archivePrefix = {arXiv},
-  note          = {hyperedge-aware partitioning reference, see logs.txt}
-}
-
-@misc{arxiv2209.02093,
-  title         = {TODO: verify exact title},
-  author        = {TODO},
-  year          = {2022},
-  eprint        = {2209.02093},
-  archivePrefix = {arXiv},
-  note          = {classical-shadow / tensor-network fidelity estimation reference, see logs.txt}
-}
-
-@misc{arxiv2312.11597,
-  title         = {TODO: verify exact title},
-  author        = {TODO},
-  year          = {2023},
-  eprint        = {2312.11597},
-  archivePrefix = {arXiv},
-  note          = {RL + ZX-calculus compression reference, see logs.txt}
-}
-
-@misc{arxiv2207.05751,
-  title         = {TODO: verify exact title},
-  author        = {TODO},
-  year          = {2022},
-  eprint        = {2207.05751},
-  archivePrefix = {arXiv},
-  note          = {noise/crosstalk-aware objective reference, see logs.txt}
-}
-
-@misc{arxiv2505.09036,
-  title         = {TODO: verify exact title},
-  author        = {TODO},
-  year          = {2025},
-  eprint        = {2505.09036},
-  archivePrefix = {arXiv},
-  note          = {noise/crosstalk-aware objective reference, see logs.txt}
+  note          = {Hyperedge-aware partitioning reference, see logs.txt. Confirmed via web search 2026-09-10.}
 }
