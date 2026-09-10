@@ -11,14 +11,16 @@ scope here.
 =====================================================================
 LITERATURE
 =====================================================================
-Full literature list (48 entries) lives in paper_survey/references.bib,
+Full literature list (49 entries) lives in paper_survey/references.bib,
 each entry's own `note` field carrying its role/section mapping and any
 TODOs -- not duplicated here. Sourced from Report1/, moo.txt ("future
 work" MOO-algorithm landscape), and web search (classical-MOEA/QIEA-MOO
-fills), all 2026-09-10; sorted per the bib file's own header comment
-(foundation paper -> Adrian Florea's papers, grouped -> core QIEA-MOO ->
-motivation-only -> classical MOEA baselines -> moo.txt landscape ->
-quantum-circuit-optimization extensions).
+fills, plus moga2025rlmicrogrid added 2026-09-11, another Adrian Florea
+paper -- RL energy management in microgrids, same sustainability-
+motivation role as banciu2026aiot); sorted per the bib file's own header
+comment (foundation paper -> Adrian Florea's papers, grouped -> core
+QIEA-MOO -> motivation-only -> classical MOEA baselines -> moo.txt
+landscape -> quantum-circuit-optimization extensions).
 
 Load-bearing points not obvious from the bib alone:
 - ghlib2026scalable is THE foundational paper this project's pipeline
@@ -27,12 +29,14 @@ Load-bearing points not obvious from the bib alone:
   others.
 - gilea2026waste (user's own first paper) has an unconfirmed venue/DOI --
   ask the user before citing with a venue.
-- banciu2026aiot and sai2026generative are motivation-only (Section 1
-  energy-efficiency framing) -- keep out of Sections 2-5.
+- banciu2026aiot, moga2025rlmicrogrid, and sai2026generative are
+  motivation-only (Section 1 energy-efficiency framing) -- keep out of
+  Sections 2-5.
 
-None of this has been reviewed for actual citation-worthiness in the
-final paper text yet (sections/*.tex are still empty skeletons) -- treat
-the bib as a candidate pool, not a finalized bibliography.
+Sections 1-2 (Introduction, Background) are drafted as of 2026-09-10 and
+confirmed rendering correctly in Overleaf; Sections 3-8 are still empty
+skeletons. Treat the bib as a candidate pool for the undrafted sections,
+not a finalized bibliography.
 
 =====================================================================
 PROPOSED STRUCTURE
