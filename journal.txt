@@ -9,11 +9,35 @@ and the ablations tracked in logs.txt, is planned for later and is out of
 scope here.
 
 =====================================================================
+LITERATURE FROM Report1/ (added 2026-09-10; full bib data in
+paper_survey/references.bib -- this is just the role/section mapping)
+=====================================================================
+- ghlib2026scalable -- THE foundational paper (base NSGA-II + block-
+  partitioned fidelity approach this project's pipeline implements and
+  extends with NSGA-III/SMS-EMOA). Most important citation; Section 6
+  case study must be framed as an extension of this paper, not one
+  illustrative example among others.
+- gilea2026waste -- user's own first paper (QIEA on a real-world TSP).
+  Self-citation / Section 3 taxonomy example.
+- rehman2025evolutionary -- QiEA-vs-QEA terminology split. Sections 2-3.
+- olvera2023continuous -- NSGA-II vs. QIEA on continuous MOPs. Core
+  Sections 2/4/5 reference.
+- vivek2025fss -- QIEA survey (feature subset selection, not MOO). Use
+  for Section 3 (rotation-gate taxonomy) only, not MOO-specific results.
+- banciu2026aiot, sai2026generative -- MOTIVATION-ONLY citations (Section
+  1): ground the energy-efficiency/sustainability rationale for why
+  shallower/cheaper circuits matter (classical + NISQ compute cost).
+  banciu2026aiot is co-authored by the user's supervisor (Adrian Florea).
+  Keep both out of Sections 2-5 (QIEA/MOO-technical scope).
+
+=====================================================================
 PROPOSED STRUCTURE
 =====================================================================
 
 1. Introduction
-   - Motivation for surveying QIEA-for-MOO.
+   - Motivation for surveying QIEA-for-MOO, including the energy-
+     efficiency/sustainability rationale (banciu2026aiot, sai2026generative
+     -- see "LITERATURE FROM Report1/" above).
    - Scope and inclusion criteria for the literature covered.
    - Contributions of this survey.
    - Paper organization.
@@ -43,9 +67,12 @@ PROPOSED STRUCTURE
      practices, scalability claims not empirically stress-tested.
 
 6. Case study: block-partitioned quantum circuit optimization
-   - Illustrative use of the project's own pipeline (partition -> per-block
-     MOO -> inter-block injection -> compression) to ground abstract
-     taxonomy claims in a concrete worked example.
+   - Framed as a direct extension of ghlib2026scalable (see "LITERATURE
+     FROM Report1/" above) -- lead with what M1_finale/ adds on top of
+     that baseline (NSGA-III and SMS-EMOA as additional per-block
+     optimizers, plus the inter-block injection and compression stages)
+     before using the pipeline to ground abstract taxonomy claims in a
+     concrete worked example.
    - Candidate grounding points (pending re-verification on the fixed
      injection-stage code before being cited -- see logs.txt):
      - NSGA-II vs. SMS-EMOA vs. NSGA-III as a worked example of
