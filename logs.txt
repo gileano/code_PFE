@@ -35,6 +35,20 @@ optimization: Taxonomy, Features, and Limitations", see journal.txt) is also
 in progress, using this pipeline's results as an illustrative case study, not
 as that paper's primary evidence. The two papers are separate deliverables.
 
+PRIORITY SHIFT (2026-09-10): the survey paper is now the primary focus,
+ahead of the empirical-paper items below (roadmap items 1 and 8). This
+session: built out paper_survey/references.bib to 48 entries (literature
+from Report1/, moo.txt's MOO-algorithm landscape, and web search to fill
+previously-TODO stubs), sorted/grouped it (foundation paper first, then
+Adrian Florea's papers, then by topic), fixed a bibliography-style bug
+(plainnat alphabetized by author instead of citation order -- switched to
+unsrtnat) and three notes with unescaped underscores that broke LaTeX
+compilation, and drafted Sections 1-2 (Introduction, Background) of
+paper_survey/sections/ -- confirmed rendering correctly in Overleaf.
+Full detail in journal.txt, not repeated here. Next up: continue drafting
+Section 3 (Taxonomy) onward; the empirical-paper roadmap items below are
+paused, not abandoned.
+
 ROADMAP:
 1. OPEN: start empirical-paper results write-up.
 2. DONE: NSGA-III/SMS-EMOA scaling verified -- per-family fidelity-backend
@@ -56,11 +70,12 @@ ROADMAP:
 7. DONE: found and fixed two real injection-stage bugs (2026-09-04, see
    below); re-ran and re-verified the core 225-run algorithm-comparison
    baseline on the fixed code (2026-09-06).
-8. OPEN: items 5/6's ablations still need re-running on the fixed code at
-   every size before their findings can be re-cited. Scope not yet decided
-   (~900 configs / ~55-60h for a full re-run at every size; partial options
-   discussed 2026-09-06: n=8+12 only ~10-11h, or one phase at a time). Pick
-   up next session.
+8. OPEN, PAUSED (see PRIORITY SHIFT above): items 5/6's ablations still
+   need re-running on the fixed code at every size before their findings
+   can be re-cited. Scope not yet decided (~900 configs / ~55-60h for a
+   full re-run at every size; partial options discussed 2026-09-06:
+   n=8+12 only ~10-11h, or one phase at a time). Pick up once the survey
+   paper reaches a stable draft.
 
 =====================================================================
 CURRENT STATUS OF RESULTS (as of 2026-09-06) — READ THIS FIRST
@@ -255,16 +270,18 @@ all figures/tables directly from results_master.csv via generate_report.py.
 =====================================================================
 OPEN ITEMS (consolidated)
 =====================================================================
-- Decide and start the mutation-scheme/hybrid-LAS/sa-injection re-run scope
-  on the fixed injection code (roadmap item 8 above) -- next session's
-  first task.
-- Re-check the greedy-pass win-rate's "roughly monotonic" read at a matched
-  uniform size across all 5 families (only an uneven per-family ceiling
-  grid exists post-fix so far).
-- Start the empirical-paper results write-up (roadmap item 1) -- blocked on
-  the above re-runs for anything beyond the core algorithm-comparison
-  baseline.
-- Candidate next per-block algorithm: MOSA next up (see ROADMAP item 3).
+- Continue drafting the survey paper (paper_survey/sections/), starting
+  with Section 3 (Taxonomy) -- current main focus, see PRIORITY SHIFT
+  above and journal.txt for detail.
+- Paused until the survey reaches a stable draft: decide and start the
+  mutation-scheme/hybrid-LAS/sa-injection re-run scope on the fixed
+  injection code (roadmap item 8 above); re-check the greedy-pass
+  win-rate's "roughly monotonic" read at a matched uniform size across
+  all 5 families (only an uneven per-family ceiling grid exists post-fix
+  so far); start the empirical-paper results write-up (roadmap item 1,
+  blocked on the above re-runs for anything beyond the core
+  algorithm-comparison baseline); implement MOSA as the next per-block
+  algorithm (see ROADMAP item 3).
 - runs/ directory hygiene: superseded run backups are periodically moved to
   runs_backup_*/ (gitignored) rather than deleted; the pre-injection-fix
   full backup (runs_backup_pre_injection_blockpair_fix/, 4.6GB) was removed
