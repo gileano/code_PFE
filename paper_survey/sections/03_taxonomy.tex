@@ -1,22 +1,169 @@
 \section{Taxonomy}
 \label{sec:taxonomy}
 
-% TODO: introduce the classification axes below and how they were derived
-% from the surveyed literature (first draft, not yet validated against a
-% systematic literature pass -- see journal.txt).
+We organize the surveyed QIEA-for-MOO literature along five axes:
+representation scheme, quantum-inspired operator type,
+selection/diversity mechanism, hybridization with classical MOEAs, and
+application domain. The axes were derived inductively from recurring
+design choices across the literature identified in
+Section~\ref{sec:introduction:scope}, rather than imposed from an
+existing classification; they are a first pass, not yet checked against
+a fuller systematic literature review, and
+Section~\ref{sec:critical-analysis} revisits which surveyed methods are
+described in enough replicable detail to place along them with
+confidence. The five axes are not independent -- a method's operator
+type constrains which representations it can pair with, and its
+selection mechanism is often inherited wholesale from the classical MOEA
+it hybridizes with -- but each highlights a different design decision
+worth comparing across methods, and Section~\ref{sec:feature-comparison}
+uses them as the columns of its systematic comparison table.
 
 \subsection{Representation Scheme}
 \label{sec:taxonomy:representation}
 
+The representation axis asks what an individual encodes and how that
+encoding is turned into an evaluable candidate solution. The canonical
+QIEA representation is Han and Kim's Q-bit chromosome
+(Section~\ref{sec:background:quantum}, Eq.~\ref{eq:qubit}): a string of
+probability-amplitude pairs that is \emph{observed} into an ordinary
+binary string before fitness evaluation, while the amplitudes themselves
+carry the evolutionary search's memory across
+generations~\citep{han2002qea}. This representation transfers directly
+to combinatorial 0/1 problems -- \citet{kim2006qmea}'s QMEA observes a
+Q-bit chromosome into the binary decision vector of a multi-objective
+knapsack problem essentially unchanged from the single-objective case --
+but requires adaptation for continuous decision spaces, since there is
+no binary string to collapse to: \citet{olvera2023continuous} instead
+maps each Q-bit's rotation angle onto a real-valued decision variable
+through an interval mapping, replacing observation-as-measurement with
+observation-as-decoding. Feature subset selection sits at the
+combinatorial end of this spectrum and is, per
+\citet{vivek2025fss}'s survey, one of the domains where the Q-bit
+representation is used closest to its original binary-observation form,
+since a feature is naturally either included or excluded.
+
+Notably, this survey's own case study (Section~\ref{sec:case-study}) does
+not use a Q-bit representation at all: its individuals are classical,
+domain-specific chromosomes -- lists of gate tuples
+\texttt{(gate\_name, target\_qubit, ctrl\_qubit, angle)} -- evolved with
+ordinary (non-quantum-inspired) genetic operators. This is not an
+oversight but a reminder that the representation axis is orthogonal to
+whether a method's \emph{problem domain} happens to be quantum computing;
+we return to this distinction under application domain
+(Section~\ref{sec:taxonomy:application}).
+
 \subsection{Quantum-Inspired Operator Type}
 \label{sec:taxonomy:operator}
-% TODO: rotation gate vs. interference vs. entanglement-inspired operators.
+
+The operator axis asks which quantum-mechanical phenomenon a method
+draws its variation operator from. The dominant choice by far, across
+essentially every method surveyed, is the rotation-gate operator of
+Eq.~\ref{eq:qgate}, which nudges each Q-bit's amplitude pair toward
+whichever basis state a lookup table favors given the current
+individual's fitness relative to the best solution found so
+far~\citep{han2002qea,vivek2025fss}. Beyond the rotation gate, two
+further quantum phenomena recur, layered on top of rather than replacing
+it: superposition, exploited by \citet{guzel2022qnsga2}'s QNSGA-II to
+diversify sampling around the current population and reportedly speed
+convergence relative to a plain NSGA-II baseline, and entanglement,
+exploited by \citet{kumar2026eahqnsga2}'s EAH-QNSGA-II as an
+entanglement-driven crossover operator that couples pairs of individuals
+more tightly than independent single-point crossover would, combined
+with an adaptive (rather than fixed-table) quantum rotation step and a
+local-search refinement pass. Interference -- the third quantum
+phenomenon named alongside superposition and entanglement in
+Section~\ref{sec:introduction} as a general source of QIEA design
+inspiration -- has no method in the currently surveyed set built
+explicitly around it as a variation operator; whether this reflects a
+genuine gap in the field or simply this survey's present literature
+coverage is a question we flag for the critical analysis
+(Section~\ref{sec:critical-analysis}) rather than resolve here.
 
 \subsection{Selection and Diversity Mechanism}
 \label{sec:taxonomy:selection}
 
+The selection axis asks how a method ranks and prunes its population
+across objectives -- the same paradigms introduced as classical MOEA
+baselines in Section~\ref{sec:background:moea}: crowding-distance-based,
+reference-point-based, strength/density-based, decomposition-based, and
+hypervolume-driven. A clear pattern across the QIEA-MOO methods surveyed
+here is that this mechanism is almost always \emph{inherited unchanged}
+from a classical MOEA rather than redesigned: \citet{guzel2022qnsga2}'s
+QNSGA-II and \citet{kumar2026eahqnsga2}'s EAH-QNSGA-II both retain
+NSGA-II's crowding-distance selection verbatim, applying their
+quantum-inspired operators only to how new candidates are generated, not
+to how the population is ranked or pruned. \citet{kim2006qmea}'s earlier
+QMEA uses a simpler direct Pareto-dominance ranking, without the
+crowding-distance refinement NSGA-II adds on top of non-dominated
+sorting. Within the literature surveyed so far, no method pairs a Q-bit
+representation with reference-point-based (NSGA-III-style),
+strength/density-based (SPEA2-style), decomposition-based (MOEA/D-style),
+or hypervolume-driven (SMS-EMOA-style) selection -- an apparent
+concentration on the NSGA-II selection paradigm specifically that
+Section~\ref{sec:critical-analysis} treats as a candidate limitation
+rather than evidence that other selection paradigms are unsuitable.
+This project's own case study pairs all three of NSGA-II, NSGA-III, and
+SMS-EMOA selection with a classical (non-quantum-inspired) chromosome,
+so it demonstrates the reverse pairing is viable, but on the domain-
+specific representation side of the representation axis
+(Section~\ref{sec:taxonomy:representation}), not the Q-bit side --
+it does not by itself close this gap for QIEA-MOO specifically.
+
 \subsection{Hybridization with Classical MOEAs}
 \label{sec:taxonomy:hybridization}
 
+Closely related to the selection axis, the hybridization axis asks how
+tightly a method's quantum-inspired representation and operators are
+grafted onto an existing classical MOEA's overall algorithmic skeleton,
+versus how much of the surrounding framework is bespoke. On this axis,
+the methods surveyed cluster tightly around one design point: name and
+frame themselves as an explicit variant of a single classical MOEA --
+almost always NSGA-II -- with the Q-bit representation and one or two
+quantum-inspired operators substituted into the generation step, while
+the outer non-dominated-sorting-plus-crowding-distance loop is left
+otherwise intact (\citet{guzel2022qnsga2},
+\citet{kumar2026eahqnsga2}). \citet{olvera2023continuous} instead treats
+NSGA-II as an external comparison baseline for its own quantum-inspired
+continuous-space methods rather than a substrate hybridized directly, a
+weaker but still MOEA-referential form of the same pattern.
+\citet{kim2006qmea}'s QMEA, predating this NSGA-II-hybrid convention,
+builds its Pareto-ranking selection directly rather than citing a
+specific classical MOEA as its base. This survey's own case study
+(Section~\ref{sec:case-study}) sits at the opposite end of the same
+axis from the QIEA-MOO literature above: it hybridizes classical MOEAs
+(NSGA-II, NSGA-III, SMS-EMOA, used as unmodified per-block optimizers)
+with a domain-specific, non-quantum-inspired chromosome, rather than
+hybridizing a classical MOEA with a Q-bit representation -- the same
+"reverse pairing" noted under selection above, presented here as a
+structural contrast rather than as an example of QIEA-MOO hybridization
+itself.
+
 \subsection{Application Domain}
 \label{sec:taxonomy:application}
+
+The application-domain axis asks what kind of problem a method is
+evaluated on. Two largely disjoint clusters emerge across the literature
+surveyed so far. The first cluster comprises classical combinatorial or
+engineering optimization problems to which a quantum-\emph{inspired}
+algorithm is applied on ordinary classical hardware: multi-objective 0/1
+knapsack~\citep{kim2006qmea}, continuous benchmark
+problems~\citep{olvera2023continuous}, electric-vehicle
+charging-station siting~\citep{kumar2026eahqnsga2}, feature subset
+selection~\citep{vivek2025fss}, and -- as a self-citation and worked
+taxonomy example rather than a literature claim, given its
+still-unconfirmed venue (see the corresponding bibliography note) --
+waste-collection route optimization~\citep{gilea2026waste}. In every one
+of these, ``quantum'' describes the algorithm's inspiration, not the
+problem: the knapsack, the charging network, and the waste-collection
+routes are entirely classical objects. The second cluster is the
+opposite pairing: quantum circuit optimization, where the problem
+domain is genuinely quantum (a target unitary or circuit to reproduce)
+but the optimizer applied to it, in this survey's own case study and its
+foundational reference~\citep{ghlib2026scalable}, is an unmodified
+classical MOEA rather than a quantum-inspired one. We did not find a
+method in the literature surveyed so far that combines both --
+a Q-bit-represented, quantum-inspired MOEA applied to a quantum-computing
+problem domain such as circuit optimization or compilation. Whether that
+combination would offer any advantage over either cluster alone is an
+open question we return to as a candidate future direction in
+Section~\ref{sec:open-challenges}.

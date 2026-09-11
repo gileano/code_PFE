@@ -1,20 +1,162 @@
 \section{Feature Comparison}
 \label{sec:feature-comparison}
 
-% TODO: systematic comparison of surveyed methods across the taxonomy
-% categories from Section~\ref{sec:taxonomy}: representation, complexity,
-% scalability, convergence properties, benchmark problems used, reported
-% performance.
+Section~\ref{sec:taxonomy} introduced five classification axes and
+applied them narratively to the QIEA-for-MOO methods identified so far.
+This section applies the same axes systematically, one row per method,
+across two tables: Table~\ref{tab:feature-comparison-taxonomy} recaps
+representation, operator type, selection mechanism, and application
+domain (the four axes for which the notes gathered while building
+Section~\ref{sec:background}'s and Section~\ref{sec:taxonomy}'s
+citations already give a confident answer), and
+Table~\ref{tab:feature-comparison-performance} turns to complexity,
+scalability, convergence behavior, benchmarks, and reported performance
+-- the dimensions this survey's contributions
+(Section~\ref{sec:introduction:contributions}) also promise to cover.
+
+A methodological caveat applies to Table~\ref{tab:feature-comparison-performance}
+specifically, and is itself a preview of
+Section~\ref{sec:critical-analysis}'s reproducibility discussion: at
+this drafting stage, several of its cells reflect only what each
+method's title, abstract, and this survey's own literature-gathering
+notes state, not an independent re-derivation or reproduction of the
+original results. Cells that would require reading the full paper to
+state with confidence are marked accordingly rather than filled with an
+unverified number, following the same verify-before-citing discipline
+already applied to every entry in this survey's bibliography. That so
+many cells resist confident filling from title/abstract alone, for a
+comparison table that is supposed to be the survey's most concrete
+deliverable, is itself early evidence for a pattern
+Section~\ref{sec:critical-analysis} treats as a cross-cutting limitation:
+QIEA-MOO papers routinely under-report the complexity, scale, and
+statistical rigor of their own evaluations relative to what a reader
+would need to compare them fairly against one another.
 
 \begin{table}[htbp]
   \centering
-  \caption{Feature comparison of surveyed QIEA-MOO methods.}
-  \label{tab:feature-comparison}
-  \begin{tabular}{lllll}
+  \small
+  \caption{Representation, operator, selection, and domain summary of
+    the surveyed QIEA-MOO methods (recap of the taxonomy axes,
+    Section~\ref{sec:taxonomy}).}
+  \label{tab:feature-comparison-taxonomy}
+  \begin{adjustwidth}{-2cm}{-2cm}
+  \centering
+  \begin{tabularx}{\linewidth}{@{}p{2.1cm}XXXX@{}}
     \toprule
-    Method & Representation & Complexity & Scalability & Benchmarks \\
+    Method & Representation & Quantum-Inspired Operator(s) & Selection /
+    Diversity & Application Domain \\
     \midrule
-    % TODO: one row per surveyed method \\
+    QMEA~\citep{kim2006qmea} &
+      Q-bit chromosome, observed to a binary decision vector &
+      Rotation-gate update only &
+      Direct Pareto-dominance ranking (no crowding distance) &
+      Multi-objective 0/1 knapsack (combinatorial) \\
+    QNSGA-II~\citep{guzel2022qnsga2} &
+      Q-bit chromosome layered onto an NSGA-II individual &
+      Rotation gate + superposition-based sampling &
+      NSGA-II crowding distance, unmodified &
+      General-purpose multi-objective benchmarks (not itemized in
+      abstract-level notes) \\
+    Continuous QIEA-MOO~\citep{olvera2023continuous} &
+      Q-bit angle decoded to a real-valued decision variable &
+      Rotation gate &
+      Compared directly against NSGA-II as an external baseline &
+      Continuous-space multi-objective benchmark problems \\
+    EAH-QNSGA-II~\citep{kumar2026eahqnsga2} &
+      Q-bit chromosome layered onto an NSGA-II individual &
+      Adaptive rotation gate + entanglement-driven crossover +
+      post-hoc local search &
+      NSGA-II crowding distance, unmodified &
+      Electric-vehicle charging-station siting (real-world
+      infrastructure) \\
+    QIEA-MOO for waste collection~\citep{gilea2026waste} &
+      Not yet confirmed against full text (self-citation; venue/DOI
+      itself unconfirmed, see the bibliography note) &
+      Not yet confirmed against full text &
+      Not yet confirmed against full text &
+      Waste-collection vehicle routing (real-world logistics) \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
+  \end{adjustwidth}
 \end{table}
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Complexity, scalability, convergence, and reported
+    performance of the surveyed QIEA-MOO methods. Cells marked
+    ``not confirmed'' require reading the full paper, not just its
+    abstract, before any specific claim is cited (see the methodological
+    caveat above).}
+  \label{tab:feature-comparison-performance}
+  \begin{adjustwidth}{-2cm}{-2cm}
+  \centering
+  \begin{tabularx}{\linewidth}{@{}p{2.1cm}XXXX@{}}
+    \toprule
+    Method & Complexity & Scalability & Convergence & Reported
+    Performance \\
+    \midrule
+    QMEA~\citep{kim2006qmea} &
+      Not confirmed; direct Pareto ranking without NSGA-II's fast
+      non-dominated sort suggests a per-generation cost at or above
+      NSGA-II's, not below it &
+      Evaluated only on the knapsack instance sizes used in the
+      original paper; not confirmed &
+      Not confirmed &
+      Not confirmed beyond the paper's own framing as an early
+      QIEA-MOO proof of concept \\
+    QNSGA-II~\citep{guzel2022qnsga2} &
+      Inherits NSGA-II's per-generation non-dominated-sorting cost,
+      since selection is left unmodified (Section~\ref{sec:taxonomy:selection});
+      the superposition-sampling step adds low-order per-Q-bit overhead &
+      Not confirmed &
+      Reported to converge faster than a plain NSGA-II baseline; the
+      magnitude and statistical significance of that claim are not
+      independently confirmed here &
+      Improved convergence speed relative to NSGA-II (self-reported) \\
+    Continuous QIEA-MOO~\citep{olvera2023continuous} &
+      Not confirmed &
+      Not confirmed &
+      Directly compared against NSGA-II on shared continuous benchmark
+      problems, per the paper's own framing, but the direction and size
+      of any advantage are not confirmed here &
+      Not confirmed beyond the paper's framing as a head-to-head
+      comparison against NSGA-II \\
+    EAH-QNSGA-II~\citep{kumar2026eahqnsga2} &
+      Inherits NSGA-II's per-generation cost plus entanglement-crossover
+      and local-search overhead; the local-search pass is structurally
+      analogous to the hybrid-LAS refinement in this survey's own case
+      study (Section~\ref{sec:case-study:mutation}), applied after the
+      main GA loop rather than during it &
+      Evaluated on a single real-world EV-charging-siting case study;
+      scaling behavior beyond that instance not confirmed &
+      Not confirmed &
+      Reports improved siting trade-offs on its case study relative to
+      baseline planning approaches; specific metrics not confirmed here \\
+    QIEA-MOO for waste collection~\citep{gilea2026waste} &
+      Not confirmed &
+      Not confirmed &
+      Not confirmed &
+      Not confirmed \\
+    \bottomrule
+  \end{tabularx}
+  \end{adjustwidth}
+\end{table}
+
+Read across both tables, two patterns stand out even before the
+critical analysis proper (Section~\ref{sec:critical-analysis}). First,
+every method with a confirmed selection mechanism reuses NSGA-II's
+crowding distance unmodified (Table~\ref{tab:feature-comparison-taxonomy}),
+so any complexity or scalability claim that does exist is really a
+claim about NSGA-II's own well-studied $O(MN^2)$ non-dominated-sorting
+cost~\citep{deb2002nsga2} plus a low-order quantum-operator overhead --
+none of the surveyed methods has been evaluated against a
+selection mechanism whose asymptotic behavior differs enough from
+NSGA-II's to matter at scale. Second, reported performance in this
+literature is consistently self-comparative (a proposed method against
+a classical NSGA-II baseline, run once per paper) rather than
+cross-compared against the other QIEA-MOO methods in the same table --
+no two of the four confirmed methods above are benchmarked against each
+other anywhere in the sources gathered for this survey. Both
+observations recur as cross-cutting limitations in
+Section~\ref{sec:critical-analysis:cross-cutting}.
