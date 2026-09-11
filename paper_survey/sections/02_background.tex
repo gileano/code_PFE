@@ -67,8 +67,8 @@ true (or best-known) Pareto front requires quality indicators that
 capture both convergence and diversity, since neither alone is
 sufficient: a tightly clustered set of points on the front converges well
 but covers it poorly, while a widely spread set may cover a region no
-solution actually dominates. The indicators used throughout this survey
-and in the case study (Section~\ref{sec:case-study}) are:
+solution actually dominates. The indicators used throughout this
+survey are:
 \begin{itemize}
   \item \textbf{Hypervolume (HV)}: the volume of objective space
     dominated by a solution set relative to a fixed reference point --
@@ -81,10 +81,14 @@ and in the case study (Section~\ref{sec:case-study}) are:
     distance from each point on a reference (true or best-known) Pareto
     front to its nearest neighbor in the algorithm's output set,
     rewarding both convergence and coverage but requiring that reference
-    front to be known or well-approximated.
+    front to be known or well-approximated -- a requirement this
+    survey's own case study (Section~\ref{sec:case-study}) does not
+    meet for any of its benchmark circuit families, so IGD does not
+    itself recur there.
   \item \textbf{Spread and spacing}: measures of how evenly solutions are
     distributed along the approximated front, independent of how close
-    that front is to the true optimum.
+    that front is to the true optimum. Spread recurs in the case study
+    (Section~\ref{sec:case-study:algorithms}); spacing does not.
 \end{itemize}
 See \citet{emmerich2018tutorial} and \citet{hanne2025review} for a fuller
 treatment of these fundamentals and their formal definitions.
