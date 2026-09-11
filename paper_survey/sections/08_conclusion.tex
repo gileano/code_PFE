@@ -1,6 +1,60 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-% TODO: summarize contributions and restate the case study's role as
-% illustrative evidence, pointing to the planned empirical results paper
-% for full validation.
+Section~\ref{sec:introduction} opened with a gap: quantum-inspired
+evolutionary algorithms have been applied to multi-objective problems
+since at least \citet{kim2006qmea}'s quantum-inspired multi-objective
+knapsack algorithm, yet no prior survey had taxonomized or critically
+compared QIEA-for-MOO methods on their own terms, separately from
+single-objective QIEA work on one side and classical MOO on the other.
+This survey addressed that gap directly. Section~\ref{sec:taxonomy}
+organized the literature identified in
+Section~\ref{sec:introduction:scope} along five axes -- representation
+scheme, quantum-inspired operator type, selection and diversity
+mechanism, hybridization with classical MOEAs, and application domain.
+Section~\ref{sec:feature-comparison} applied those axes systematically
+across the surveyed methods, and in doing so surfaced a pattern the
+taxonomy alone had only implied: an overwhelming concentration on
+NSGA-II's crowding distance as the selection mechanism of choice, and a
+benchmarking culture in which every method is compared against that
+same classical baseline but never against its own QIEA-MOO siblings.
+Section~\ref{sec:critical-analysis} traced that pattern, and several
+others like it, into per-category weaknesses and three cross-cutting
+problems -- reproducibility gaps, weak benchmarking practices, and
+scalability claims rarely stress-tested -- that recur across the field
+regardless of which taxonomy category a given method falls into.
+
+Section~\ref{sec:case-study} grounded several of these abstract claims
+in a concrete worked example: this project's own block-partitioned
+quantum-circuit-optimization pipeline, itself a direct extension of
+\citet{ghlib2026scalable}'s scalable, block-partitioned NSGA-II
+framework. We want to restate plainly what that case study was and was
+not. It was illustrative -- a way to show, with a real,
+actively-maintained codebase, what a swappable selection mechanism
+looks like in practice, how an adaptive hypervolume computation can
+silently mislead a cross-algorithm comparison, and how easily a
+reproducibility gap can hide even inside careful, tested development.
+It was not this survey's primary evidence, and none of its numbers
+should be read as a benchmark result for QIEA-MOO methods themselves,
+which the case study's own pipeline does not use. Full empirical
+validation of that pipeline -- including the mutation-scheme and
+hybrid-local-search ablations Section~\ref{sec:case-study:mutation}
+explicitly left unresolved, pending re-verification on the pipeline's
+corrected code -- is the responsibility of a separate, forthcoming
+empirical results paper, not this one.
+
+Section~\ref{sec:open-challenges} closed by turning the critical
+analysis forward rather than only backward: untested pairings between
+the Q-bit representation and selection mechanisms beyond NSGA-II's,
+a still-undemonstrated interference-based operator, concrete extensions
+to the case-study pipeline drawn from adjacent quantum-computing
+literature, and the wider field's movement toward learned and
+neural-guided search that neither QIEA-MOO nor this survey's case study
+has yet engaged with. None of these close the gap this survey opened
+with; each narrows it. If the motivation from
+Section~\ref{sec:introduction} is taken seriously -- that a cheaper,
+shallower optimization process is not merely a performance metric but
+part of a broader case for energy-efficient
+computing~\citep{banciu2026aiot,moga2025rlmicrogrid} -- then QIEA-MOO's
+comparative youth as a subfield, documented throughout this survey, is
+better read as room to grow into than as a reason for caution.
