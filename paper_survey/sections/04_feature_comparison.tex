@@ -32,6 +32,31 @@ QIEA-MOO papers routinely under-report the complexity, scale, and
 statistical rigor of their own evaluations relative to what a reader
 would need to compare them fairly against one another.
 
+The application-domain column of Table~\ref{tab:feature-comparison-taxonomy}
+is worth pausing on before the tables themselves: every method in it
+targets a classical combinatorial or continuous problem -- a knapsack,
+a benchmark function, a charging network, a vehicle-routing instance --
+and none targets a quantum circuit. Figure~\ref{fig:qft-example} shows,
+for contrast, a small instance of exactly that other kind of object: a
+4-qubit quantum Fourier transform circuit, the sort of target this
+survey's own case study (Section~\ref{sec:case-study}) evolves a
+cheaper replacement for. No method surveyed in this section operates on
+an object like it -- a gap Section~\ref{sec:taxonomy:application}
+already named and Section~\ref{sec:critical-analysis:per-category}
+returns to.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\linewidth]{figures/qft_example.png}
+  \caption{A 4-qubit quantum Fourier transform circuit ($H$, controlled
+    phase rotations, and a final \texttt{SWAP} layer), drawn directly
+    from this survey's own case-study pipeline's circuit generator
+    (Section~\ref{sec:case-study:pipeline}). Shown here purely for
+    contrast with the table below: none of the QIEA-MOO methods
+    surveyed in this section target an object like it.}
+  \label{fig:qft-example}
+\end{figure}
+
 \begin{table}[htbp]
   \centering
   \small

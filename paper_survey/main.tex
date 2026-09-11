@@ -6,10 +6,15 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{array}
 \usepackage{changepage}
 \usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage[numbers,sort&compress]{natbib}
+
+% Centered, text-wrapping tabularx column, used to keep wide comparison
+% tables exactly \textwidth-aligned instead of overflowing the margin.
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
 
 \title{State-of-the-art and Critical Analysis of Quantum-Inspired\\
 Evolutionary Algorithms for Multi-Objective Optimization:\\

@@ -1,41 +1,299 @@
 \section{Case Study: Block-Partitioned Quantum Circuit Optimization}
 \label{sec:case-study}
 
-% TODO: illustrative use of the project's own pipeline (partition ->
-% per-block MOO -> inter-block injection -> compression, see
-% M1\_finale/final\_m1\_script.py) to ground abstract taxonomy claims in a
-% concrete worked example. Framed explicitly as illustrative, not as this
-% paper's primary evidence -- full empirical validation is deferred to the
-% planned separate empirical results paper.
-%
-% IMPORTANT: any number cited here must be re-verified on the
-% post-2026-09-04 injection-stage-bug-fix codebase before being written
-% down -- see logs.txt's "CURRENT STATUS OF RESULTS" section. Do not copy
-% pre-fix figures into this section.
+This section grounds several of the preceding sections' more abstract
+taxonomy and critical-analysis claims in a concrete worked example: this
+project's own block-partitioned quantum-circuit-optimization pipeline,
+itself a direct extension of \citet{ghlib2026scalable}'s scalable,
+block-partitioned NSGA-II framework, adding NSGA-III and SMS-EMOA as
+alternative per-block optimizers on top of it. As stated in
+Section~\ref{sec:introduction}, the case study is illustrative, not this
+survey's primary evidence -- full empirical validation of the pipeline,
+including the ablations Sections~\ref{sec:case-study:mutation} and
+\ref{sec:case-study:hypervolume} discuss the status of, is the subject
+of a separate, forthcoming empirical results paper. Every number cited
+below has been re-verified on the pipeline's current code; where an
+ablation has not yet been re-run on that code, this section says so
+explicitly rather than citing a superseded figure, for reasons
+Section~\ref{sec:critical-analysis:cross-cutting} already anticipates
+in the abstract.
 
 \subsection{Pipeline Overview}
 \label{sec:case-study:pipeline}
-% TODO: brief description of the partition/optimize/inject/compress
-% pipeline for readers of the survey (not a full method section -- that
-% belongs to the separate empirical paper).
+
+The pipeline takes a target quantum circuit (or unitary), partitions its
+qubits into blocks via Louvain community detection on a qubit-interaction
+graph, evolves a cheaper per-block replacement circuit with a pluggable
+multi-objective optimizer, and reassembles the blocks into a global
+circuit. Concretely, it runs in six stages: (1) \emph{partitioning},
+which also extracts the gates that cross block boundaries so they can be
+reinjected later; (2) \emph{sub-circuit extraction}, pulling each block
+into a self-contained, locally reindexed circuit; (3) a \emph{fidelity
+metric} comparing the recomposed circuit against the target -- exact
+below a qubit-count threshold, Monte-Carlo-approximate above it, since
+exact fidelity computation is intractable much beyond roughly a dozen
+qubits; (4) \emph{intra-block optimization}, where a multi-objective
+genetic algorithm evolves each block's replacement circuit to jointly
+maximize fidelity and minimize depth and gate cost; (5) \emph{inter-block
+gate injection}, re-adding cross-block entanglement that block-local
+optimization necessarily loses; and (6) \emph{compression}, a mix of
+hand-rolled and standard circuit-simplification passes applied to the
+final result. Two of these stages recur through the rest of this
+section: stage (4), where NSGA-II, NSGA-III, and SMS-EMOA are
+interchangeable per-block optimizers (Section~\ref{sec:case-study:algorithms}),
+and stage (5), where a real correctness bug was found and fixed partway
+through this project's own empirical work. That bug -- gate injection
+silently considering only one pair of blocks out of every partition,
+and a barrier-counting error that inflated how many gates a partition
+appeared to cross -- had a confirmed, circuit- and seed-dependent impact
+on final fidelity once fixed, large enough that every quantitative
+pipeline result computed before the fix is treated as superseded. It is
+mentioned here, rather than left as an implementation footnote, because
+it is itself a concrete instance of the reproducibility-gap problem
+Section~\ref{sec:critical-analysis:cross-cutting} raises about the wider
+QIEA-MOO literature: this bug persisted, undetected, through several
+weeks of active, tested development on a small, single-team codebase,
+which is a considerably more favorable setting for catching it than the
+independently authored, rarely-shared-code literature that section
+discusses.
+
+Figure~\ref{fig:weak-random-example} shows a small instance of one of
+the pipeline's five benchmark circuit families,
+\texttt{weak\_random} -- deliberately sparse in its two-qubit gates and
+connectivity (most of its structure is single-qubit rotations, with
+only a handful of two-qubit gates connecting a few qubit pairs, and
+barriers marking generation layers) -- to make stage (1) concrete: it
+is exactly this kind of loosely-coupled qubit structure that a
+qubit-interaction graph and Louvain community detection can split into
+blocks with comparatively little entanglement crossing the cuts, which
+is what stage (5) then has to re-add.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.95\linewidth]{figures/weak_random_example.png}
+  \caption{A 6-qubit instance of the \texttt{weak\_random} benchmark
+    circuit family (Section~\ref{sec:case-study:pipeline}), drawn
+    directly from the pipeline's own circuit generator at a small
+    qubit count for legibility. Grey dashed lines mark generation-layer
+    barriers, not two-qubit gates; the only two-qubit gates present are
+    four controlled-$Z$ couplings. This instance's very low
+    connectivity budget allows three candidate qubit pairs
+    ($q_0$--$q_2$, $q_2$--$q_3$, $q_3$--$q_4$), and this particular
+    random seed's independent per-gate draw happened to pick the same
+    pair, $q_0$--$q_2$, all four times.}
+  \label{fig:weak-random-example}
+\end{figure}
 
 \subsection{NSGA-II vs.\ SMS-EMOA vs.\ NSGA-III as a Worked Example}
 \label{sec:case-study:algorithms}
-% TODO: use the three interchangeable per-block optimizers as a concrete
-% illustration of crowding-distance vs.\ hypervolume-driven vs.\
-% reference-point selection trade-offs (Section~\ref{sec:taxonomy:selection}).
+
+The pipeline's per-block optimizer is selected through a small registry
+of interchangeable functions sharing one call signature, which makes it
+a concrete demonstration that the taxonomy's selection axis
+(Section~\ref{sec:taxonomy:selection}) is a genuine, swappable design
+dimension rather than only an abstract classification: the same
+partitioning, fidelity metric, injection, and compression stages sit
+around whichever of NSGA-II's crowding-distance selection, SMS-EMOA's
+hypervolume-driven environmental selection, or NSGA-III's reference-point
+niching is plugged in underneath. This is also, incidentally, the
+reverse pairing already flagged in
+Sections~\ref{sec:taxonomy:hybridization} and
+\ref{sec:critical-analysis:per-category}: it demonstrates the same
+three selection paradigms interchanged around one representation, but a
+domain-specific, non-quantum-inspired one, not the Q-bit representation
+the surveyed QIEA-MOO literature has so far paired only with NSGA-II's
+crowding distance.
+
+Table~\ref{tab:case-study-algorithms} summarizes the 225-run core
+baseline re-verified on the fixed injection-stage code (five circuit
+families, each at its own qubit-count ceiling, five seeds per
+configuration, point mutation, no hybrid local search). NSGA-II reaches
+the highest mean final fidelity in 13 of the 15 circuit-by-size cells;
+NSGA-III wins one (\texttt{weak\_random} at $n{=}8$) and SMS-EMOA wins
+one (\texttt{qft} at $n{=}12$). This mirrors the general shape of an
+earlier, pre-fix comparison, but the two are not otherwise comparable,
+since the injection-stage fix changes how much fidelity the pipeline's
+later stages recover regardless of which per-block optimizer produced
+the starting point. On efficiency, upstream of the injection stage and
+therefore unaffected by that fix, NSGA-III's per-block optimization is
+cheaper in wall-clock time than NSGA-II's in 14 of the 15 cells --
+by roughly 1\% to 12\%, aggregating to about 4.5\% cheaper overall --
+with a single exception (\texttt{weak\_random} at its own $n{=}20$
+ceiling, where NSGA-III was about 2\% \emph{more} expensive). The
+direction is consistent with the efficiency gap being caused by the
+underlying evolutionary library's reference-point selection
+implementation defaulting to a cheaper non-dominated-sorting routine
+than the crowding-distance and hand-rolled hypervolume-driven selections
+use -- an implementation detail of this pipeline's current software
+stack, not a general claim that NSGA-III is more efficient than
+NSGA-II as algorithms. This distinction matters because an earlier
+measurement in this same project once suggested a much larger, roughly
+two-fold advantage for NSGA-III; closer, fresher re-measurement showed
+that figure to be a stale-versus-fresh timing artifact rather than a
+real effect, and it was retracted once the single-digit-percent figure
+above was confirmed on repeated measurement. That episode is a direct,
+self-inflicted instance of the single-run benchmarking weakness
+Section~\ref{sec:critical-analysis:cross-cutting} raises about the wider
+literature -- this project is not exempt from the risk it identifies in
+others, only better positioned to catch it once measured twice.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Per-block-optimizer comparison on the 225-run core baseline
+    (5 circuit families $\times$ each family's own qubit-count ceiling
+    $\times$ 5 seeds; point mutation, no hybrid local search,
+    stochastic injection). ``Cells won'' counts the circuit-by-size
+    cells (of 15) where that optimizer reached the highest mean
+    \texttt{fidelity\_final}. Fair hypervolume is defined in
+    Section~\ref{sec:case-study:hypervolume}.}
+  \label{tab:case-study-algorithms}
+  \begin{tabularx}{\textwidth}{@{}p{2.6cm}YYYY@{}}
+    \toprule
+    Per-block optimizer & Mean fidelity\_final & Cells won (/15) &
+    Mean block-opt.\ wall-clock (s) & Mean fair HV \\
+    \midrule
+    NSGA-II   & 0.135 & 13 & 42.78 & 0.815 \\
+    NSGA-III  & 0.120 & 1  & 40.85 & 0.763 \\
+    SMS-EMOA  & 0.108 & 1  & 43.88 & 0.808 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.6\linewidth]{figures/algorithm_fidelity.png}
+  \caption{Mean \texttt{fidelity\_final} by per-block optimizer, pooled
+    across all 15 circuit-by-size cells of
+    Table~\ref{tab:case-study-algorithms}.}
+  \label{fig:case-study-algorithm-fidelity}
+\end{figure}
 
 \subsection{No Universally-Best Mutation Operator}
 \label{sec:case-study:mutation}
-% TODO: the project's mutation-scheme ablation (point / swap\_add /
-% swap\_add\_delete) as a concrete instance of a taxonomy/limitations
-% claim. Pending re-run on the fixed injection-stage code.
+
+The pipeline exposes a second, independent design axis within each
+per-block optimizer: the mutation operator applied to a block's
+chromosome, with point mutation (fixed-length) and two
+insertion/deletion variants (variable-length) available across all
+three optimizers in Section~\ref{sec:case-study:algorithms}, together
+with an optional local-search refinement pass applied to the winning
+individual afterward. An ablation across these mutation schemes and the
+local-search option, at several problem sizes, was run and analyzed
+before the injection-stage bug described in
+Section~\ref{sec:case-study:pipeline} was found, and its headline
+finding -- that no single mutation operator dominates uniformly across
+problem scale -- has not yet been re-run on the fixed code. Because the
+injection-stage bug changes how much of the final circuit's fidelity
+this pipeline's later stages recover, and the local-search option's
+value is entangled with exactly that recovery, that pre-fix finding
+cannot be assumed to still hold and is deliberately not restated here as
+a current result, pending that re-run. We report this not as a gap in
+this section so much as a demonstration of the discipline
+Section~\ref{sec:critical-analysis:cross-cutting} argues the wider
+QIEA-MOO literature should apply more consistently: a finding computed
+on code later found to contain a real correctness bug is treated as
+provisional, not citable, until it is re-derived on the corrected code,
+even when -- as here -- re-running the ablation is a known, scoped, but
+not yet completed piece of future work.
 
 \subsection{Hypervolume Comparability Across Algorithms}
 \label{sec:case-study:hypervolume}
-% TODO: adaptive vs.\ fair/shared-reference hypervolume as an illustration
-% of the benchmarking-practice limitations raised in
-% Section~\ref{sec:critical-analysis:cross-cutting}. This finding is
-% structural (about how HV is computed), not tied to the injection-stage
-% bug fix, so it can be cited as-is -- see logs.txt's "HYPERVOLUME
-% COMPARABILITY ACROSS ALGORITHMS" section.
+
+A separate, purely methodological finding from this pipeline's own
+quality-indicator tooling illustrates the benchmarking-practice
+limitations raised in Section~\ref{sec:critical-analysis:cross-cutting}
+directly, and -- unlike Section~\ref{sec:case-study:mutation}'s
+ablation -- is structural rather than data-dependent, so it does not
+need to wait on any re-run to be cited. The pipeline's per-run
+hypervolume computation derives its reference point and normalization
+adaptively from that run's own final population, which is appropriate
+for tracking a single run's own convergence but not valid for ranking
+different algorithms or runs against each other, since the same
+absolute hypervolume value means something different depending on the
+population it was normalized against. The fix is to also record each
+run's Pareto front in raw, unnormalized units and, when comparing
+algorithms, pool all of their front points per block into one shared
+minimum/maximum normalization and one shared, fixed reference point
+before computing hypervolume.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Adaptive (per-run-normalized) vs.\ fair (shared-reference)
+    mean hypervolume, by per-block optimizer, at three scale slices of
+    the 225-run core baseline. Fair HV ranks the three optimizers
+    consistently across all three slices; adaptive HV does not rank
+    them consistently even against itself.}
+  \label{tab:case-study-hv}
+  \begin{tabularx}{\textwidth}{@{}p{3.4cm}YYY YYY@{}}
+    \toprule
+    & \multicolumn{3}{c}{Adaptive mean HV} & \multicolumn{3}{c}{Fair mean HV} \\
+    \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+    Scale slice & NSGA-II & NSGA-III & SMS-EMOA & NSGA-II & NSGA-III & SMS-EMOA \\
+    \midrule
+    All 5 families, all sizes pooled & 0.052 & 0.046 & 0.060 & 0.815 & 0.763 & 0.808 \\
+    All 5 families, $n{=}12$ (matched) & 0.050 & 0.045 & 0.054 & 0.812 & 0.736 & 0.808 \\
+    \texttt{qaoa\_maxcut} only, its own $n{=}16$ ceiling & 0.024 & 0.030 & 0.028 & 0.810 & 0.593 & 0.739 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/algorithm_hypervolume_adaptive.png}
+  \end{minipage}\hfill
+  \begin{minipage}{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/algorithm_hypervolume_fair.png}
+  \end{minipage}
+  \caption{The pooled-all-sizes row of Table~\ref{tab:case-study-hv},
+    shown visually: adaptive mean hypervolume (left, explicitly labeled
+    not comparable across algorithms) ranks SMS-EMOA highest, while
+    fair mean hypervolume (right) ranks NSGA-II highest and NSGA-III
+    lowest -- a visibly different ranking from the same underlying
+    Pareto fronts.}
+  \label{fig:case-study-hv-bars}
+\end{figure}
+
+Table~\ref{tab:case-study-hv} shows both
+computations, side by side, at three scale slices of the re-verified
+225-run core baseline. Adaptive mean HV ranks SMS-EMOA above NSGA-II
+above NSGA-III when pooling all sizes, but that ranking is not even
+stable against itself as the scale slice changes: at
+\texttt{qaoa\_maxcut}'s own $n{=}16$ ceiling, adaptive HV instead ranks
+NSGA-III above SMS-EMOA above NSGA-II -- the complete reverse order.
+Fair HV, by contrast, ranks NSGA-II above SMS-EMOA above NSGA-III
+consistently across all three slices, and NSGA-III's disadvantage under
+fair HV widens as problem size grows within a matched comparison (0.763
+pooled, 0.736 at the $n{=}12$ slice matched across all five families,
+0.593 at \texttt{qaoa\_maxcut}'s own $n{=}16$ ceiling) rather than
+narrowing. This is a direct, current demonstration of the risk the
+adaptive-versus-fair distinction warns about: an algorithm-comparison
+conclusion drawn from adaptive HV alone would not just be
+questionable in the abstract, it would flip depending on which slice of
+this pipeline's own data it was drawn from. The methodological point
+itself, unaffected by any of these specific numbers, is what is
+load-bearing: cross-algorithm hypervolume comparison requires a shared
+reference point, and an adaptive, per-run one is only valid for
+single-run convergence plots. A second,
+purely structural guarantee from the same tooling is that the optional
+local-search refinement pass mentioned in
+Section~\ref{sec:case-study:mutation} cannot affect the recorded Pareto
+front at all, by construction: the front is captured from the
+population before that refinement runs, and the refinement only
+modifies a copy of the winning individual afterward. Fair and adaptive
+hypervolume are therefore always identical between local-search on and
+off, at any problem size -- a claim about how the indicator is computed,
+not about any experimental outcome, and one this project has not
+attempted to unsettle by re-measurement because there is nothing in the
+fix above that could change it. One question Table~\ref{tab:case-study-hv}
+raises but does not answer -- why NSGA-III's front is not only smaller
+than NSGA-II's or SMS-EMOA's under the shared-reference comparison but
+increasingly so as problem size grows, a question about Deb and Jain's
+reference-point niching versus crowding-distance-based and
+hypervolume-driven diversity rather than about measurement artifacts --
+remains open, and we return to it as a candidate direction in
+Section~\ref{sec:open-challenges}.
