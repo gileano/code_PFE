@@ -8,3 +8,4 @@ runs/
 runs_backup_*/
 report/
 .pytest_cache/
+.idea/
