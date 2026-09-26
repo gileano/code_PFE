@@ -37,7 +37,9 @@
 % (grouped 2026-09-10 at user's request; ordered by theme -- the
 % waste-collection thread (banciu2025icstcc predecessor -> gilea2026waste
 % self-citation) first, then the sustainability/energy-motivation thread
-% (banciu2026aiot, moga2025rlmicrogrid) added 2026-09-10/11)
+% (banciu2026aiot, moga2025rlmicrogrid) added 2026-09-10/11, then the
+% MOO-frameworks/benchmarking thread (patrausanu2024frameworks ->
+% patrausanu2026thomae) added 2026-09-26)
 % =======================================================================
 
 % Companion/predecessor paper to gilea2026waste (cited as reference [1] in that
@@ -93,6 +95,44 @@
   pages   = {10696},
   year    = {2025},
   doi     = {10.3390/su172310696},
+}
+
+% Verified against the PDF 2026-09-26 (issue number 5 inferred from the MDPI
+% DOI pattern pr{vol}{issue}{article}). Same author group and FADSE PhD-thesis
+% thread as patrausanu2026thomae (its predecessor). Systematic review of MOEA
+% software frameworks (PlatEMO, pymoo, jMetal/jMetalPy, Evolver, FADSE):
+% algorithm/problem libraries, quality indicators, parallelization,
+% extensibility. Notes that algorithm implementations are "very rarely made
+% public" by their authors and argues for a common benchmarking platform --
+% cited in Section 5's "Reproducibility gaps" paragraph; also a
+% natural pointer for this project's own tooling (DEAP + pymoo).
+@article{patrausanu2024frameworks,
+  title   = {A Systematic Review of Multi-Objective Evolutionary Algorithms Optimization Frameworks},
+  author  = {P{\u{a}}tr{\u{a}}u{\c{s}}anu, Andrei and Florea, Adrian and Neghin{\u{a}}, Mihai and Dicoiu, Alina and Chi{\c{s}}, Radu},
+  journal = {Processes},
+  volume  = {12},
+  number  = {5},
+  pages   = {869},
+  year    = {2024},
+  doi     = {10.3390/pr12050869},
+}
+
+% Verified against the PDF 2026-09-26 (issue number 15 inferred from the MDPI
+% DOI pattern electronics{vol}{issue}{article}). MOO-benchmarking thread:
+% proposes discrete multidimensional Thomae-like functions as adversarial,
+% rugged benchmarks for MOEAs, arguing standard suites (ZDT/DTLZ/WFG/CEC) only
+% exhibit smooth input-output variation and that hypervolume may fail to
+% capture the resulting fragmented Pareto fronts. Cited in Section 5's
+% "Weak benchmarking practices" paragraph; could also fit Section 7.
+@article{patrausanu2026thomae,
+  title   = {A Systematic Method for Generating Discrete Multidimensional Thomae-like Functions},
+  author  = {P{\u{a}}tr{\u{a}}u{\c{s}}anu, Andrei and Florea, Adrian and Neghin{\u{a}}, Mihai and Chi{\c{s}}, Radu and Dicoiu, Alina},
+  journal = {Electronics},
+  volume  = {15},
+  number  = {15},
+  pages   = {3284},
+  year    = {2026},
+  doi     = {10.3390/electronics15153284},
 }
 
 % =======================================================================
@@ -423,15 +463,14 @@
   archivePrefix = {arXiv},
 }
 
-% TODO: author names not confirmed via web search (only institutional
-% affiliations found: Wuhan Second Ship Design and Research Institute; Xi'an
-% Polytechnic University) -- verify against the paper before citing. CMOEA-WA
+% Authors confirmed 2026-09-26 via the DOI's Crossref metadata (key renamed
+% from placeholder weakconstraintpareto2025). CMOEA-WA
 % algorithm; not directly applicable to this project's unconstrained objectives
 % today (moo.txt Section 1) -- revisit only if a future objective becomes a
 % hard feasibility constraint.
-@article{weakconstraintpareto2025,
+@article{guo2025weakconstraintpareto,
   title   = {A Constrained Multi-Objective Evolutionary Algorithm with Weak Constraint-Pareto Dominance and Angle Distance-Based Diversity Preservation},
-  author  = {TODO},
+  author  = {Guo, Jinhao and Shan, Yahui},
   journal = {Mathematics},
   volume  = {13},
   number  = {22},
@@ -581,14 +620,15 @@
   archivePrefix = {arXiv},
 }
 
-% TODO: author names not found via web search -- verify against the paper
-% before citing. Proposes a 5-level taxonomy (Classical MOEA -> ML-Guided ->
+% Authors confirmed 2026-09-26 via the DOI's Crossref metadata (key renamed
+% from a placeholder doerr2026paretoneural -- Doerr is not an author).
+% Proposes a 5-level taxonomy (Classical MOEA -> ML-Guided ->
 % RL-Driven -> LLM-Driven -> Hybrid Neuro-Evolutionary) surveying 120+
 % approaches (moo.txt Section 5) -- context for where the field is moving past
 % this project's current scope, not a near-term implementation target.
-@article{doerr2026paretoneural,
+@article{zheng2026paretoneural,
   title   = {From Pareto to Neural: A Mathematical Survey of Multi-Objective Optimization Algorithms---With Applications to Software Testing},
-  author  = {TODO},
+  author  = {Zheng, Xufan and Rasheed, Waqas},
   journal = {Mathematics},
   volume  = {14},
   number  = {15},
@@ -663,12 +703,13 @@
   doi       = {10.1145/3712256.3726392},
 }
 
-% TODO: author list not found via web search -- verify against the paper (CCMap
-% framework) before citing. Noise/crosstalk-aware objective reference. Title
-% confirmed via web search 2026-09-10.
-@article{arxiv2505.09036,
+% Authors confirmed 2026-09-26 via arXiv abstract page and DataCite DOI
+% metadata (key renamed from placeholder arxiv2505.09036); no journal/conference
+% version listed as of that date. CCMap framework. Noise/crosstalk-aware
+% objective reference.
+@article{du2025ccmap,
   title   = {Hardware-aware Compilation for Chip-to-Chip Coupler-Connected Modular Quantum Systems},
-  author  = {TODO},
+  author  = {Du, Zefan and Kan, Shuwen and Stein, Samuel and Liang, Zhiding and Li, Ang and Mao, Ying},
   year    = {2025},
   eprint  = {2505.09036},
   archivePrefix = {arXiv},

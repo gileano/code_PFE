@@ -118,7 +118,13 @@ a limitation of how this survey gathered its literature -- it reflects
 that the information needed to independently reproduce or even
 carefully re-derive a QIEA-MOO paper's headline result is often not
 recoverable without the full paper and, in many cases, code or data
-that may never have been released. This survey's own case study offers
+that may never have been released. This gap is not specific to
+QIEA-MOO: \citet{patrausanu2024frameworks}'s systematic review of MOEA
+software frameworks (PlatEMO, pymoo, jMetal, Evolver, and FADSE) notes
+that authors very rarely make their algorithms' implementations public,
+and argues for common, extensible platforms that would both expose those
+implementation details and give the field a shared basis for
+benchmarking. This survey's own case study offers
 a cautionary illustration of how easily such gaps can hide even inside
 a codebase under active, careful maintenance: two real bugs in its
 inter-block gate injection stage silently distorted every quantitative
@@ -138,7 +144,17 @@ against NSGA-II, never against a sibling QIEA-MOO method -- is itself an
 instance of a broader benchmarking weakness: comparisons in this
 literature are run once, against one baseline, on one problem or
 instance, without the kind of multi-seed statistical treatment that
-would distinguish a genuine improvement from run-to-run variance. This
+would distinguish a genuine improvement from run-to-run variance. Even
+moving to the standard shared MOEA benchmark suites would not by itself
+close this gap: \citet{patrausanu2026thomae} observe that ZDT, DTLZ,
+WFG, and CEC all exhibit only smooth variation between a solution's
+inputs and its objective values, and propose discrete multidimensional
+Thomae-like functions as adversarial, deliberately rugged benchmarks
+in which small input changes can produce large output jumps. They
+further caution that such landscapes are likely to yield fragmented
+Pareto fronts that standard quality indicators such as hypervolume may
+fail to characterize adequately -- a benchmark-design gap that applies
+to the classical baselines and QIEA-MOO methods alike. This
 survey's own case study underscores why that treatment matters: an
 early quantitative finding in the project's own results, later
 retracted, turned out to be a measurement artifact rather than a real

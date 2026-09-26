@@ -11,7 +11,7 @@ scope here.
 =====================================================================
 LITERATURE
 =====================================================================
-Full literature list (49 entries) lives in paper_survey/references.bib,
+Full literature list (51 entries) lives in paper_survey/references.bib,
 each entry's own `note` field carrying its role/section mapping and any
 TODOs -- not duplicated here. Sourced from Report1/, moo.txt ("future
 work" MOO-algorithm landscape), and web search (classical-MOEA/QIEA-MOO
