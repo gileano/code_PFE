@@ -13,9 +13,13 @@ itself exposes once the methods are compared against each other.
 combinatorial 0/1 problems~\citep{kim2006qmea} but has no single
 standard decoding convention for continuous decision spaces: where a
 binary problem simply observes each Q-bit, \citet{olvera2023continuous}
-must instead choose a specific interval mapping from rotation angle to
-real value, a design decision with no equivalent in the original
-formalism~\citep{han2002qea} to constrain it. Two papers that both
+must additionally decode each observed binary string into
+floating-point values, fixing how many Q-bits represent each variable
+-- a design decision with no equivalent in the original
+formalism~\citep{han2002qea} to constrain it, and one with a measurable
+cost: the same study found the quantum-inspired variants' performance
+degrading as the number of decision variables, and so of Q-bits,
+grew. Two papers that both
 describe themselves as using ``the Q-bit representation'' may therefore
 be doing meaningfully different things once a continuous problem is
 involved, which weakens how much a shared representation label actually
@@ -80,11 +84,14 @@ Table~\ref{tab:feature-comparison-performance}
 (Section~\ref{sec:feature-comparison}), every reported performance claim
 in the surveyed set compares the proposed method against a classical
 NSGA-II baseline, and no two of the surveyed QIEA-MOO methods are
-benchmarked against each other anywhere in the sources gathered for this
-survey. A field in which every new method is shown to beat the same
-baseline, but never compared against its own siblings, cannot yet
-support a claim about which hybridization choice is preferable within
-the QIEA-MOO cluster itself.
+benchmarked against each other in the sources gathered for this
+survey; only \citet{olvera2023continuous} compare several QIEA-MOO
+variants side by side, and those are variants the authors themselves
+adapted, not independently published competitors. A field in which new
+methods are routinely shown to beat the same baseline, but rarely
+compared against their own siblings, cannot yet support a claim about
+which hybridization choice is preferable within the QIEA-MOO cluster
+itself.
 
 \textbf{Application domain.} The application domains covered split into
 two disjoint clusters with no overlap
@@ -94,13 +101,15 @@ problems~\citep{kim2006qmea,kumar2026eahqnsga2,gilea2026waste}, and
 classical (non-quantum-inspired) algorithms applied to a genuinely
 quantum problem domain, as in this survey's own case study
 (Section~\ref{sec:case-study}) and its foundational
-reference~\citep{ghlib2026scalable}. Within the first cluster, each
-paper additionally validates on a single problem or a single real-world
+reference~\citep{ghlib2026scalable}. Within the first cluster, most
+papers additionally validate on a single problem or a single real-world
 instance -- one knapsack benchmark, one EV-charging-siting case study,
 one waste-collection routing scenario -- rather than a shared benchmark
-suite spanning multiple problem sizes or domains, so claims of general
-applicability rest on a narrower evidentiary base than the breadth of
-domains represented across the cluster as a whole might suggest.
+suite spanning multiple problem sizes or domains; the continuous-space
+study of \citet{olvera2023continuous}, with its 16-problem standard
+suite, is the exception. Claims of general applicability therefore rest
+on a narrower evidentiary base than the breadth of domains represented
+across the cluster as a whole might suggest.
 
 \subsection{Cross-Cutting Open Problems}
 \label{sec:critical-analysis:cross-cutting}
@@ -142,11 +151,13 @@ rule out, not easier.
 already noted under hybridization above -- every method benchmarked
 against NSGA-II, never against a sibling QIEA-MOO method -- is itself an
 instance of a broader benchmarking weakness: comparisons in this
-literature are run once, against one baseline, on one problem or
+literature are typically run against one baseline, on one problem or
 instance, without the kind of multi-seed statistical treatment that
-would distinguish a genuine improvement from run-to-run variance. Even
-moving to the standard shared MOEA benchmark suites would not by itself
-close this gap: \citet{patrausanu2026thomae} observe that ZDT, DTLZ,
+would distinguish a genuine improvement from run-to-run variance.
+\citet{olvera2023continuous}'s 30-run, hypothesis-tested comparison on
+a standard benchmark suite shows the more rigorous alternative is
+feasible within this literature. Even that, however, would not by
+itself close the gap: \citet{patrausanu2026thomae} observe that ZDT, DTLZ,
 WFG, and CEC all exhibit only smooth variation between a solution's
 inputs and its objective values, and propose discrete multidimensional
 Thomae-like functions as adversarial, deliberately rugged benchmarks
@@ -171,12 +182,16 @@ postdate nearly every QIEA-MOO paper surveyed here, so those papers'
 original empirical comparisons against NSGA-II could not have accounted
 for guarantees that did not yet exist.
 
-\textbf{Scalability claims rarely stress-tested.} Every application
-example in Section~\ref{sec:critical-analysis:per-category}'s
-application-domain discussion is evaluated at a single scale rather than
-across a size sweep, so a method's reported performance says little
-about how it would behave on a substantially larger instance of the same
-problem. This survey's own case study again illustrates the point
+\textbf{Scalability claims rarely stress-tested.} The real-world
+application examples in Section~\ref{sec:critical-analysis:per-category}'s
+application-domain discussion are each evaluated at a single scale
+rather than across a size sweep, so a method's reported performance says
+little about how it would behave on a substantially larger instance of
+the same problem. Where problem size does vary, the signal is not
+reassuring: \citet{olvera2023continuous}'s quantum-inspired variants
+lost ground as the number of decision variables increased, which the
+authors attribute to the Q-bit representation's intrinsic uncertainty
+growing with the number of Q-bits. This survey's own case study again illustrates the point
 concretely, on the quantum-circuit-optimization side rather than the
 QIEA-MOO side: its own fidelity-estimation subsystem required distinct,
 per-circuit-family scaling fixes and qubit-count ceilings before it
@@ -224,9 +239,8 @@ Section~\ref{sec:background:moea} and every NSGA-II-hybridized QIEA-MOO
 method in Section~\ref{sec:taxonomy:hybridization} relies on has itself
 only recently been shown to have a structural weakness --
 \citet{zheng2025weakparetoboundary}'s ``weak Pareto boundary'' result --
-that postdates every one of the surveyed QIEA-MOO literature's own
-publication dates and so could not have been accounted for by any of
-it. Scalability claims in this field, in short, rest on baselines and
+that postdates nearly all of the surveyed QIEA-MOO literature and so
+could not have been accounted for by it. Scalability claims in this field, in short, rest on baselines and
 dominance relations whose own limits are still being discovered, on top
 of application-side evaluations that rarely test more than one problem
 scale to begin with.

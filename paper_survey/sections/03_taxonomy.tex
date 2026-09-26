@@ -32,11 +32,13 @@ generations~\citep{han2002qea}. This representation transfers directly
 to combinatorial 0/1 problems -- \citet{kim2006qmea}'s QMEA observes a
 Q-bit chromosome into the binary decision vector of a multi-objective
 knapsack problem essentially unchanged from the single-objective case --
-but requires adaptation for continuous decision spaces, since there is
-no binary string to collapse to: \citet{olvera2023continuous} instead
-maps each Q-bit's rotation angle onto a real-valued decision variable
-through an interval mapping, replacing observation-as-measurement with
-observation-as-decoding. Feature subset selection sits at the
+but requires adaptation for continuous decision spaces, where the
+decision vector is real-valued rather than binary:
+\citet{olvera2023continuous} keep observation-as-measurement unchanged
+but add an explicit decoding step after it, converting each observed
+binary string into floating-point decision variables before fitness
+evaluation -- so that the precision with which a real value can be
+represented is bounded by how many Q-bits are allotted to it. Feature subset selection sits at the
 combinatorial end of this spectrum and is, per
 \citet{vivek2025fss}'s survey, one of the domains where the Q-bit
 representation is used closest to its original binary-observation form,
@@ -90,7 +92,9 @@ hypervolume-driven. A clear pattern across the QIEA-MOO methods surveyed
 here is that this mechanism is almost always \emph{inherited unchanged}
 from a classical MOEA rather than redesigned: \citet{guzel2022qnsga2}'s
 QNSGA-II and \citet{kumar2026eahqnsga2}'s EAH-QNSGA-II both retain
-NSGA-II's crowding-distance selection verbatim, applying their
+NSGA-II's crowding-distance selection verbatim, as do the three
+continuous-space algorithms of \citet{olvera2023continuous} (each built
+on fast non-dominated sorting plus crowding distance), applying their
 quantum-inspired operators only to how new candidates are generated, not
 to how the population is ranked or pruned. \citet{kim2006qmea}'s earlier
 QMEA uses a simpler direct Pareto-dominance ranking, without the
@@ -122,10 +126,11 @@ almost always NSGA-II -- with the Q-bit representation and one or two
 quantum-inspired operators substituted into the generation step, while
 the outer non-dominated-sorting-plus-crowding-distance loop is left
 otherwise intact (\citet{guzel2022qnsga2},
-\citet{kumar2026eahqnsga2}). \citet{olvera2023continuous} instead treats
-NSGA-II as an external comparison baseline for its own quantum-inspired
-continuous-space methods rather than a substrate hybridized directly, a
-weaker but still MOEA-referential form of the same pattern.
+\citet{kumar2026eahqnsga2}). \citet{olvera2023continuous} follow the
+same pattern twice over: their proposed SQMEA is explicitly a
+quantum-inspired version of NSGA-II, and NSGA-II (in both binary- and
+floating-point-coded form) is also one of the classical baselines they
+compare against.
 \citet{kim2006qmea}'s QMEA, predating this NSGA-II-hybrid convention,
 builds its Pareto-ranking selection directly rather than citing a
 specific classical MOEA as its base. This survey's own case study
@@ -150,8 +155,7 @@ knapsack~\citep{kim2006qmea}, continuous benchmark
 problems~\citep{olvera2023continuous}, electric-vehicle
 charging-station siting~\citep{kumar2026eahqnsga2}, feature subset
 selection~\citep{vivek2025fss}, and -- as a self-citation and worked
-taxonomy example rather than a literature claim, given its
-still-unconfirmed venue (see the corresponding bibliography note) --
+taxonomy example rather than an independent literature claim --
 waste-collection route optimization~\citep{gilea2026waste}. In every one
 of these, ``quantum'' describes the algorithm's inspiration, not the
 problem: the knapsack, the charging network, and the waste-collection

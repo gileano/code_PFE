@@ -67,20 +67,22 @@ true (or best-known) Pareto front requires quality indicators that
 capture both convergence and diversity, since neither alone is
 sufficient: a tightly clustered set of points on the front converges well
 but covers it poorly, while a widely spread set may cover a region no
-solution actually dominates. The indicators used throughout this
-survey are:
+solution actually dominates. The indicators most relevant to this
+survey -- all among those commonly offered by MOEA software
+frameworks~\citep{patrausanu2024frameworks} -- are:
 \begin{itemize}
   \item \textbf{Hypervolume (HV)}: the volume of objective space
     dominated by a solution set relative to a fixed reference point --
-    the only indicator that is strictly monotonic with Pareto dominance
-    on its own, and the basis of hypervolume-driven selection in
+    the only known unary (single-set) indicator that is strictly
+    monotonic with Pareto dominance~\citep{zitzler2003performance}, and
+    the basis of hypervolume-driven selection in
     SMS-EMOA~\citep{beume2007smsemoa}. Its value is sensitive to the
     reference point and normalization used, a methodological detail
     Section~\ref{sec:case-study:hypervolume} returns to.
   \item \textbf{Inverted Generational Distance (IGD)}: the average
     distance from each point on a reference (true or best-known) Pareto
     front to its nearest neighbor in the algorithm's output set,
-    rewarding both convergence and coverage but requiring that reference
+    rewarding both convergence and diversity but requiring that reference
     front to be known or well-approximated -- a requirement this
     survey's own case study (Section~\ref{sec:case-study}) does not
     meet for any of its benchmark circuit families, so IGD does not
@@ -89,7 +91,26 @@ survey are:
     distributed along the approximated front, independent of how close
     that front is to the true optimum. Spread recurs in the case study
     (Section~\ref{sec:case-study:algorithms}); spacing does not.
+  \item \textbf{Coverage (C)}: a binary indicator that directly compares
+    two solution sets $A$ and $B$. $C(A,B)$ is the fraction of solutions
+    in $B$ weakly dominated by at least one solution in
+    $A$~\citep{zitzler1999spea,zitzler2003performance}, so $C(A,B)=1$
+    means every solution in $B$ is dominated by or equal to some
+    solution in $A$. Since $C(A,B)$ and $C(B,A)$ are not complementary,
+    both directions must be reported.
+  \item \textbf{Two Set Hypervolume Difference (TSHD)}: the hypervolume
+    dominated by one set but not by the other,
+    $D(A,B) = HV(A \cup B) - HV(B)$~\citep{zitzler1999thesis}. Unlike
+    Coverage, it measures by how much, not only whether, one set
+    improves on the other, making it a direct hypervolume-based
+    comparison between two algorithms' output fronts.
 \end{itemize}
+Unlike HV, IGD, and spread, which score a single solution set, Coverage
+and TSHD compare two sets directly, and so are suited to ranking
+algorithms against each other. Neither is computed in this survey's own
+case study (Section~\ref{sec:case-study}), which instead compares
+algorithms through a shared-reference hypervolume
+(Section~\ref{sec:case-study:hypervolume}).
 See \citet{emmerich2018tutorial} and \citet{hanne2025review} for a fuller
 treatment of these fundamentals and their formal definitions.
 
@@ -117,9 +138,11 @@ these selection mechanisms rather than inventing a new one --
 understanding the mechanism being reused is a precondition for the
 taxonomy's hybridization axis (Section~\ref{sec:taxonomy:hybridization}).
 
-Five classical MOEAs recur most often as the baselines QIEA-MOO methods
-are compared against in the surveyed literature, and this survey adopts
-the same five as its background reference set:
+Five classical MOEAs serve as this survey's background reference set.
+In practice NSGA-II is by far the baseline QIEA-MOO methods are most
+often compared against (Section~\ref{sec:feature-comparison}); the
+other four are included because together they span the main
+alternative selection paradigms:
 \begin{itemize}
   \item \textbf{NSGA-II}~\citep{deb2002nsga2}: fast non-dominated
     sorting (ranking the population into successive Pareto fronts) combined
@@ -145,8 +168,9 @@ the same five as its background reference set:
     optimizing for the HV indicator described in
     Section~\ref{sec:background:moo} rather than a proxy for it.
 \end{itemize}
-Together these five span the main selection paradigms QIEA-MOO methods
-adopt or compare against: crowding-distance-based, reference-point-based,
+Together these five span the main selection paradigms available to
+QIEA-MOO methods: crowding-distance-based, reference-point-based,
 strength/density-based, decomposition-based, and hypervolume-driven.
 Section~\ref{sec:taxonomy:selection} uses this same set of paradigms as
-one of the taxonomy's classification axes.
+one of the taxonomy's classification axes -- and finds that the surveyed
+methods in fact draw almost exclusively on the first of them.

@@ -38,7 +38,21 @@ maximize fidelity and minimize depth and gate cost; (5) \emph{inter-block
 gate injection}, re-adding cross-block entanglement that block-local
 optimization necessarily loses; and (6) \emph{compression}, a mix of
 hand-rolled and standard circuit-simplification passes applied to the
-final result. Two of these stages recur through the rest of this
+final result.
+
+The pipeline is exercised on five parametric benchmark circuit families
+-- \texttt{weak\_random}, \texttt{qaoa\_maxcut}, \texttt{w\_state},
+\texttt{qft}, and \texttt{hw\_efficient\_ansatz} -- each evaluated at
+three qubit counts: $n{=}8$, $12$, and $20$, except
+\texttt{qaoa\_maxcut}, whose largest size is $n{=}16$. Those upper
+sizes are per-family ceilings imposed by stage (3), not arbitrary
+choices: above the exact-fidelity threshold, each family needs its own
+Monte-Carlo fidelity backend -- an echo-test estimator by default, or a
+per-sample-exact statevector estimator for the families where the
+echo-test estimator is too slow or too coarse (\texttt{qaoa\_maxcut},
+\texttt{qft}) -- and, for \texttt{w\_state} and
+\texttt{hw\_efficient\_ansatz}, more samples and shots, before the estimate can be trusted at
+that size. Two of the six stages recur through the rest of this
 section: stage (4), where NSGA-II, NSGA-III, and SMS-EMOA are
 interchangeable per-block optimizers (Section~\ref{sec:case-study:algorithms}),
 and stage (5), where a real correctness bug was found and fixed partway
@@ -159,11 +173,14 @@ fidelity/hypervolume comparisons below necessarily average away.
 
 Table~\ref{tab:case-study-algorithms} summarizes the 225-run core
 baseline re-verified on the fixed injection-stage code (five circuit
-families, each at its own qubit-count ceiling, five seeds per
-configuration, point mutation, no hybrid local search). NSGA-II reaches
+families, each at the three qubit counts given in
+Section~\ref{sec:case-study:pipeline}, three per-block optimizers, and
+five seeds per configuration; point mutation, no hybrid local
+search). NSGA-II reaches
 the highest mean final fidelity in 13 of the 15 circuit-by-size cells;
 NSGA-III wins one (\texttt{weak\_random} at $n{=}8$) and SMS-EMOA wins
-one (\texttt{qft} at $n{=}12$). This mirrors the general shape of an
+one (\texttt{qft} at $n{=}12$); Figure~\ref{fig:case-study-algorithm-fidelity}
+shows the pooled means. This mirrors the general shape of an
 earlier, pre-fix comparison, but the two are not otherwise comparable,
 since the injection-stage fix changes how much fidelity the pipeline's
 later stages recover regardless of which per-block optimizer produced
@@ -194,7 +211,7 @@ others, only better positioned to catch it once measured twice.
   \centering
   \small
   \caption{Per-block-optimizer comparison on the 225-run core baseline
-    (5 circuit families $\times$ each family's own qubit-count ceiling
+    (5 circuit families $\times$ 3 qubit counts $\times$ 3 optimizers
     $\times$ 5 seeds; point mutation, no hybrid local search,
     stochastic injection). ``Cells won'' counts the circuit-by-size
     cells (of 15) where that optimizer reached the highest mean
@@ -294,7 +311,8 @@ before computing hypervolume.
 
 Table~\ref{tab:case-study-hv} shows both
 computations, side by side, at three scale slices of the re-verified
-225-run core baseline. Adaptive mean HV ranks SMS-EMOA above NSGA-II
+225-run core baseline, and Figure~\ref{fig:case-study-hv-bars} plots
+its pooled row. Adaptive mean HV ranks SMS-EMOA above NSGA-II
 above NSGA-III when pooling all sizes, but that ranking is not even
 stable against itself as the scale slice changes: at
 \texttt{qaoa\_maxcut}'s own $n{=}16$ ceiling, adaptive HV instead ranks

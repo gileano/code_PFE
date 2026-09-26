@@ -7,23 +7,33 @@ since at least \citet{kim2006qmea}'s quantum-inspired multi-objective
 knapsack algorithm, yet no prior survey had taxonomized or critically
 compared QIEA-for-MOO methods on their own terms, separately from
 single-objective QIEA work on one side and classical MOO on the other.
-This survey addressed that gap directly. Section~\ref{sec:taxonomy}
-organized the literature identified in
-Section~\ref{sec:introduction:scope} along five axes -- representation
-scheme, quantum-inspired operator type, selection and diversity
-mechanism, hybridization with classical MOEAs, and application domain.
-Section~\ref{sec:feature-comparison} applied those axes systematically
-across the surveyed methods, and in doing so surfaced a pattern the
-taxonomy alone had only implied: an overwhelming concentration on
-NSGA-II's crowding distance as the selection mechanism of choice, and a
-benchmarking culture in which every method is compared against that
-same classical baseline but never against its own QIEA-MOO siblings.
-Section~\ref{sec:critical-analysis} traced that pattern, and several
-others like it, into per-category weaknesses and three cross-cutting
-problems -- reproducibility gaps, weak benchmarking practices, and
-scalability claims rarely stress-tested -- that recur across the field
-regardless of which taxonomy category a given method falls into.
+This survey addressed that gap through the four research questions set
+out in Section~\ref{sec:introduction:contributions}.
 
+\textbf{RQ1} (classification): Section~\ref{sec:taxonomy} organized the
+literature identified in Section~\ref{sec:introduction:scope} along five
+axes -- representation scheme, quantum-inspired operator type,
+selection and diversity mechanism, hybridization with classical MOEAs,
+and application domain.
+
+\textbf{RQ2} (comparison): Section~\ref{sec:feature-comparison} applied
+those axes systematically across the surveyed methods, and in doing so
+surfaced a pattern the taxonomy alone had only implied: an overwhelming
+concentration on NSGA-II's crowding distance as the selection mechanism
+of choice, and a benchmarking culture in which methods are routinely
+compared against that same classical baseline but rarely against their
+own QIEA-MOO siblings.
+
+\textbf{RQ3} (limitations): Section~\ref{sec:critical-analysis} traced
+that pattern, and several others like it, into per-category weaknesses
+-- among them a Q-bit representation whose performance degrades as the
+number of decision variables grows on continuous problems -- and three
+cross-cutting problems -- reproducibility gaps, weak benchmarking
+practices, and scalability claims rarely stress-tested -- that recur
+across the field regardless of which taxonomy category a given method
+falls into.
+
+\textbf{RQ4} (a concrete instance):
 Section~\ref{sec:case-study} grounded several of these abstract claims
 in a concrete worked example: this project's own block-partitioned
 quantum-circuit-optimization pipeline, itself a direct extension of

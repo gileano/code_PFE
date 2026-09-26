@@ -11,8 +11,8 @@ Section~\ref{sec:background}'s and Section~\ref{sec:taxonomy}'s
 citations already give a confident answer), and
 Table~\ref{tab:feature-comparison-performance} turns to complexity,
 scalability, convergence behavior, benchmarks, and reported performance
--- the dimensions this survey's contributions
-(Section~\ref{sec:introduction:contributions}) also promise to cover.
+-- the remaining dimensions RQ2
+(Section~\ref{sec:introduction:contributions}) asks about.
 
 A methodological caveat applies to Table~\ref{tab:feature-comparison-performance}
 specifically, and is itself a preview of
@@ -83,10 +83,12 @@ returns to.
       General-purpose multi-objective benchmarks (not itemized in
       abstract-level notes) \\
     Continuous QIEA-MOO~\citep{olvera2023continuous} &
-      Q-bit angle decoded to a real-valued decision variable &
-      Rotation gate &
-      Compared directly against NSGA-II as an external baseline &
-      Continuous-space multi-objective benchmark problems \\
+      Q-bit chromosome observed to binary, then decoded to
+      floating-point decision variables &
+      Rotation gate (lookup-table direction, dynamic angle magnitude) &
+      NSGA-II-style fast non-dominated sorting + crowding distance &
+      16 standard bi-objective continuous benchmarks (e.g.\ ZDT,
+      LZ09), 4 of them constrained \\
     EAH-QNSGA-II~\citep{kumar2026eahqnsga2} &
       Q-bit chromosome layered onto an NSGA-II individual &
       Adaptive rotation gate + entanglement-driven crossover +
@@ -95,8 +97,7 @@ returns to.
       Electric-vehicle charging-station siting (real-world
       infrastructure) \\
     QIEA-MOO for waste collection~\citep{gilea2026waste} &
-      Not yet confirmed against full text (self-citation; venue/DOI
-      itself unconfirmed, see the bibliography note) &
+      Not yet confirmed against full text (self-citation) &
       Not yet confirmed against full text &
       Not yet confirmed against full text &
       Waste-collection vehicle routing (real-world logistics) \\
@@ -140,13 +141,19 @@ returns to.
       independently confirmed here &
       Improved convergence speed relative to NSGA-II (self-reported) \\
     Continuous QIEA-MOO~\citep{olvera2023continuous} &
-      Not confirmed &
-      Not confirmed &
-      Directly compared against NSGA-II on shared continuous benchmark
-      problems, per the paper's own framing, but the direction and size
-      of any advantage are not confirmed here &
-      Not confirmed beyond the paper's framing as a head-to-head
-      comparison against NSGA-II \\
+      Inherits NSGA-II's non-dominated-sorting cost; the proposed SQMEA
+      uses a single quantum register, requiring fewer qubits than the
+      other two variants &
+      Performance of the quantum-inspired variants degrades as the
+      number of decision variables (and hence Q-bits) grows, attributed
+      by the authors to the representation's intrinsic uncertainty;
+      bi-objective only &
+      Floating-point NSGA-II converged faster overall; quantum-inspired
+      variants converged more slowly on ZDT3 &
+      Three QIEA-MOO variants compared against each other and against
+      NSGA-II and SMPSO (30 runs, t-tests): no statistically significant
+      difference from NSGA-II; SQMEA best of the three QIEA variants on
+      constrained problems and complicated Pareto sets \\
     EAH-QNSGA-II~\citep{kumar2026eahqnsga2} &
       Inherits NSGA-II's per-generation cost plus entanglement-crossover
       and local-search overhead; the local-search pass is structurally
@@ -178,10 +185,17 @@ cost~\citep{deb2002nsga2} plus a low-order quantum-operator overhead --
 none of the surveyed methods has been evaluated against a
 selection mechanism whose asymptotic behavior differs enough from
 NSGA-II's to matter at scale. Second, reported performance in this
-literature is consistently self-comparative (a proposed method against
-a classical NSGA-II baseline, run once per paper) rather than
-cross-compared against the other QIEA-MOO methods in the same table --
-no two of the four confirmed methods above are benchmarked against each
-other anywhere in the sources gathered for this survey. Both
-observations recur as cross-cutting limitations in
+literature is predominantly self-comparative -- a proposed method
+against a classical NSGA-II baseline -- rather than cross-compared
+against the other QIEA-MOO methods in the same table: no two of the
+four confirmed methods above are benchmarked against each other in the
+sources gathered for this survey. \citet{olvera2023continuous} are the
+one partial exception, and an instructive one: they compare three
+QIEA-MOO variants against each other as well as against NSGA-II and
+SMPSO, over 16 standard benchmark problems, 30 runs each, with
+statistical hypothesis testing -- and it is precisely this more careful
+protocol that surfaces a limitation (degrading performance as the
+number of decision variables grows) that single-instance evaluations
+elsewhere in the table are not positioned to detect. Both observations
+recur as cross-cutting limitations in
 Section~\ref{sec:critical-analysis:cross-cutting}.
