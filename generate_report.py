@@ -23,11 +23,14 @@ baseline is reported separately for historical reference.
 Example:
     python generate_report.py
     python generate_report.py --input runs/results_master.csv --out-dir report
+    # also refresh the survey paper's data-driven figures
+    python generate_report.py --paper-figures-dir paper_survey/figures
 """
 from __future__ import annotations
 
 import argparse
 import json
+import shutil
 from pathlib import Path
 
 import matplotlib
@@ -90,16 +93,26 @@ def load_results(path: Path) -> pd.DataFrame:
 # stochastic) -- excluding them here is required, not just a default, or the
 # ablation tables silently pool two different qubit counts into one mean.
 BASELINE_N_QUBITS = 8
+# Pass as n_qubits to the algorithm-comparison/fair-HV tables to pool every size in
+# run_sweep.CIRCUIT_QUBIT_SIZES (each family at its own grid, e.g. qaoa_maxcut tops out
+# at 16, the rest at 20) -- this is the "225-run core baseline" the survey paper's
+# case-study tables/figures report, as opposed to the n=8-only BASELINE_N_QUBITS slice.
+ALL_SIZES = None
+
+
+def _size_mask(df: pd.DataFrame, n_qubits) -> pd.Series:
+    return pd.Series(True, index=df.index) if n_qubits is ALL_SIZES else df["n_qubits"] == n_qubits
 
 
 # ---------------------------------------------------------------------------
 # Tables
 # ---------------------------------------------------------------------------
 
-def table_algorithm_comparison(df: pd.DataFrame, n_qubits: int = BASELINE_N_QUBITS) -> pd.DataFrame:
-    """NSGA-II vs SMS-EMOA vs NSGA-III at baseline settings (point mutation, no hybrid LAS)."""
+def table_algorithm_comparison(df: pd.DataFrame, n_qubits=BASELINE_N_QUBITS) -> pd.DataFrame:
+    """NSGA-II vs SMS-EMOA vs NSGA-III at baseline settings (point mutation, no hybrid LAS).
+    n_qubits=ALL_SIZES pools every qubit count instead of one slice."""
     baseline = df[
-        (df["n_qubits"] == n_qubits)
+        _size_mask(df, n_qubits)
         & (~df["is_legacy_schema"])
         & (df["mutation_scheme"] == "point")
         & (df["hybrid_las"] == False)
@@ -113,6 +126,7 @@ def table_algorithm_comparison(df: pd.DataFrame, n_qubits: int = BASELINE_N_QUBI
         mean_hv=("mean_hv", "mean"),
         total_n_pareto=("total_n_pareto", "mean"),
         wall_clock_s=("wall_clock_s", "mean"),
+        stage_block_optimization_s=("stage_block_optimization_s", "mean"),
     ).reset_index()
     return g
 
@@ -139,7 +153,7 @@ def _normalize_shared(costs: np.ndarray, f_min: np.ndarray, f_max: np.ndarray) -
 
 
 def _pooled_fair_hv_rows(runs_dir: Path, mutation_scheme: str, hybrid_las: bool,
-                          n_qubits: int = BASELINE_N_QUBITS) -> list:
+                          n_qubits=BASELINE_N_QUBITS) -> list:
     """Core fair-HV pooling logic for one (mutation_scheme, hybrid_las) combination --
     returns one row per (circuit, seed, block, block_algorithm), computed from raw
     Pareto-front points (metrics.json's front_raw field, added 2026-08-28 specifically to
@@ -156,18 +170,24 @@ def _pooled_fair_hv_rows(runs_dir: Path, mutation_scheme: str, hybrid_las: bool,
     algorithm's HV against the one shared FAIR_HV_REF_POINT. Shared by all three fair-HV
     tables below (baseline, mutation ablation, hybrid-LAS ablation) -- each just picks
     which (mutation_scheme, hybrid_las) combinations to pool over.
+
+    n_qubits=ALL_SIZES repeats this for each size in that circuit's own
+    run_sweep.CIRCUIT_QUBIT_SIZES entry. Normalization is still shared only within one
+    (circuit, n_qubits, seed, block) -- fronts from different sizes are never pooled
+    together, since their blocks are different objects.
     """
     rows = []
     n_mismatched = 0
     for circuit in FAIR_HV_CIRCUITS:
-        for seed in range(FAIR_HV_N_SEEDS):
+        sizes = _run_sweep.CIRCUIT_QUBIT_SIZES[circuit] if n_qubits is ALL_SIZES else [n_qubits]
+        for n, seed in ((n, s) for n in sizes for s in range(FAIR_HV_N_SEEDS)):
             per_algo_blocks = {}
             fidelity_settings = (
-                _run_sweep.CIRCUIT_FIDELITY_SETTINGS.get(circuit, {}) if n_qubits > 13 else {}
+                _run_sweep.CIRCUIT_FIDELITY_SETTINGS.get(circuit, {}) if n > 13 else {}
             )
             for algo in FAIR_HV_ALGORITHMS:
                 run_id = _run_sweep.run_id_for({
-                    "circuit": circuit, "n_qubits": n_qubits, "injection_method": "stochastic",
+                    "circuit": circuit, "n_qubits": n, "injection_method": "stochastic",
                     "block_algorithm": algo, "mutation_scheme": mutation_scheme,
                     "hybrid_las": hybrid_las, "generations": 100, "pop_size": 100, "seed": seed,
                     "fidelity_exact_threshold": None, "injection_fidelity_exact_threshold": None,
@@ -197,7 +217,8 @@ def _pooled_fair_hv_rows(runs_dir: Path, mutation_scheme: str, hybrid_las: bool,
                 f_min, f_max = pooled.min(axis=0), pooled.max(axis=0)
                 for algo, costs in per_algo_costs.items():
                     hv = _PymooHV(ref_point=FAIR_HV_REF_POINT)(_normalize_shared(costs, f_min, f_max))
-                    rows.append({"circuit": circuit, "seed": seed, "block": b, "block_algorithm": algo,
+                    rows.append({"circuit": circuit, "n_qubits": n, "seed": seed, "block": b,
+                                 "block_algorithm": algo,
                                  "mutation_scheme": mutation_scheme, "hybrid_las": hybrid_las, "fair_hv": hv})
     if n_mismatched:
         print(f"⚠️ fair_hv pooling (mutation_scheme={mutation_scheme}, hybrid_las={hybrid_las}): "
@@ -209,18 +230,46 @@ def _aggregate_fair_hv(rows: list, group_cols: list) -> pd.DataFrame:
     detail = pd.DataFrame(rows)
     if detail.empty:
         return pd.DataFrame(columns=group_cols + ["n_runs", "fair_mean_hv"])
-    per_run = detail.groupby(["circuit", "seed"] + group_cols)["fair_hv"].mean().reset_index()
+    run_keys = ["circuit", "n_qubits", "seed"]
+    per_run = detail.groupby(run_keys + [c for c in group_cols if c not in run_keys])["fair_hv"].mean().reset_index()
     return per_run.groupby(group_cols).agg(
         n_runs=("fair_hv", "count"),
         fair_mean_hv=("fair_hv", "mean"),
     ).reset_index()
 
 
-def table_fair_hv_comparison(runs_dir: Path, n_qubits: int = BASELINE_N_QUBITS) -> pd.DataFrame:
+def table_fair_hv_comparison(runs_dir: Path, n_qubits=BASELINE_N_QUBITS) -> pd.DataFrame:
     """Fair (shared fixed reference point) hypervolume at the baseline settings --
     mirrors table_algorithm_comparison's filter, see _pooled_fair_hv_rows' docstring."""
     rows = _pooled_fair_hv_rows(runs_dir, mutation_scheme="point", hybrid_las=False, n_qubits=n_qubits)
     return _aggregate_fair_hv(rows, ["block_algorithm"])
+
+
+def table_algorithm_by_cell(df: pd.DataFrame, runs_dir: Path) -> pd.DataFrame:
+    """Per (circuit, n_qubits, block_algorithm) cell of the all-sizes baseline: mean
+    fidelity_final, block-optimization wall-clock, adaptive and fair HV, plus which
+    algorithm wins each circuit x size cell on fidelity -- the per-cell numbers behind the
+    survey paper's "cells won" column, NSGA-III-vs-NSGA-II wall-clock comparison, and
+    per-size fair-HV gap."""
+    baseline = df[
+        (~df["is_legacy_schema"])
+        & (df["mutation_scheme"] == "point")
+        & (df["hybrid_las"] == False)
+        & (df["injection_method"] == "stochastic")
+    ]
+    keys = ["circuit", "n_qubits", "block_algorithm"]
+    g = baseline.groupby(keys).agg(
+        n_runs=("run_id", "count"),
+        fidelity_final=("fidelity_final", "mean"),
+        stage_block_optimization_s=("stage_block_optimization_s", "mean"),
+        mean_hv=("mean_hv", "mean"),
+    ).reset_index()
+    fair = _aggregate_fair_hv(
+        _pooled_fair_hv_rows(runs_dir, mutation_scheme="point", hybrid_las=False, n_qubits=ALL_SIZES), keys)
+    g = g.merge(fair.drop(columns="n_runs"), on=keys, how="left")
+    best = g.groupby(["circuit", "n_qubits"])["fidelity_final"].transform("max")
+    g["wins_fidelity_cell"] = g["fidelity_final"] == best
+    return g.sort_values(keys)
 
 
 def table_fair_hv_mutation_ablation(runs_dir: Path, n_qubits: int = BASELINE_N_QUBITS) -> pd.DataFrame:
@@ -406,6 +455,10 @@ def main(argv=None):
                     help="Used only by the fair-HV tables (table_fair_hv_comparison/"
                          "_mutation_ablation/_hybrid_las_ablation), which read metrics.json "
                          "files directly for their raw Pareto-front points.")
+    p.add_argument("--paper-figures-dir", default=None, type=Path,
+                    help="If set (e.g. paper_survey/figures), also copy the all-sizes algorithm "
+                         "figures and the scaling figures there under the file names the survey "
+                         "paper's \\includegraphics calls use (see PAPER_FIGURES).")
     args = p.parse_args(argv)
 
     if not args.input.exists():
@@ -421,6 +474,11 @@ def main(argv=None):
     tables = {
         "algorithm_comparison": table_algorithm_comparison(df),
         "fair_hv_comparison": table_fair_hv_comparison(args.runs_dir),
+        # All-sizes pooled versions (every family at its own run_sweep.CIRCUIT_QUBIT_SIZES
+        # grid) -- what the survey paper's case-study tables/figures report.
+        "algorithm_comparison_all": table_algorithm_comparison(df, n_qubits=ALL_SIZES),
+        "fair_hv_comparison_all": table_fair_hv_comparison(args.runs_dir, n_qubits=ALL_SIZES),
+        "algorithm_by_cell": table_algorithm_by_cell(df, args.runs_dir),
         # n=12 algorithm comparison (added alongside n=12 mutation/hybrid-LAS coverage,
         # see logs.txt's "SCALING VERIFICATION: NSGA-III/SMS-EMOA AT n=12 AND FAMILY
         # CEILINGS" -- these numbers previously only existed as a hand-built table there).
@@ -473,6 +531,16 @@ def main(argv=None):
         fair_hv = tables["fair_hv_comparison"].set_index("block_algorithm")["fair_mean_hv"]
         fig_bar(fair_hv, title="Hypervolume (fair: shared fixed reference point)",
                 ylabel="fair_mean_hv", out_path=figures_dir / "algorithm_hypervolume_fair.png")
+
+    algo_all = tables["algorithm_comparison_all"].set_index("block_algorithm")
+    fig_bar(algo_all["fidelity_final"], title="Fidelity by block algorithm (all sizes)",
+            ylabel="fidelity_final", out_path=figures_dir / "algorithm_fidelity_all.png")
+    fig_bar(algo_all["mean_hv"], title="Hypervolume (adaptive per-run reference --\nnot comparable across algorithms)",
+            ylabel="mean_hv", out_path=figures_dir / "algorithm_hypervolume_adaptive_all.png")
+    if not tables["fair_hv_comparison_all"].empty:
+        fair_hv_all = tables["fair_hv_comparison_all"].set_index("block_algorithm")["fair_mean_hv"]
+        fig_bar(fair_hv_all, title="Hypervolume (fair: shared fixed reference point)",
+                ylabel="fair_mean_hv", out_path=figures_dir / "algorithm_hypervolume_fair_all.png")
 
     algo_n12 = tables["algorithm_comparison_n12"].set_index("block_algorithm")
     if not algo_n12.empty:
@@ -545,7 +613,25 @@ def main(argv=None):
 
     print(f"✅ Wrote {len(tables)} tables -> {tables_dir}/ (+ summary.md)")
     print(f"✅ Wrote {len(list(figures_dir.glob('*.png')))} figures -> {figures_dir}/")
+
+    if args.paper_figures_dir is not None:
+        args.paper_figures_dir.mkdir(parents=True, exist_ok=True)
+        for src, dst in PAPER_FIGURES.items():
+            shutil.copyfile(figures_dir / src, args.paper_figures_dir / dst)
+        print(f"📎 Copied {len(PAPER_FIGURES)} figures -> {args.paper_figures_dir}/")
     return 0
+
+
+# report/figures/ name -> survey paper (paper_survey/figures/) name. The paper's other
+# figures (circuit drawings, interaction graph, MOO evolution) come from pipeline runs,
+# not from this script.
+PAPER_FIGURES = {
+    "algorithm_fidelity_all.png": "algorithm_fidelity.png",
+    "algorithm_hypervolume_adaptive_all.png": "algorithm_hypervolume_adaptive.png",
+    "algorithm_hypervolume_fair_all.png": "algorithm_hypervolume_fair.png",
+    "scaling_fidelity.png": "scaling_fidelity.png",
+    "scaling_wallclock.png": "scaling_wallclock.png",
+}
 
 
 if __name__ == "__main__":

@@ -177,9 +177,11 @@ returns to.
 
 Read across both tables, two patterns stand out even before the
 critical analysis proper (Section~\ref{sec:critical-analysis}). First,
-every method with a confirmed selection mechanism reuses NSGA-II's
-crowding distance unmodified (Table~\ref{tab:feature-comparison-taxonomy}),
-so any complexity or scalability claim that does exist is really a
+every method with a confirmed selection mechanism other than the early
+QMEA, whose direct Pareto ranking predates the NSGA-II-hybrid
+convention, reuses NSGA-II's crowding distance unmodified
+(Table~\ref{tab:feature-comparison-taxonomy}), so any complexity or
+scalability claim that does exist for those methods is really a
 claim about NSGA-II's own well-studied $O(MN^2)$ non-dominated-sorting
 cost~\citep{deb2002nsga2} plus a low-order quantum-operator overhead --
 none of the surveyed methods has been evaluated against a

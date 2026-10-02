@@ -1,6 +1,6 @@
 PROJECT LOG — Quantum Circuit Optimization with Genetic Algorithms
 Generated: 2026-08-18
-Last updated: 2026-09-10
+Last updated: 2026-10-02
 
 NOTE ON THIS FILE (2026-09-07): condensed from a much longer (~1700-line)
 narrative at user request -- it had grown too big to be useful. Kept: current
@@ -29,8 +29,7 @@ accurate circuits are hard to get via standard, non-partitioned optimization.
 Timeline: ~4 months, laptop-only, targeting a December 2026 empirical results
 paper submission (started 2026-08-18).
 
-A separate survey/critical-analysis paper ("State-of-the-art and critical
-analysis of Quantum-Inspired Evolutionary Algorithms for multi-objective
+A separate survey/critical-analysis paper ("Critical analysis of Quantum-Inspired Evolutionary Algorithms for multi-objective
 optimization: Taxonomy, Features, and Limitations", see journal.txt) is also
 in progress, using this pipeline's results as an illustrative case study, not
 as that paper's primary evidence. The two papers are separate deliverables.
@@ -49,6 +48,22 @@ Full detail in journal.txt, not repeated here. Next up: continue drafting
 Section 3 (Taxonomy) onward; the empirical-paper roadmap items below are
 paused, not abandoned.
 
+UPDATE (2026-10-02): all 8 survey sections are now drafted (3-8 on
+2026-09-11), coherence-reviewed, and revised after supervisor feedback
+(2026-09-26); only the abstract remains. A 2026-10-02 pass fixed
+overclaims, shortened the title, and re-derived the case-study numbers
+from raw run data -- the algorithm table had silently used n=8-only
+values from generate_report.py's default, now replaced with the true
+225-run values. generate_report.py gained all-sizes tables and a
+--paper-figures-dir flag. bib now 53 entries. Detail in journal.txt's
+DRAFT STATUS section.
+New finding from that pass (225-run baseline, not previously logged):
+NSGA-III's total wall-clock per run is ~1.9x NSGA-II's (331s vs 176s;
+SMS-EMOA 124s) despite its cheaper block-optimization stage -- the
+excess is almost all in hw_efficient_ansatz/w_state at n=20, split
+between stage_injection_s and time outside the four timed stages
+(probably final fidelity evaluation; not verified).
+
 ROADMAP:
 1. OPEN: start empirical-paper results write-up.
 2. DONE: NSGA-III/SMS-EMOA scaling verified -- per-family fidelity-backend
@@ -59,8 +74,9 @@ ROADMAP:
    baseline (cite the 2025 IJCAI "SPEA2 Beats NSGA-II" result alongside the
    2001 paper if implemented) > MOPSO (different paradigm, highest lift).
    SMS-EMOA and NSGA-III already done, both as BLOCK_OPTIMIZERS entries.
-4. DONE: NSGA-III's wall-clock advantage over NSGA-II never exceeded ~5-9%
-   (block-optimization stage only) -- an earlier "half the wall-clock"
+4. DONE: NSGA-III's wall-clock advantage over NSGA-II is ~4.5% overall
+   on the post-fix baseline (block-optimization stage only, see FINDINGS
+   below) -- an earlier "half the wall-clock"
    headline was a stale-vs-fresh measurement artifact, retracted.
 5. DONE pre-fix, SUPERSEDED: mutation-scheme/hybrid-LAS ablations exist at
    n=8/12/16 for all 3 algorithms, but predate the 2026-09-04 injection-stage
@@ -135,14 +151,15 @@ still current -- see SCALING and HYPERVOLUME sections below for detail):
   (shared-reference) hypervolume table for cross-algorithm comparison
   instead. This is structural (about how HV is computed), not data-
   dependent, so it holds regardless of the injection fix.
-- NSGA-III's block-optimization stage is genuinely ~5-9% cheaper than
-  NSGA-II's at every tested size, due to DEAP's selNSGA3 defaulting to a
-  cheaper non-dominated-sort algorithm than selNSGA2/this codebase's
-  hand-rolled SMS-EMOA both use -- an implementation detail of this
-  codebase's current setup, not a general NSGA-III-is-more-efficient claim.
-  This is a block-optimization-stage-only, fidelity-independent effect, so
-  it should still hold post-fix (not re-verified, but nothing ties it to
-  the injection stage).
+- NSGA-III's block-optimization stage is genuinely cheaper than
+  NSGA-II's, due to DEAP's selNSGA3 defaulting to a cheaper
+  non-dominated-sort algorithm than selNSGA2/this codebase's hand-rolled
+  SMS-EMOA both use -- an implementation detail of this codebase's current
+  setup, not a general NSGA-III-is-more-efficient claim. Re-verified on the
+  post-fix 225-run baseline (2026-10-02): ~4.5% cheaper overall (40.85s vs
+  42.78s mean), cheaper in 14 of 15 circuit x size cells by ~1-12%, the
+  one exception weak_random @ n=20 (~2% more expensive). The earlier
+  "~5-9% at every tested size" figure was pre-fix.
 
 =====================================================================
 SCALING (fidelity-estimation performance -- still current, independent of
@@ -270,9 +287,11 @@ all figures/tables directly from results_master.csv via generate_report.py.
 =====================================================================
 OPEN ITEMS (consolidated)
 =====================================================================
-- Continue drafting the survey paper (paper_survey/sections/), starting
-  with Section 3 (Taxonomy) -- current main focus, see PRIORITY SHIFT
-  above and journal.txt for detail.
+- Finish the survey paper (paper_survey/) -- current main focus: write
+  the abstract, address the remaining weaknesses listed in journal.txt's
+  DRAFT STATUS section. See PRIORITY SHIFT above.
+- Explain NSGA-III's ~1.9x end-to-end wall-clock (see PRIORITY SHIFT
+  UPDATE) -- relevant to the empirical paper, not blocking the survey.
 - Paused until the survey reaches a stable draft: decide and start the
   mutation-scheme/hybrid-LAS/sa-injection re-run scope on the fixed
   injection code (roadmap item 8 above); re-check the greedy-pass

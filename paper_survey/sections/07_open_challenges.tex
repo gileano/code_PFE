@@ -120,7 +120,8 @@ Figure~\ref{fig:scaling-wallclock} shows why this remains an open cost
 rather than a solved one: total wall-clock time grows sharply with
 qubit count for four of the five circuit families -- most steeply for
 \texttt{hw\_efficient\_ansatz} (roughly 22s at $n{=}8$ to over 1{,}000s
-at $n{=}20$) and \texttt{qft}, more gently for \texttt{weak\_random} --
+at $n{=}20$) and \texttt{w\_state} (roughly 25s to 900s), more gently
+for \texttt{qft} and \texttt{weak\_random} --
 while \texttt{qaoa\_maxcut} is non-monotonic (26s, 75s, 43s at $n{=}8$,
 $12$, and its own $n{=}16$ ceiling respectively), plausibly an artifact
 of the statevector-backend fidelity settings that

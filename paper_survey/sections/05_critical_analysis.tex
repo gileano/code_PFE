@@ -50,7 +50,8 @@ interference, entanglement) framing common in this literature's
 introductions would suggest.
 
 \textbf{Selection and diversity mechanism.} Every method in the
-surveyed set with a confirmed selection mechanism inherits NSGA-II's
+surveyed set with a confirmed selection mechanism, apart from the early
+QMEA's direct Pareto ranking~\citep{kim2006qmea}, inherits NSGA-II's
 crowding distance unmodified
 (Section~\ref{sec:taxonomy:selection}), and none pairs the Q-bit
 representation with NSGA-III's reference-point niching, SPEA2's
@@ -82,8 +83,9 @@ than only its observed bit value). A second, related weakness is
 evaluative rather than architectural: as already noted from
 Table~\ref{tab:feature-comparison-performance}
 (Section~\ref{sec:feature-comparison}), every reported performance claim
-in the surveyed set compares the proposed method against a classical
-NSGA-II baseline, and no two of the surveyed QIEA-MOO methods are
+in the surveyed set that we could confirm compares the proposed method
+against a classical baseline -- NSGA-II in most cases, conventional
+planning approaches in \citet{kumar2026eahqnsga2}'s case -- and no two of the surveyed QIEA-MOO methods are
 benchmarked against each other in the sources gathered for this
 survey; only \citet{olvera2023continuous} compare several QIEA-MOO
 variants side by side, and those are variants the authors themselves
@@ -137,10 +139,9 @@ benchmarking. This survey's own case study offers
 a cautionary illustration of how easily such gaps can hide even inside
 a codebase under active, careful maintenance: two real bugs in its
 inter-block gate injection stage silently distorted every quantitative
-fidelity result reported over several weeks of work, and were only
-caught and fixed once the pipeline's output was checked against a
-specific, otherwise-unremarkable circuit family
-(Section~\ref{sec:case-study:pipeline}). If a reproducibility gap of
+fidelity result reported over several weeks of work before they were
+caught and fixed (Section~\ref{sec:case-study:pipeline}). If a
+reproducibility gap of
 that kind can persist for weeks inside one actively-maintained pipeline
 with its own test suite, the equivalent risk across independently
 authored papers with no shared code and no obligation to re-verify a
@@ -148,8 +149,9 @@ predecessor's numbers before building on them is considerably harder to
 rule out, not easier.
 
 \textbf{Weak benchmarking practices.} The self-comparative-only pattern
-already noted under hybridization above -- every method benchmarked
-against NSGA-II, never against a sibling QIEA-MOO method -- is itself an
+already noted under hybridization above -- methods benchmarked against
+a classical baseline, usually NSGA-II, but not against a sibling
+QIEA-MOO method -- is itself an
 instance of a broader benchmarking weakness: comparisons in this
 literature are typically run against one baseline, on one problem or
 instance, without the kind of multi-seed statistical treatment that
@@ -203,9 +205,9 @@ surfaces a second, sharper instance of the same point: mean
 \texttt{fidelity\_final} \emph{declines} with qubit count for four of
 the five circuit families tested (e.g.\ \texttt{qft}: 0.070 at $n{=}8$,
 0.015 at $n{=}12$, 0.0005 at $n{=}20$; \texttt{hw\_efficient\_ansatz}:
-0.098, 0.020, 0.0004 over the same sizes), while the fifth,
+0.098, 0.020, 0.0003 over the same sizes), while the fifth,
 \texttt{weak\_random}, instead \emph{improves} with qubit count (0.225,
-0.363, 0.375), as Figure~\ref{fig:scaling-fidelity} shows directly. A
+0.362, 0.375), as Figure~\ref{fig:scaling-fidelity} shows directly. A
 single-scale evaluation of any one of these families
 -- exactly the evaluative pattern this subsection has already flagged
 as the norm in the QIEA-MOO literature surveyed above -- would report
@@ -214,8 +216,7 @@ problem instances, let alone across algorithms. We do not attempt to
 adjudicate here whether the declining trend reflects a genuine scaling
 limitation of the pipeline or simply the exact fidelity metric's own
 well-known exponential contraction toward zero for two generically
-different unitaries as $n$ grows
-(Section~\ref{sec:background:quantum}) -- distinguishing the two is
+different unitaries as $n$ grows -- distinguishing the two is
 exactly the kind of question the separate, forthcoming empirical
 results paper is responsible for answering, not this survey.
 

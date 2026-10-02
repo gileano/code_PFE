@@ -196,7 +196,13 @@ implementation defaulting to a cheaper non-dominated-sorting routine
 than the crowding-distance and hand-rolled hypervolume-driven selections
 use -- an implementation detail of this pipeline's current software
 stack, not a general claim that NSGA-III is more efficient than
-NSGA-II as algorithms. This distinction matters because an earlier
+NSGA-II as algorithms. Nor does it carry over to end-to-end cost: mean
+total wall-clock per run is roughly 1.9 times \emph{higher} for NSGA-III
+than for NSGA-II (331s vs.\ 176s; SMS-EMOA 124s), almost entirely
+because of the stages after block optimization on two families at
+$n{=}20$ (\texttt{hw\_efficient\_ansatz} and \texttt{w\_state}), where
+the circuits NSGA-III hands downstream turn out more expensive to
+process. This distinction matters because an earlier
 measurement in this same project once suggested a much larger, roughly
 two-fold advantage for NSGA-III; closer, fresher re-measurement showed
 that figure to be a stale-versus-fresh timing artifact rather than a
@@ -223,9 +229,9 @@ others, only better positioned to catch it once measured twice.
     Per-block optimizer & Mean fidelity\_final & Cells won (/15) &
     Mean block-opt.\ wall-clock (s) & Mean fair HV \\
     \midrule
-    NSGA-II   & 0.135 & 13 & 42.78 & 0.815 \\
-    NSGA-III  & 0.120 & 1  & 40.85 & 0.763 \\
-    SMS-EMOA  & 0.108 & 1  & 43.88 & 0.808 \\
+    NSGA-II   & 0.110 & 13 & 42.78 & 0.808 \\
+    NSGA-III  & 0.092 & 1  & 40.85 & 0.729 \\
+    SMS-EMOA  & 0.092 & 1  & 43.88 & 0.788 \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -302,7 +308,7 @@ before computing hypervolume.
     \cmidrule(lr){2-4} \cmidrule(lr){5-7}
     Scale slice & NSGA-II & NSGA-III & SMS-EMOA & NSGA-II & NSGA-III & SMS-EMOA \\
     \midrule
-    All 5 families, all sizes pooled & 0.052 & 0.046 & 0.060 & 0.815 & 0.763 & 0.808 \\
+    All 5 families, all sizes pooled & 0.048 & 0.045 & 0.055 & 0.808 & 0.729 & 0.788 \\
     All 5 families, $n{=}12$ (matched) & 0.050 & 0.045 & 0.054 & 0.812 & 0.736 & 0.808 \\
     \texttt{qaoa\_maxcut} only, its own $n{=}16$ ceiling & 0.024 & 0.030 & 0.028 & 0.810 & 0.593 & 0.739 \\
     \bottomrule
@@ -320,11 +326,11 @@ NSGA-III above SMS-EMOA above NSGA-II -- not a strict reversal of the
 pooled order (SMS-EMOA and NSGA-II swap places relative to a true
 reversal), but NSGA-III still moves from worst to best.
 Fair HV, by contrast, ranks NSGA-II above SMS-EMOA above NSGA-III
-consistently across all three slices, and NSGA-III's disadvantage under
-fair HV widens as problem size grows within a matched comparison (0.763
-pooled, 0.736 at the $n{=}12$ slice matched across all five families,
-0.593 at \texttt{qaoa\_maxcut}'s own $n{=}16$ ceiling) rather than
-narrowing. This is a direct, current demonstration of the risk the
+consistently across all three slices, and NSGA-III's fair-HV gap to
+NSGA-II widens rather than narrows as problem size grows: 0.052 at
+$n{=}8$ and 0.076 at $n{=}12$ (both matched across all five families),
+0.084 at $n{=}20$ (the four families that reach it), and widest, 0.217,
+at \texttt{qaoa\_maxcut}'s own $n{=}16$ ceiling. This is a direct, current demonstration of the risk the
 adaptive-versus-fair distinction warns about: an algorithm-comparison
 conclusion drawn from adaptive HV alone would not just be
 questionable in the abstract, it would flip depending on which slice of
