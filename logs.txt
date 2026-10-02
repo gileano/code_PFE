@@ -1,6 +1,6 @@
 PROJECT LOG — Quantum Circuit Optimization with Genetic Algorithms
 Generated: 2026-08-18
-Last updated: 2026-09-07
+Last updated: 2026-09-10
 
 NOTE ON THIS FILE (2026-09-07): condensed from a much longer (~1700-line)
 narrative at user request -- it had grown too big to be useful. Kept: current
