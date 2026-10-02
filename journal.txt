@@ -38,8 +38,16 @@ DRAFT STATUS (as of 2026-10-02)
 =====================================================================
 All 8 sections drafted (Sections 1-2 on 2026-09-10, 3-8 on 2026-09-11),
 followed by a full narrative-coherence review (2026-09-11) and a
-supervisor-feedback/coherence pass (2026-09-26). Only the abstract is
-still a TODO (main.tex).
+supervisor-feedback/coherence pass (2026-09-26). Abstract written
+2026-10-02 (main.tex, ~265 words, no citations) -- every section now has
+content.
+
+Abstract choices worth revisiting: ghlib2026scalable is described only as
+"a published NSGA-II framework" (not cited by name); the HV finding is
+phrased as adaptive HV "can change" a ranking, not "reverse" it (pooled,
+it only swaps the top two; NSGA-III worst-to-best happens only at
+qaoa_maxcut n=16); the number of surveyed methods (5) is not stated;
+trim if the target venue caps abstracts at 250 words.
 
 2026-10-02 review/fix pass:
 - Title shortened (see top of file).
@@ -141,7 +149,6 @@ PROPOSED STRUCTURE
 =====================================================================
 NOT DONE / OPEN
 =====================================================================
-- Abstract (main.tex) still a TODO.
 - Taxonomy axes (section 3) are a first draft, not validated against a
   systematic literature pass yet. (Inclusion criteria/search scope are
   done -- Section 1.1.)

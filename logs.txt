@@ -29,7 +29,8 @@ accurate circuits are hard to get via standard, non-partitioned optimization.
 Timeline: ~4 months, laptop-only, targeting a December 2026 empirical results
 paper submission (started 2026-08-18).
 
-A separate survey/critical-analysis paper ("Critical analysis of Quantum-Inspired Evolutionary Algorithms for multi-objective
+A separate survey/critical-analysis paper ("Critical analysis of
+Quantum-Inspired Evolutionary Algorithms for multi-objective
 optimization: Taxonomy, Features, and Limitations", see journal.txt) is also
 in progress, using this pipeline's results as an illustrative case study, not
 as that paper's primary evidence. The two papers are separate deliverables.
@@ -50,7 +51,8 @@ paused, not abandoned.
 
 UPDATE (2026-10-02): all 8 survey sections are now drafted (3-8 on
 2026-09-11), coherence-reviewed, and revised after supervisor feedback
-(2026-09-26); only the abstract remains. A 2026-10-02 pass fixed
+(2026-09-26); abstract written 2026-10-02, so every section now has
+content. A 2026-10-02 pass also fixed
 overclaims, shortened the title, and re-derived the case-study numbers
 from raw run data -- the algorithm table had silently used n=8-only
 values from generate_report.py's default, now replaced with the true
@@ -287,9 +289,9 @@ all figures/tables directly from results_master.csv via generate_report.py.
 =====================================================================
 OPEN ITEMS (consolidated)
 =====================================================================
-- Finish the survey paper (paper_survey/) -- current main focus: write
-  the abstract, address the remaining weaknesses listed in journal.txt's
-  DRAFT STATUS section. See PRIORITY SHIFT above.
+- Finish the survey paper (paper_survey/) -- current main focus: address
+  the remaining weaknesses listed in journal.txt's DRAFT STATUS section
+  (abstract done 2026-10-02). See PRIORITY SHIFT above.
 - Explain NSGA-III's ~1.9x end-to-end wall-clock (see PRIORITY SHIFT
   UPDATE) -- relevant to the empirical paper, not blocking the survey.
 - Paused until the survey reaches a stable draft: decide and start the
