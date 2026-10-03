@@ -21,19 +21,27 @@ domains covered by the surveyed literature split into two disjoint
 clusters -- quantum-inspired algorithms applied to classical
 combinatorial or engineering problems, and classical (non-quantum-
 inspired) algorithms applied to a genuinely quantum problem domain, as
-in this survey's own case study -- with no method in the literature
-gathered so far combining both: a Q-bit-represented, quantum-inspired
-MOEA applied directly to a quantum-computing problem domain such as
-circuit optimization or compilation. Concretely, this would mean
-encoding a gate sequence itself as a string of Q-bit amplitude pairs,
-with rotation-gate (and perhaps entanglement- or interference-inspired)
-operators evolving that encoding directly, rather than -- as this
-survey's own case study does -- using an ordinary classical chromosome
-of gate tuples inside a classical MOEA. Whether such a representation
+in this survey's own case study. Single-objective QIEAs have been
+applied to quantum circuits~\citep{ding2008qcircuits,krylov2019qeqea,chou2022qcsynthesis,li2025aqeaqas},
+but we found no \emph{multi-objective} QIEA applied to a
+quantum-computing problem domain such as circuit optimization or
+compilation. Concretely, this would mean encoding a gate sequence as a
+string of Q-bit amplitude pairs, with rotation-gate (and perhaps
+entanglement- or interference-inspired) operators evolving that
+encoding directly, and a multi-objective selection mechanism trading
+fidelity against depth and gate cost -- rather than, as this survey's
+own case study does, using an ordinary classical chromosome of gate
+tuples inside a classical MOEA. The single-objective evidence is mixed:
+\citet{krylov2019qeqea}, comparing a quantum-encoded evolutionary
+algorithm for circuit design against a classical GPU-accelerated
+genetic algorithm, report that the quantum encoding brings some
+disadvantages relative to classical evolutionary computation, while
+\citet{chou2022qcsynthesis} report more compact circuits than a
+state-of-the-art synthesis method. Whether a multi-objective version
 would offer any advantage over either cluster alone (e.g.\ a more
 natural search-space geometry for gate sequences, given that both
 objects are already expressed in the language of qubits and rotations)
-is, to our knowledge, untested anywhere in the current literature.
+is, to our knowledge, untested.
 
 Second, Section~\ref{sec:case-study:hypervolume} found that NSGA-III's
 Pareto front is not only smaller than NSGA-II's or SMS-EMOA's under a
@@ -56,12 +64,17 @@ running controlled ablations this survey does not.
 
 Several of Section~\ref{sec:critical-analysis:per-category}'s
 per-category weaknesses point directly at concrete methodological gaps
-rather than only diagnosing a problem. The selection-mechanism
-concentration on NSGA-II's crowding distance
-(Section~\ref{sec:taxonomy:selection}) is the clearest: no surveyed
+rather than only diagnosing a problem. The missing selection paradigms
+(Section~\ref{sec:taxonomy:selection}) are the clearest: no surveyed
 method has paired the Q-bit representation with NSGA-III's
-reference-point niching, SPEA2's density estimator, MOEA/D's
-decomposition, or SMS-EMOA's hypervolume-driven selection, so which of
+reference-point niching, SPEA2's density estimator, or SMS-EMOA's
+hypervolume-driven selection, although MOEA/D-style decomposition has
+been shown to work with it~\citep{deng2024moqead}. A QIEA-MOO need not
+commit to a single paradigm, either: \citet{florea2023superposition}
+run NSGA-II and SPEA2 side by side, letting each produce a share of
+every generation set by its recent solution quality, and the same
+scheme could pair a Q-bit representation with SPEA2-style selection
+without abandoning NSGA-II's. Which of
 these pairings would actually work well -- and whether any of them
 would shift the operator-versus-selection balance discussed in
 Section~\ref{sec:taxonomy:operator} -- is entirely open. Relatedly, a
@@ -169,10 +182,9 @@ taxonomy (relaxed-dominance, diversity-based, aggregation-based,
 indicator-based, reference-set-based, preference-based, and
 dimensionality-reduction methods) is a reminder that this survey's own
 five classical baselines (Section~\ref{sec:background:moea}) sample
-only some of that landscape, and a QIEA-MOO method built around
-preference articulation or dimensionality reduction, rather than any of
-the five selection paradigms named in
-Section~\ref{sec:taxonomy:selection}, remains unexplored.
+only some of that landscape. Preference articulation has been tried
+in a QIEA-MOO only within the MQEA line~\citep{kim2011mqeaps}, and we
+found no QIEA-MOO method built around dimensionality reduction.
 \citet{zheng2026paretoneural}'s more recent five-level taxonomy --
 classical MOEA, ML-guided, RL-driven, LLM-driven, and hybrid
 neuro-evolutionary methods -- places every method surveyed in this

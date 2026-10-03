@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage{xltabular} % page-breakable tabularx (Section 5 comparison tables)
 \usepackage{array}
 \usepackage{changepage}
 \usepackage{hyperref}
@@ -29,43 +30,43 @@ Taxonomy, Features, and Limitations}
 \begin{abstract}
 Quantum-inspired evolutionary algorithms (QIEAs) borrow the Q-bit
 chromosome and rotation-gate operator from quantum mechanics to improve
-classical evolutionary search, and have been applied to multi-objective
-optimization (MOO) since at least 2006 -- yet that literature remains
-sparse, scattered across domains, and, to our knowledge, has not been
-surveyed on its own terms. This paper proposes a taxonomy of QIEA-for-MOO
-methods along five axes (representation scheme, quantum-inspired operator
-type, selection and diversity mechanism, hybridization with classical
-MOEAs, and application domain), applies it in a systematic feature
-comparison, and critically analyzes the field's limitations. We find
-that the surveyed methods almost uniformly inherit NSGA-II's
-crowding-distance selection unchanged, layer at most one further
-quantum-inspired operator on top of the rotation gate (with no
-interference-based operator at all), and are benchmarked against a
-classical baseline but rarely against one another; the Q-bit
-representation also lacks a standard decoding convention for continuous
-problems, where its performance has been reported to degrade as the
-number of decision variables grows. Across the field, reproducibility
-gaps, weak benchmarking practice, and scalability claims tested at a
-single problem size recur regardless of method category. We ground these
-claims in an illustrative case study: a block-partitioned
-quantum-circuit-optimization pipeline extending a published NSGA-II
-framework with NSGA-III and SMS-EMOA as interchangeable per-block
-optimizers. It shows, among other things, that an adaptive, per-run
-hypervolume reference point can change a cross-algorithm ranking that
-a shared reference point keeps stable, and how a correctness bug can
-silently invalidate weeks of results. We close with open challenges,
-including the as-yet untested combination of a Q-bit-represented QIEA
-with a quantum-computing problem domain.
+classical evolutionary search. Their multi-objective optimization (MOO)
+branch, active since at least 2006, remains sparse, scattered across
+domains, and, to our knowledge, unsurveyed on its own terms. A
+bibliometric analysis of 2{,}250 QIEA papers from 1996--2026 shows
+multi-objective work making up under a tenth of the field, with its
+share roughly doubling since 2024, and clustering with application
+domains rather than with algorithm design. We propose a taxonomy of
+QIEA-for-MOO methods along five axes (representation, operator type,
+selection mechanism, hybridization, and application domain), apply it
+in a feature comparison that uses single-objective QIEAs as a baseline, and critically analyze the
+field's limitations. Across thirteen methods selected by citation,
+selection mechanisms are varied but never reference-point- or
+hypervolume-based, several highly cited methods do not state how they
+combine objectives, and methods are rarely benchmarked against one
+another. The rotation gate's reference solution, obvious with one
+objective, changes most with several, yet only three methods document
+their choice.
+Reproducibility gaps, weak benchmarking, and scalability claims tested
+at a single problem size recur across method categories. An
+illustrative case study, a block-partitioned quantum-circuit-optimization
+pipeline extending a published NSGA-II framework with NSGA-III and
+SMS-EMOA, shows how an adaptive, per-run hypervolume reference point can
+change a cross-algorithm ranking and how a correctness bug can silently
+invalidate weeks of results. We close with open challenges, including
+the untested combination of a multi-objective QIEA with a
+quantum-computing problem domain.
 \end{abstract}
 
 \input{sections/01_introduction}
-\input{sections/02_background}
-\input{sections/03_taxonomy}
-\input{sections/04_feature_comparison}
-\input{sections/05_critical_analysis}
-\input{sections/06_case_study}
-\input{sections/07_open_challenges}
-\input{sections/08_conclusion}
+\input{sections/02_bibliometric_analysis}
+\input{sections/03_background}
+\input{sections/04_taxonomy}
+\input{sections/05_feature_comparison}
+\input{sections/06_critical_analysis}
+\input{sections/07_case_study}
+\input{sections/08_open_challenges}
+\input{sections/09_conclusion}
 
 \bibliographystyle{unsrtnat}
 \bibliography{references}

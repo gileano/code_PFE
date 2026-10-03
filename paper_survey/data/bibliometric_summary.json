@@ -1,0 +1,290 @@
+{
+  "retrieved": {
+    "core": "2026-10-03",
+    "broad": "2026-10-03"
+  },
+  "queries": {
+    "core": "title_and_abstract.search:(\"quantum-inspired evolutionary\" OR \"quantum-inspired genetic\" OR \"quantum evolutionary algorithm\" OR \"quantum genetic algorithm\" OR QIEA),publication_year:1996-2026",
+    "broad": "title_and_abstract.search:((\"evolutionary computation\" OR \"evolutionary algorithm\" OR \"genetic algorithm\") AND (\"quantum computing\" OR \"quantum computer\")),publication_year:1996-2026"
+  },
+  "filter_steps": {
+    "core": [
+      [
+        "retrieved",
+        2835
+      ],
+      [
+        "peer-reviewed types",
+        2654
+      ],
+      [
+        "English",
+        2603
+      ],
+      [
+        "terms verified in title/abstract",
+        2341
+      ],
+      [
+        "deduplicated",
+        2250
+      ]
+    ],
+    "broad": [
+      [
+        "retrieved",
+        935
+      ],
+      [
+        "peer-reviewed types",
+        755
+      ],
+      [
+        "English",
+        743
+      ],
+      [
+        "terms verified in title/abstract",
+        577
+      ],
+      [
+        "deduplicated",
+        558
+      ]
+    ]
+  },
+  "core_total": 2250,
+  "core_multi_objective": 215,
+  "broad_total": 558,
+  "core_first_year": 1996,
+  "core_per_year": {
+    "1996": 1,
+    "2000": 1,
+    "2001": 3,
+    "2002": 4,
+    "2003": 11,
+    "2004": 24,
+    "2005": 28,
+    "2006": 34,
+    "2007": 66,
+    "2008": 89,
+    "2009": 121,
+    "2010": 166,
+    "2011": 124,
+    "2012": 132,
+    "2013": 164,
+    "2014": 100,
+    "2015": 104,
+    "2016": 92,
+    "2017": 74,
+    "2018": 81,
+    "2019": 94,
+    "2020": 93,
+    "2021": 81,
+    "2022": 95,
+    "2023": 101,
+    "2024": 102,
+    "2025": 135,
+    "2026": 130
+  },
+  "core_mo_per_year": {
+    "2003": 1,
+    "2005": 2,
+    "2006": 4,
+    "2007": 5,
+    "2008": 5,
+    "2009": 6,
+    "2010": 13,
+    "2011": 9,
+    "2012": 19,
+    "2013": 10,
+    "2014": 11,
+    "2015": 7,
+    "2016": 9,
+    "2017": 7,
+    "2018": 8,
+    "2019": 12,
+    "2020": 5,
+    "2021": 10,
+    "2022": 6,
+    "2023": 5,
+    "2024": 15,
+    "2025": 21,
+    "2026": 25
+  },
+  "broad_periods": {
+    "2005-2020": {
+      "papers": 241,
+      "also_in_qiea_corpus": 138,
+      "quantum_problem": 24
+    },
+    "2021-2026": {
+      "papers": 294,
+      "also_in_qiea_corpus": 97,
+      "quantum_problem": 87
+    }
+  },
+  "broad_per_year": {
+    "1999": 2,
+    "2000": 2,
+    "2001": 4,
+    "2002": 6,
+    "2003": 4,
+    "2004": 5,
+    "2005": 9,
+    "2006": 10,
+    "2007": 7,
+    "2008": 10,
+    "2009": 24,
+    "2010": 22,
+    "2011": 13,
+    "2012": 20,
+    "2013": 21,
+    "2014": 19,
+    "2015": 12,
+    "2016": 15,
+    "2017": 10,
+    "2018": 16,
+    "2019": 19,
+    "2020": 14,
+    "2021": 29,
+    "2022": 25,
+    "2023": 38,
+    "2024": 63,
+    "2025": 99,
+    "2026": 40
+  },
+  "network": {
+    "keywords": 55,
+    "edges": 695,
+    "clusters": 4,
+    "min_keyword_count": 20
+  },
+  "clusters": [
+    [
+      "convergence rate",
+      "premature convergence",
+      "quantum rotation gate",
+      "local optima avoidance",
+      "population diversity",
+      "global optimization",
+      "qubits",
+      "exploration-exploitation balance",
+      "hybrid metaheuristic",
+      "local search",
+      "function optimization",
+      "global search",
+      "continuous optimization",
+      "global search ability",
+      "bp neural network",
+      "real-coded genetic algorithm",
+      "benchmark functions",
+      "simulated annealing",
+      "image segmentation",
+      "np-hard combinatorial optimization"
+    ],
+    [
+      "combinatorial optimization",
+      "knapsack problem",
+      "metaheuristic optimization",
+      "genetic algorithm comparison",
+      "superposition",
+      "traveling salesman problem",
+      "numerical optimization",
+      "mutation operator",
+      "np-complete problems"
+    ],
+    [
+      "multi-objective optimization",
+      "parameter optimization",
+      "wireless sensor networks",
+      "power loss reduction",
+      "makespan minimization",
+      "distributed generation",
+      "resource allocation",
+      "fitness function",
+      "pareto front",
+      "energy efficiency",
+      "pareto optimal solutions",
+      "quality of service",
+      "clustering",
+      "energy consumption",
+      "solution diversity"
+    ],
+    [
+      "quantum computing",
+      "genetic algorithm",
+      "feature selection",
+      "particle swarm optimization",
+      "support vector machine",
+      "evolutionary algorithm",
+      "hyperparameter optimization",
+      "quantum-behaved particle swarm optimization",
+      "parameter estimation",
+      "dimensionality reduction",
+      "quantum-inspired algorithms"
+    ]
+  ],
+  "top_cited": [
+    {
+      "title": "Quantum-inspired evolutionary algorithm for a class of combinatorial optimization",
+      "year": 2002,
+      "cites": 1589,
+      "multi_objective": false
+    },
+    {
+      "title": "Quantum-inspired genetic algorithms",
+      "year": 1996,
+      "cites": 648,
+      "multi_objective": false
+    },
+    {
+      "title": "Quantum-Inspired Evolutionary Algorithms With a New Termination Criterion, $H_epsilon $ Gate, and Two-Phase Scheme",
+      "year": 2004,
+      "cites": 482,
+      "multi_objective": false
+    },
+    {
+      "title": "A Novel Gate Resource Allocation Method Using Improved PSO-Based QEA",
+      "year": 2020,
+      "cites": 339,
+      "multi_objective": true
+    },
+    {
+      "title": "Quantum-inspired evolutionary algorithms: a survey and empirical study",
+      "year": 2010,
+      "cites": 297,
+      "multi_objective": false
+    },
+    {
+      "title": "A Hybrid Quantum-Inspired Genetic Algorithm for Multiobjective Flow Shop Scheduling",
+      "year": 2007,
+      "cites": 208,
+      "multi_objective": true
+    },
+    {
+      "title": "Cognitive radio spectrum allocation using evolutionary algorithms",
+      "year": 2009,
+      "cites": 205,
+      "multi_objective": false
+    },
+    {
+      "title": "Quantum genetic algorithm for dynamic economic dispatch with valve-point effects and including wind power system",
+      "year": 2010,
+      "cites": 194,
+      "multi_objective": false
+    },
+    {
+      "title": "Parallel quantum-inspired genetic algorithm for combinatorial optimization problem",
+      "year": 2001,
+      "cites": 191,
+      "multi_objective": false
+    },
+    {
+      "title": "Quantum-Inspired Evolutionary Algorithm: A Multimodel EDA",
+      "year": 2008,
+      "cites": 175,
+      "multi_objective": false
+    }
+  ]
+}

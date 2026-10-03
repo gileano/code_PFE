@@ -107,7 +107,11 @@ evolutionary computation and multi-objective optimization, identified
 through a combination of targeted literature search (arXiv, IEEE Xplore,
 Springer, ACM Digital Library, MDPI) and citation-chasing from the papers
 found, spanning publications from 1985 (the earliest Pareto-based MOEA,
-VEGA~\citep{schaffer1985vega}) to 2026. We include:
+VEGA~\citep{schaffer1985vega}) to 2026. This targeted selection is
+complemented by a bibliometric sweep of the QIEA literature as a whole,
+2{,}250 papers from 1996--2026 retrieved from OpenAlex, which also
+contributes its ten most-cited papers to the survey
+(Section~\ref{sec:bibliometric}). We include:
 \begin{itemize}
   \item Papers proposing or surveying quantum-inspired evolutionary
     algorithms (in the QiEA sense above) applied to multi-objective or
@@ -141,6 +145,22 @@ quantum hardware (QEA in the strict sense), except where a paper
 explicitly discusses the QiEA/QEA distinction. Only English-language
 sources are included.
 
+The multi-objective methods that the taxonomy
+(Section~\ref{sec:taxonomy}) and feature comparison
+(Section~\ref{sec:feature-comparison}) examine in depth are chosen by a
+stated rule rather than by hand. They are the ten most-cited papers in
+the bibliometric corpus of Section~\ref{sec:bibliometric} that are
+tagged multi-objective and whose own optimization method is a QIEA --
+skipping papers that use a QIEA only as a comparison baseline, and
+papers without an English full text --
+\citep{deng2020gate,li2007hqga,kim2011mqeaps,kim2006qmea,deng2024moqead,hussain2022moqiga,mousavi2019uav,wang2014powertrain,zhang2012moqeavrp,lu2013apmqea},
+plus three recent methods found by the targeted search that a
+citation-based rule would miss because they have had little time to be
+cited~\citep{guzel2022qnsga2,olvera2023continuous,kumar2026eahqnsga2}.
+This gives thirteen methods. For most of them, the comparison rests on
+what the paper's abstract states; Section~\ref{sec:feature-comparison}
+marks what could not be confirmed.
+
 \subsection{Research Questions and Contributions}
 \label{sec:introduction:contributions}
 
@@ -159,8 +179,12 @@ This survey is organized around four research questions:
     domain?
 \end{description}
 In answering them, this survey makes the following contributions, one
-per research question:
+per research question, preceded by a bibliometric overview of the field:
 \begin{itemize}
+  \item A bibliometric analysis of 2{,}250 QIEA papers from 1996--2026:
+    the field's publication trend, the share and recent growth of
+    multi-objective work, its keyword clusters, and its ten most-cited
+    papers (Section~\ref{sec:bibliometric}).
   \item \textbf{(RQ1)} A taxonomy of QIEA-for-MOO methods along five axes --
     representation scheme, quantum-inspired operator type,
     selection/diversity mechanism, hybridization with classical MOEAs,
@@ -183,7 +207,8 @@ per research question:
 \subsection{Paper Organization}
 \label{sec:introduction:organization}
 
-Section~\ref{sec:background} reviews the quantum-computing and
+Section~\ref{sec:bibliometric} gives a bibliometric overview of the QIEA
+literature. Section~\ref{sec:background} reviews the quantum-computing and
 multi-objective-optimization background needed to follow the rest of the
 survey, including the classical MOEA baselines QIEA methods are compared
 against. Section~\ref{sec:taxonomy} introduces the classification axes

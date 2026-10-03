@@ -13,7 +13,8 @@
 % work" candidates, mirroring moo.txt's own section order: Pareto-
 % dominance lineage -> indicator-based -> decomposition-based -> other
 % metaheuristic paradigms -> recent surveys), (7) quantum-circuit-
-% optimization-extension literature (chronological).
+% optimization-extension literature (chronological), (8) bibliometric
+% methodology (Section 2).
 
 % =======================================================================
 % (1) FOUNDATIONAL PAPER
@@ -42,10 +43,24 @@
 % patrausanu2026thomae) added 2026-09-26)
 % =======================================================================
 
+% Supervisor's paper. "Superposition" here is NOT quantum-inspired: NSGA-II
+% and SPEA2 run concurrently, each producing a share of the next generation
+% set by recent solution quality. Cited in Sections 4.2 (terminology) and 8.2
+% (combining selection paradigms). Read in full (PDF in Report1/) 2026-10-03.
+@article{florea2023superposition,
+  title   = {Superposition of populations in multi-objective evolutionary optimization of car suspensions},
+  author  = {Florea, Adrian and Cofaru, Ioana and Patrausanu, Andrei and Cofaru, Nicolae and Fiore, Ugo},
+  journal = {Engineering Applications of Artificial Intelligence},
+  volume  = {126},
+  pages   = {107026},
+  year    = {2023},
+  doi     = {10.1016/j.engappai.2023.107026},
+}
+
 % Companion/predecessor paper to gilea2026waste (cited as reference [1] in that
 % paper's own bibliography) -- same IoT-waste-collection application, classical
-% (non-quantum) route optimization. Possible sibling venue for gilea2026waste,
-% NOT confirmed as that paper's actual venue -- do not assume.
+% (non-quantum) route optimization. Source of the waste paper's three Sibiu
+% routes and GA baseline (cited for that in Section 5).
 @inproceedings{banciu2025icstcc,
   title     = {IoT-Enabled Waste Collection: Route Optimization and Environmental Impact Reduction Using Smart Technologies},
   author    = {Banciu, Claudia and Florea, Adrian and Popa, M.},
@@ -56,18 +71,19 @@
   doi       = {10.1109/ICSTCC66753.2025.11240462},
 }
 
-% TODO: venue/DOI still unconfirmed after a 2026-09-10 web search -- no indexed
-% listing found (IEEE Xplore, Springer, arXiv, dblp, ResearchGate all came up
-% empty for this exact title), and the PDF itself carries no
-% header/footer/DOI/copyright imprint, so it reads as a preprint or submitted
-% (not yet published) manuscript. Ask the user directly for
-% submission/acceptance status before citing with a venue. User's first paper;
-% QIEA applied to a real-world waste-collection TSP. Self-citation / taxonomy-
-% section example.
-@unpublished{gilea2026waste,
-  title  = {Scalable Quantum Inspired Evolutionary Algorithm for Multi-Objective Optimization Real World Problems},
-  author = {Gilea, Olivian-Antonio and Florea, Adrian and Banciu, Claudia and Telcean, Alexandru},
-  year   = {2026},
+% User's first paper; QIEA applied to a real-world waste-collection TSP.
+% Venue and DOI given by the user 2026-10-03 (PDP 2026, March 2026); the DOI
+% was not yet registered on Crossref that day, so pages are not known yet.
+% Read in full 2026-10-03: the evaluation is SINGLE-objective (paper says
+% so; MO is future work), so it is cited in the survey's single-objective
+% baseline table, not as QIEA-MOO.
+@inproceedings{gilea2026waste,
+  title     = {Scalable Quantum Inspired Evolutionary Algorithm for Multi-Objective Optimization Real World Problems},
+  author    = {G{\^{\i}}lea, Olivian-Antonio and Florea, Adrian and Banciu, Claudia and Telcean, Alexandru},
+  booktitle = {Proceedings of the Euromicro International Conference on Parallel, Distributed, and Network-Based Processing (PDP 2026)},
+  month     = mar,
+  year      = {2026},
+  doi       = {10.23919/PDP.2026.00054},
 }
 
 % Motivation-section citation only (sustainable/energy-efficient computing
@@ -153,6 +169,20 @@
   year      = {1996},
 }
 
+% Top-10 most-cited QIEA paper in the OpenAlex bibliometric sweep (Section 2,
+% bibliometric_analysis.py, retrieved 2026-10-03). Metadata from OpenAlex/Crossref
+% 2026-10-03; Section 2 paragraph written from the abstract only.
+% OpenAlex dates it 2002; the DOI (cec.2001) shows CEC 2001.
+@inproceedings{han2001pqga,
+  title     = {Parallel quantum-inspired genetic algorithm for combinatorial optimization problem},
+  author    = {Han, Kuk-Hyun and Park, Kui-Hong and Lee, Ci-Ho and Kim, Jong-Hwan},
+  booktitle = {Proceedings of the 2001 IEEE Congress on Evolutionary Computation (CEC 2001)},
+  volume    = {2},
+  pages     = {1422--1429},
+  year      = {2001},
+  doi       = {10.1109/CEC.2001.934358},
+}
+
 % THE foundational QEA paper (Q-bit chromosome + Q-gate rotation operator) that
 % essentially every later QIEA, including the MOO variants, builds on. Section
 % 2 background -- cite before any QIEA-MOO variant. Confirmed via web search
@@ -194,6 +224,52 @@
   year      = {2006},
 }
 
+% Top-10 most-cited QIEA paper in the OpenAlex bibliometric sweep (Section 2,
+% bibliometric_analysis.py, retrieved 2026-10-03). Metadata from OpenAlex/Crossref
+% 2026-10-03; Section 2 paragraph written from the abstract only.
+% Multi-objective: random-weighted linear sum in its QGA part, nondominated
+% sorting in its permutation-GA part.
+@article{li2007hqga,
+  title   = {A Hybrid Quantum-Inspired Genetic Algorithm for Multiobjective Flow Shop Scheduling},
+  author  = {Li, Bin-Bin and Wang, Ling},
+  journal = {IEEE Transactions on Systems, Man, and Cybernetics, Part B (Cybernetics)},
+  volume  = {37},
+  number  = {3},
+  pages   = {576--591},
+  year    = {2007},
+  doi     = {10.1109/TSMCB.2006.887946},
+}
+
+% Top-10 most-cited QIEA paper in the OpenAlex bibliometric sweep (Section 2,
+% bibliometric_analysis.py, retrieved 2026-10-03). Metadata from OpenAlex/Crossref
+% 2026-10-03; Section 2 paragraph written from the abstract only.
+% OpenAlex dates it 2008 (online); volume 13 issue 6 is December 2009.
+@article{platel2009qeaeda,
+  title   = {Quantum-Inspired Evolutionary Algorithm: A Multimodel {EDA}},
+  author  = {Defoin Platel, Michael and Schliebs, Stefan and Kasabov, Nikola},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {13},
+  number  = {6},
+  pages   = {1218--1232},
+  year    = {2009},
+  doi     = {10.1109/TEVC.2008.2003010},
+}
+
+% Top-10 most-cited QIEA paper in the OpenAlex bibliometric sweep (Section 2,
+% bibliometric_analysis.py, retrieved 2026-10-03). Metadata from OpenAlex/Crossref
+% 2026-10-03; Section 2 paragraph written from the abstract only.
+% QGA is one of three methods compared (with GA and PSO).
+@article{zhao2009cognitive,
+  title   = {Cognitive radio spectrum allocation using evolutionary algorithms},
+  author  = {Zhao, Zhijin and Peng, Zhen and Zheng, Shilian and Shang, Junna},
+  journal = {IEEE Transactions on Wireless Communications},
+  volume  = {8},
+  number  = {9},
+  pages   = {4421--4425},
+  year    = {2009},
+  doi     = {10.1109/TWC.2009.080939},
+}
+
 % Broad survey + empirical comparison of (mostly single-objective) QIEA
 % variants, combinatorial and numerical. Comparison-baseline reference
 % (supervisor point 5). Confirmed via web search 2026-10-03 (Springer).
@@ -205,6 +281,22 @@
   pages   = {303--351},
   year    = {2011},
   doi     = {10.1007/s10732-010-9136-0},
+}
+
+% Top-10 most-cited QIEA paper in the OpenAlex bibliometric sweep (Section 2,
+% bibliometric_analysis.py, retrieved 2026-10-03). Metadata from OpenAlex/Crossref
+% 2026-10-03; Section 2 paragraph written from the abstract only.
+% OpenAlex has no abstract; abstract taken from the ScienceDirect page
+% (very short). OpenAlex dates it 2010 (online); volume 33 is 2011.
+@article{lee2011qgadispatch,
+  title   = {Quantum genetic algorithm for dynamic economic dispatch with valve-point effects and including wind power system},
+  author  = {Lee, Jia-Chu and Lin, Whei-Min and Liao, Gwo-Ching and Tsao, Ta-Peng},
+  journal = {International Journal of Electrical Power \& Energy Systems},
+  volume  = {33},
+  number  = {2},
+  pages   = {189--197},
+  year    = {2011},
+  doi     = {10.1016/j.ijepes.2010.08.014},
 }
 
 % DMQEA, from the same group as kim2006qmea. Cited mainly as the source for
@@ -219,6 +311,22 @@
   pages     = {207--214},
   year      = {2014},
   doi       = {10.5220/0005071802070214},
+}
+
+% Top-10 most-cited QIEA paper in the OpenAlex bibliometric sweep (Section 2,
+% bibliometric_analysis.py, retrieved 2026-10-03). Metadata from OpenAlex/Crossref
+% 2026-10-03; Section 2 paragraph written from the abstract only.
+% Three-objective airport gate allocation; QEA hybridized with PSO and niche
+% co-evolution. OpenAlex dates it 2020 (early access); volume 23 issue 3 is 2022.
+@article{deng2020gate,
+  title   = {A Novel Gate Resource Allocation Method Using Improved {PSO}-Based {QEA}},
+  author  = {Deng, Wu and Xu, Junjie and Zhao, Huimin and Song, Yingjie},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {23},
+  number  = {3},
+  pages   = {1737--1745},
+  year    = {2022},
+  doi     = {10.1109/TITS.2020.3025796},
 }
 
 % Another quantum-inspired NSGA-II variant (qubit superposition to speed
@@ -285,6 +393,130 @@
   pages   = {14666},
   year    = {2026},
   doi     = {10.1038/s41598-026-44141-z},
+}
+
+% =======================================================================
+% (3b) MULTI-OBJECTIVE QIEA METHODS ADDED BY THE TOP-CITED RULE (chronological)
+% =======================================================================
+
+% Primary source for MQEA's archive-guided Q-bit update (cited in text, not
+% a table row). Metadata from OpenAlex/Crossref 2026-10-03.
+@inproceedings{kim2009mqea,
+  title     = {Multiobjective quantum-inspired evolutionary algorithm for fuzzy path planning of mobile robot},
+  author    = {Kim, Ye-Hoon and Kim, Jong-Hwan},
+  booktitle = {Proceedings of the 2009 IEEE Congress on Evolutionary Computation (CEC 2009)},
+  pages     = {1185--1192},
+  year      = {2009},
+  doi       = {10.1109/CEC.2009.4983080},
+}
+
+% In-depth multi-objective method set (Section 1.1 rule: top-10 most-cited
+% MO papers in the Section 2 corpus whose own method is a QIEA). Metadata from
+% OpenAlex/Crossref 2026-10-03; described from the abstract only.
+@article{kim2011mqeaps,
+  title   = {Preference-Based Solution Selection Algorithm for Evolutionary Multiobjective Optimization},
+  author  = {Kim, Jong-Hwan and Han, Ji-Hyeong and Kim, Ye-Hoon and Choi, Seung-Hwan and Kim, Eun-Soo},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {16},
+  number  = {1},
+  pages   = {20--34},
+  year    = {2012},
+  doi     = {10.1109/TEVC.2010.2098412},
+}
+
+% In-depth multi-objective method set (Section 1.1 rule: top-10 most-cited
+% MO papers in the Section 2 corpus whose own method is a QIEA). Metadata from
+% OpenAlex/Crossref 2026-10-03; described from the abstract only.
+@article{zhang2012moqeavrp,
+  title   = {Multiobjective Quantum Evolutionary Algorithm for the Vehicle Routing Problem with Customer Satisfaction},
+  author  = {Zhang, Jingling and Wang, Wanliang and Zhao, Yanwei and Cattani, Carlo},
+  journal = {Mathematical Problems in Engineering},
+  volume  = {2012},
+  pages   = {879614},
+  year    = {2012},
+  doi     = {10.1155/2012/879614},
+}
+
+% Vector QEA: redesigned fitness assignment and angle update for MO (cited in
+% text, not a table row; outside the top-10). Abstract only.
+@article{ho2013vectorqea,
+  title   = {A Quantum-Inspired Evolutionary Algorithm for Multi-Objective Design},
+  author  = {Ho, S. L. and Yang, Shiyou and Ni, Peihong and Huang, Jin},
+  journal = {IEEE Transactions on Magnetics},
+  volume  = {49},
+  number  = {5},
+  pages   = {1609--1612},
+  year    = {2013},
+  doi     = {10.1109/TMAG.2013.2238661},
+}
+
+% In-depth multi-objective method set (Section 1.1 rule: top-10 most-cited
+% MO papers in the Section 2 corpus whose own method is a QIEA). Metadata from
+% OpenAlex/Crossref 2026-10-03; described from the abstract only.
+% No abstract available (publisher-elided); Semantic Scholar TLDR only.
+@article{lu2013apmqea,
+  title   = {An adaptive population multi-objective quantum-inspired evolutionary algorithm for multi-objective 0/1 knapsack problems},
+  author  = {Lu, Tzyy-Chyang and Yu, Gwo-Ruey},
+  journal = {Information Sciences},
+  volume  = {243},
+  pages   = {39--56},
+  year    = {2013},
+  doi     = {10.1016/j.ins.2013.04.018},
+}
+
+% In-depth multi-objective method set (Section 1.1 rule: top-10 most-cited
+% MO papers in the Section 2 corpus whose own method is a QIEA). Metadata from
+% OpenAlex/Crossref 2026-10-03; described from the abstract only.
+@article{wang2014powertrain,
+  title   = {Powertrain Matching and Optimization of Dual-Motor Hybrid Driving System for Electric Vehicle Based on Quantum Genetic Intelligent Algorithm},
+  author  = {Wang, Yong and Sun, Dongye},
+  journal = {Discrete Dynamics in Nature and Society},
+  volume  = {2014},
+  pages   = {956521},
+  year    = {2014},
+  doi     = {10.1155/2014/956521},
+}
+
+% In-depth multi-objective method set (Section 1.1 rule: top-10 most-cited
+% MO papers in the Section 2 corpus whose own method is a QIEA). Metadata from
+% OpenAlex/Crossref 2026-10-03; described from the abstract only.
+% Abstract from Semantic Scholar (none in OpenAlex).
+@article{mousavi2019uav,
+  title   = {Use of a quantum genetic algorithm for coalition formation in large-scale {UAV} networks},
+  author  = {Mousavi, Sajad and Afghah, Fatemeh and Ashdown, Jonathan and Turck, Kurt},
+  journal = {Ad Hoc Networks},
+  volume  = {87},
+  pages   = {26--36},
+  year    = {2019},
+  doi     = {10.1016/j.adhoc.2018.11.008},
+}
+
+% In-depth multi-objective method set (Section 1.1 rule: top-10 most-cited
+% MO papers in the Section 2 corpus whose own method is a QIEA). Metadata from
+% OpenAlex/Crossref 2026-10-03; described from the abstract only.
+% No abstract available anywhere checked; described from its title only.
+@article{hussain2022moqiga,
+  title   = {A multi-objective quantum-inspired genetic algorithm for workflow healthcare application scheduling with hard and soft deadline constraints in hybrid clouds},
+  author  = {Hussain, Mehboob and Wei, Lian-Fu and Abbas, Fakhar and Rehman, Amir and Ali, Muqadar and Lakhan, Abdullah Raza},
+  journal = {Applied Soft Computing},
+  volume  = {128},
+  pages   = {109440},
+  year    = {2022},
+  doi     = {10.1016/j.asoc.2022.109440},
+}
+
+% In-depth multi-objective method set (Section 1.1 rule: top-10 most-cited
+% MO papers in the Section 2 corpus whose own method is a QIEA). Metadata from
+% OpenAlex/Crossref 2026-10-03; described from the abstract only.
+@article{deng2024moqead,
+  title   = {{MOQEA/D}: Multi-Objective {QEA} With Decomposition Mechanism and Excellent Global Search and Its Application},
+  author  = {Deng, Wu and Cai, Xing and Wu, Daqing and Song, Yingjie and Chen, Huiling and Ran, Xiaojuan and Zhou, Xiangbing and Zhao, Huimin},
+  journal = {IEEE Transactions on Intelligent Transportation Systems},
+  volume  = {25},
+  number  = {9},
+  pages   = {12517--12527},
+  year    = {2024},
+  doi     = {10.1109/TITS.2024.3373510},
 }
 
 % =======================================================================
@@ -807,4 +1039,84 @@
   year          = {2025},
   eprint        = {2506.09963},
   archivePrefix = {arXiv},
+}
+
+% =======================================================================
+% (7b) QIEAs APPLIED TO QUANTUM CIRCUITS (single-objective as far as
+% confirmed). Found in the Section 2 OpenAlex corpus 2026-10-03; metadata
+% from OpenAlex/Crossref. They narrow the "QIEA x quantum problem domain is
+% untested" claim to the multi-objective case. Abstract-level only.
+% =======================================================================
+
+% No abstract available in OpenAlex; described from its title only.
+@article{ding2008qcircuits,
+  title   = {Evolving quantum circuits at the gate level with a hybrid quantum-inspired evolutionary algorithm},
+  author  = {Ding, Shengchao and Jin, Zhi Hao and Yang, Qing},
+  journal = {Soft Computing},
+  volume  = {12},
+  number  = {11},
+  pages   = {1059--1072},
+  year    = {2008},
+  doi     = {10.1007/s00500-007-0273-9},
+}
+
+@inproceedings{krylov2019qeqea,
+  title     = {Quantum encoded quantum evolutionary algorithm for the design of quantum circuits},
+  author    = {Krylov, Georgiy and Luk{\'a}{\v{c}}, Martin},
+  booktitle = {Proceedings of the 16th ACM International Conference on Computing Frontiers (CF '19)},
+  pages     = {220--225},
+  year      = {2019},
+  doi       = {10.1145/3310273.3322826},
+}
+
+% Abstract mentions "optimal solutions on an efficient frontier" -- check
+% the full text for whether it is multi-objective (e.g. gate count vs
+% T-depth). If it is, the survey's "no multi-objective QIEA on a quantum
+% problem domain" claim must be revised.
+@inproceedings{chou2022qcsynthesis,
+  title     = {A novel quantum-inspired evolutionary computation-based quantum circuit synthesis for various universal gate libraries},
+  author    = {Chou, Yao-Hsin and Kuo, Shu-Yu and Jiang, Yu-Chi and Wu, Ching-Hsuan and Shen, Jyun-Yi and Hua, Cheng-Yen and Huang, Pei-Shin and Lai, Yun-Ting and Tong, Yong Feng and Chang, Ming-He},
+  booktitle = {Proceedings of the Genetic and Evolutionary Computation Conference Companion (GECCO '22)},
+  pages     = {2182--2189},
+  year      = {2022},
+  doi       = {10.1145/3520304.3533956},
+}
+
+@article{li2025aqeaqas,
+  title   = {{AQEA-QAS}: An Adaptive Quantum Evolutionary Algorithm for Quantum Architecture Search},
+  author  = {Li, Yaochong and Zhang, Jing and Zhou, Ri-Gui and Qu, Yi and Xu, Ruiqing},
+  journal = {Entropy},
+  volume  = {27},
+  number  = {7},
+  pages   = {733},
+  year    = {2025},
+  doi     = {10.3390/e27070733},
+}
+
+% =======================================================================
+% (8) BIBLIOMETRIC METHODOLOGY (Section 2)
+% =======================================================================
+
+% Data source for the Section 2 bibliometric sweep. Confirmed via web search
+% 2026-10-03 (OpenAlex's own "citing OpenAlex" page).
+@misc{priem2022openalex,
+  title         = {{OpenAlex}: A fully-open index of scholarly works, authors, venues, institutions, and concepts},
+  author        = {Priem, Jason and Piwowar, Heather and Orr, Richard},
+  year          = {2022},
+  eprint        = {2205.01833},
+  archivePrefix = {arXiv},
+}
+
+% Louvain community detection, used for the Section 2 keyword clusters (and
+% by the case-study pipeline's partitioning stage). Confirmed via web search
+% 2026-10-03 (IOPscience).
+@article{blondel2008louvain,
+  title   = {Fast unfolding of communities in large networks},
+  author  = {Blondel, Vincent D. and Guillaume, Jean-Loup and Lambiotte, Renaud and Lefebvre, Etienne},
+  journal = {Journal of Statistical Mechanics: Theory and Experiment},
+  volume  = {2008},
+  number  = {10},
+  pages   = {P10008},
+  year    = {2008},
+  doi     = {10.1088/1742-5468/2008/10/P10008},
 }

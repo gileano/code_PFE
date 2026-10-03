@@ -51,14 +51,20 @@ much less diversity than the three-phenomenon (superposition,
 interference, entanglement) framing common in this literature's
 introductions would suggest.
 
-\textbf{Selection and diversity mechanism.} Every method in the
-surveyed set with a confirmed selection mechanism, apart from the early
-QMEA's direct Pareto ranking~\citep{kim2006qmea}, inherits NSGA-II's
-crowding distance unmodified
-(Section~\ref{sec:taxonomy:selection}), and none pairs the Q-bit
-representation with NSGA-III's reference-point niching, SPEA2's
-density estimator, MOEA/D's decomposition, or SMS-EMOA's
-hypervolume-driven selection. This concentration is worth weighing
+\textbf{Selection and diversity mechanism.} The thirteen surveyed
+methods use a range of selection mechanisms -- NSGA-II's crowding
+distance, Pareto ranking with an archive, preference-based archive
+selection, an adaptive grid, decomposition, and weighted sums
+(Section~\ref{sec:taxonomy:selection}) -- but two weaknesses stand out.
+First, four of the thirteen, all among the most cited, do not state in
+their abstracts how their objectives are combined at
+all~\citep{wang2014powertrain,mousavi2019uav,deng2020gate,hussain2022moqiga}.
+A reader cannot tell from the abstract whether such a method searches
+for a Pareto front or optimizes a single weighted objective, which is
+the most basic fact about a multi-objective method. Second, none of the
+thirteen pairs the Q-bit representation with NSGA-III's
+reference-point niching, SPEA2's density estimator, or SMS-EMOA's
+hypervolume-driven selection. This gap is worth weighing
 against results that postdate most of the surveyed
 QIEA-MOO papers: \citet{deng2025nsga3guarantees} give NSGA-III the first
 proven approximation guarantees of its lineage, and
@@ -69,29 +75,37 @@ roughly a factor of two. Neither result implies NSGA-II's
 crowding-distance selection is a poor empirical choice in general, and
 neither has been evaluated in combination with a Q-bit representation
 specifically -- but they do mean the QIEA-MOO literature surveyed here
-settled early and almost uniformly on one selection paradigm without the
-benefit of the theoretical grounding that later became available for
-comparing it against its main alternatives.
+has not yet adopted the selection paradigms that now have the strongest
+theoretical grounding, while its most recent methods have converged on
+NSGA-II's.
 
 \textbf{Hybridization with classical MOEAs.} Hybridization in the
-surveyed literature is uniformly shallow in the same direction: a Q-bit
+three NSGA-II-based methods is uniformly shallow in the same direction: a Q-bit
 representation and one or two quantum-inspired operators are grafted
 onto an otherwise unmodified classical MOEA loop
 (Section~\ref{sec:taxonomy:hybridization}), rather than the classical
 algorithm's selection or archiving logic itself being redesigned around
 what a quantum-inspired representation makes available (for instance,
 using the amplitude pair's own uncertainty as a diversity signal, rather
-than only its observed bit value). A second, related weakness is
+than only its observed bit value). The older QMEA/MQEA line goes
+further, building its archive into the QEA
+itself~\citep{kim2009mqea,kim2011mqeaps}, and
+\citet{ho2013vectorqea}, outside the thirteen methods, redesign the
+QEA's fitness assignment and rotation-angle update for several
+objectives -- so a deeper integration has been shown to be possible,
+but the recent methods have not followed it. A second, related weakness is
 evaluative rather than architectural: as already noted from
 Table~\ref{tab:feature-comparison-performance}
 (Section~\ref{sec:feature-comparison}), every reported performance claim
 in the surveyed set that we could confirm compares the proposed method
 against a classical baseline -- NSGA-II in most cases, conventional
-planning approaches in \citet{kumar2026eahqnsga2}'s case -- and no two of the surveyed QIEA-MOO methods are
-benchmarked against each other in the sources gathered for this
-survey; only \citet{olvera2023continuous} compare several QIEA-MOO
-variants side by side, and those are variants the authors themselves
-adapted, not independently published competitors. A field in which new
+planning approaches in \citet{kumar2026eahqnsga2}'s case -- and no two
+independently published QIEA-MOO methods among the thirteen are
+benchmarked against each other in the sources gathered for this survey.
+The only QIEA-MOO-to-QIEA-MOO comparisons are against the authors' own
+variants: \citet{kim2011mqeaps} against their earlier MQEA, and
+\citet{olvera2023continuous} across three variants they adapted
+themselves. A field in which new
 methods are routinely shown to beat the same baseline, but rarely
 compared against their own siblings, cannot yet support a claim about
 which hybridization choice is preferable within the QIEA-MOO cluster
@@ -101,17 +115,19 @@ itself.
 two disjoint clusters with no overlap
 (Section~\ref{sec:taxonomy:application}): quantum-inspired algorithms
 applied to classical combinatorial or engineering
-problems~\citep{kim2006qmea,kumar2026eahqnsga2,gilea2026waste}, and
+problems, and
 classical (non-quantum-inspired) algorithms applied to a genuinely
 quantum problem domain, as in this survey's own case study
 (Section~\ref{sec:case-study}) and its foundational
 reference~\citep{ghlib2026scalable}. Within the first cluster, most
 papers additionally validate on a single problem or a single real-world
-instance -- one knapsack benchmark, one EV-charging-siting case study,
-one waste-collection routing scenario -- rather than a shared benchmark
+instance -- one EV-charging-siting case study, one airport's
+operational data~\citep{deng2020gate}, one vehicle
+design~\citep{wang2014powertrain} -- rather than a shared benchmark
 suite spanning multiple problem sizes or domains; the continuous-space
 study of \citet{olvera2023continuous}, with its 16-problem standard
-suite, is the exception. Claims of general applicability therefore rest
+suite, and MQEA-PS's use of the DTLZ suite~\citep{kim2011mqeaps} are the
+exceptions. Claims of general applicability therefore rest
 on a narrower evidentiary base than the breadth of domains represented
 across the cluster as a whole might suggest.
 
@@ -123,7 +139,9 @@ baseline (Section~\ref{sec:taxonomy:objectives},
 Table~\ref{tab:feature-comparison-so}) exposes a limitation that none of
 the five axes above shows on its own: the move to several objectives was
 made mostly by \emph{adding} classical MOO machinery around an unchanged
-single-objective QIEA core, not by rethinking that core.
+single-objective QIEA core, not by rethinking that core;
+\citet{ho2013vectorqea}'s redesigned fitness assignment and angle update
+are the clearest exception we found.
 
 \textbf{The rotation gate's reference solution is under-specified.} In
 the single-objective QEA, the rotation gate always has a well-defined
@@ -132,14 +150,21 @@ multi-objective method has to replace that target with something chosen
 from a set of non-dominated solutions, and this choice decides where on
 the front each Q-bit individual is pulled. It is therefore as much a
 part of the method's diversity mechanism as its crowding distance or
-archive. Yet among the surveyed methods, only the QMEA line documents
-it in the sources we could confirm -- a uniform random draw from the archive~\citep{ryu2014dmqea} -- and
-none compares alternatives such as choosing the reference by crowding
-distance, by reference direction, or by hypervolume contribution. The
-selection-axis finding above (every surveyed hybrid inherits NSGA-II's
-crowding distance unchanged) has a counterpart here: the part of the
-algorithm that is genuinely new in the multi-objective setting is also
-the part least often specified or studied.
+archive. Yet among the thirteen surveyed methods, only three answers are
+documented -- a random draw from a non-dominated archive in the
+QMEA/MQEA line~\citep{kim2009mqea,ryu2014dmqea}, a randomly weighted sum
+of the objectives in \citet{li2007hqga}'s hybrid, and one
+single-objective subproblem per Q-bit string in
+\citet{deng2024moqead}'s MOQEA/D. The only comparison between
+alternatives is within the MQEA line, where \citet{kim2011mqeaps}
+change which solutions enter the archive the references are drawn from
+(preference-based instead of dominance-based) and report better results.
+No method compares choosing the reference by crowding distance, by
+reference direction, or by hypervolume contribution. The
+selection-axis finding above (four of the most-cited methods do not
+state how they combine objectives) has a counterpart here: the part of
+the algorithm that is genuinely new in the multi-objective setting is
+also the part least often specified or studied.
 
 \textbf{Convergence means different things in the two settings.}
 Single-objective QIEA design treats Q-bit probabilities converging to 0

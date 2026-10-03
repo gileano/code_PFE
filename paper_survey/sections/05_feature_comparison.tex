@@ -1,0 +1,410 @@
+\section{Feature Comparison}
+\label{sec:feature-comparison}
+
+Section~\ref{sec:taxonomy} introduced five classification axes and
+applied them narratively to the QIEA-for-MOO methods surveyed.
+This section applies the same axes systematically, one row per method,
+across two tables: Table~\ref{tab:feature-comparison-taxonomy} recaps
+representation, operator type, selection mechanism, and application
+domain, and
+Table~\ref{tab:feature-comparison-performance} turns to complexity,
+scalability, convergence behavior, benchmarks, and reported performance
+-- the remaining dimensions RQ2
+(Section~\ref{sec:introduction:contributions}) asks about. A third,
+smaller table (Table~\ref{tab:feature-comparison-so}) lists the
+single-objective QIEAs included as a comparison baseline
+(Section~\ref{sec:taxonomy:objectives}).
+
+A methodological caveat applies to Table~\ref{tab:feature-comparison-performance}
+specifically, and is itself a preview of
+Section~\ref{sec:critical-analysis}'s reproducibility discussion: its
+cells report what each paper itself states, not an independent
+re-derivation or reproduction of its results. Where a paper does not
+state a quantity clearly enough to cite with confidence, the cell is
+marked ``not confirmed'' rather than filled with an unverified number.
+That so many cells end up marked this way, in what is meant to be the
+survey's most concrete deliverable, is itself evidence for a pattern
+Section~\ref{sec:critical-analysis} treats as a cross-cutting limitation:
+QIEA-MOO papers routinely under-report the complexity, scale, and
+statistical rigor of their own evaluations relative to what a reader
+would need to compare them fairly against one another.
+
+The application-domain column of Table~\ref{tab:feature-comparison-taxonomy}
+is worth pausing on before the tables themselves: every method in it
+targets a classical combinatorial, continuous, or engineering problem
+-- a knapsack, a benchmark function, a schedule, a charging network --
+and none targets a quantum circuit. Figure~\ref{fig:qft-example} shows,
+for contrast, a small instance of exactly that other kind of object: a
+4-qubit quantum Fourier transform circuit, the sort of target this
+survey's own case study (Section~\ref{sec:case-study}) evolves a
+cheaper replacement for. No method surveyed in this section operates on
+an object like it -- a gap Section~\ref{sec:taxonomy:application}
+already named and Section~\ref{sec:critical-analysis:per-category}
+returns to.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\linewidth]{figures/qft_example.png}
+  \caption{A 4-qubit quantum Fourier transform circuit ($H$, controlled
+    phase rotations, and a final \texttt{SWAP} layer), drawn directly
+    from this survey's own case-study pipeline's circuit generator
+    (Section~\ref{sec:case-study:pipeline}). Shown here purely for
+    contrast with the table below: none of the QIEA-MOO methods
+    surveyed in this section target an object like it.}
+  \label{fig:qft-example}
+\end{figure}
+
+% Breakable across pages (xltabular = longtable + tabularx X columns),
+% widened 2cm into each margin like the other comparison tables.
+\begingroup
+\footnotesize
+\setlength{\LTleft}{-2cm}
+\setlength{\LTright}{-2cm}
+\setlength{\LTcapwidth}{\textwidth}
+\begin{xltabular}{\dimexpr\textwidth+4cm\relax}{@{}p{2.1cm}XXXX@{}}
+  \caption{Representation, operator, selection, and domain summary of
+    the thirteen surveyed QIEA-MOO methods, in order of publication
+    (recap of the taxonomy axes, Section~\ref{sec:taxonomy}; method
+    selection rule in Section~\ref{sec:introduction:scope}).}
+  \label{tab:feature-comparison-taxonomy} \\
+  \toprule
+  Method & Representation & Quantum-Inspired Operator(s) & Selection / Diversity & Application Domain \\
+  \midrule
+  \endfirsthead
+  \multicolumn{5}{@{}l}{\small\tablename~\thetable{} (continued)} \\
+  \toprule
+  Method & Representation & Quantum-Inspired Operator(s) & Selection / Diversity & Application Domain \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{5}{r@{}}{\emph{Continued on next page}} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+
+    QMEA~\citep{kim2006qmea} &
+      Q-bit chromosome, observed to a binary decision vector &
+      Rotation gate toward archive solutions drawn at
+      random~\citep{kim2009mqea,ryu2014dmqea} &
+      Pareto-dominance ranking with an external non-dominated archive (no
+      crowding distance) &
+      Multi-objective 0/1 knapsack (combinatorial) \\
+    HQGA~\citep{li2007hqga} &
+      Q-bit chromosome, observed to binary, then random-key decoded to a
+      job permutation; paired with a permutation-coded GA &
+      Rotation gate + Q-bit genetic operators &
+      Randomly weighted sum of objectives (Q-bit part); non-dominated
+      sorting with two population-trimming techniques (permutation part) &
+      Multi-objective flow-shop scheduling (combinatorial) \\
+    MQEA-PS~\citep{kim2011mqeaps} &
+      Q-bit chromosome (as in MQEA) &
+      Rotation gate toward archive solutions &
+      Non-dominated sorting of subpopulations; archive filled by
+      preference-based selection (fuzzy-integral scoring of user
+      preferences) &
+      DTLZ benchmarks; fuzzy path planner for a soccer robot \\
+    MOQEA~\citep{zhang2012moqeavrp} &
+      Not confirmed beyond the abstract &
+      Not confirmed beyond the abstract &
+      Non-dominated set built by ``Challenge Cup'' rules; self-adaptive
+      grid for diversity &
+      Multi-objective vehicle routing with customer satisfaction \\
+    APMQEA~\citep{lu2013apmqea} &
+      Not confirmed (no abstract available) &
+      Not confirmed &
+      Adaptive population size; other details not confirmed &
+      Multi-objective 0/1 knapsack (combinatorial) \\
+    QGA for powertrain design~\citep{wang2014powertrain} &
+      Not confirmed &
+      Quantum genetic algorithm (details not in the abstract) &
+      Not stated (vehicle dynamics and economy as the two indexes) &
+      Dual-motor electric-vehicle powertrain matching \\
+    QGA for UAV coalitions~\citep{mousavi2019uav} &
+      Not confirmed &
+      QEA-inspired leader--follower coalition formation &
+      Not stated (three objectives: resource use, reliability, trust) &
+      Task allocation in large-scale UAV networks \\
+    IPOQEA~\citep{deng2020gate} &
+      QEA individual (encoding details not confirmed beyond the
+      abstract) &
+      QEA update, hybridized with enhanced PSO and niche co-evolution &
+      Not stated in the abstract (Pareto ranking vs.\ scalarization not
+      confirmed) &
+      Three-objective airport gate allocation (real-world operations) \\
+    MOQIGA~\citep{hussain2022moqiga} &
+      Not confirmed (no abstract available) &
+      Not confirmed &
+      Not confirmed &
+      Healthcare workflow scheduling in hybrid clouds with hard and soft
+      deadlines \\
+    QNSGA-II~\citep{guzel2022qnsga2} &
+      Q-bit chromosome layered onto an NSGA-II individual &
+      Rotation gate + superposition-based sampling &
+      NSGA-II crowding distance, unmodified &
+      General-purpose multi-objective benchmarks (not itemized in
+      abstract-level notes) \\
+    Continuous QIEA-MOO~\citep{olvera2023continuous} &
+      Q-bit chromosome observed to binary, then decoded to
+      floating-point decision variables &
+      Rotation gate (lookup-table direction, dynamic angle magnitude) &
+      NSGA-II-style fast non-dominated sorting + crowding distance &
+      16 standard bi-objective continuous benchmarks (e.g.\ ZDT,
+      LZ09), 4 of them constrained \\
+    MOQEA/D~\citep{deng2024moqead} &
+      Q-bit strings, each solving one single-objective subproblem &
+      Observation guided by an ``optimal crossover'' that preserves good
+      genes &
+      Decomposition into single-objective subproblems (MOEA/D-style) &
+      Multi-objective knapsack; large-scale airport gate assignment \\
+    EAH-QNSGA-II~\citep{kumar2026eahqnsga2} &
+      Q-bit chromosome layered onto an NSGA-II individual &
+      Adaptive rotation gate + entanglement-driven crossover +
+      post-hoc local search &
+      NSGA-II crowding distance, unmodified &
+      Electric-vehicle charging-station siting (real-world
+      infrastructure) \\
+\end{xltabular}
+\endgroup
+
+% Breakable across pages (xltabular = longtable + tabularx X columns),
+% widened 2cm into each margin like the other comparison tables.
+\begingroup
+\footnotesize
+\setlength{\LTleft}{-2cm}
+\setlength{\LTright}{-2cm}
+\setlength{\LTcapwidth}{\textwidth}
+\begin{xltabular}{\dimexpr\textwidth+4cm\relax}{@{}p{2.1cm}XXXX@{}}
+  \caption{Complexity, scalability, convergence, and reported
+    performance of the surveyed QIEA-MOO methods. Cells marked
+    ``not confirmed'' require reading the full paper, not just its
+    abstract, before any specific claim is cited (see the methodological
+    caveat above).}
+  \label{tab:feature-comparison-performance} \\
+  \toprule
+  Method & Complexity & Scalability & Convergence & Reported Performance \\
+  \midrule
+  \endfirsthead
+  \multicolumn{5}{@{}l}{\small\tablename~\thetable{} (continued)} \\
+  \toprule
+  Method & Complexity & Scalability & Convergence & Reported Performance \\
+  \midrule
+  \endhead
+  \midrule
+  \multicolumn{5}{r@{}}{\emph{Continued on next page}} \\
+  \endfoot
+  \bottomrule
+  \endlastfoot
+
+    QMEA~\citep{kim2006qmea} &
+      Not confirmed; direct Pareto ranking without NSGA-II's fast
+      non-dominated sort suggests a per-generation cost at or above
+      NSGA-II's, not below it &
+      Evaluated only on the knapsack instance sizes used in the
+      original paper; not confirmed &
+      Not confirmed &
+      Not confirmed beyond the paper's own framing as an early
+      QIEA-MOO proof of concept \\
+    HQGA~\citep{li2007hqga} &
+      Not confirmed; runs two GAs side by side, so per-generation cost
+      is at least that of non-dominated sorting in the permutation part &
+      Tested on several multi-objective flow-shop instances; sizes not
+      confirmed &
+      Not confirmed &
+      Reported effective on several performance metrics against the
+      compared algorithms (self-reported; baselines not confirmed) \\
+    MQEA-PS~\citep{kim2011mqeaps} &
+      Not confirmed &
+      DTLZ benchmarks and one robot path-planning task &
+      Not confirmed &
+      Better than MQEA with dominance-based selection, NSGA-II, and
+      MOPBIL on DTLZ and path planning (self-reported) \\
+    MOQEA~\citep{zhang2012moqeavrp} &
+      Not confirmed &
+      Classical benchmark instances; sizes not confirmed &
+      Not confirmed &
+      Reported effective (self-reported; baselines not confirmed) \\
+    APMQEA~\citep{lu2013apmqea} &
+      Not confirmed &
+      Not confirmed &
+      Not confirmed &
+      Solutions close to the Pareto front with a good spread (secondary
+      summary only) \\
+    QGA for powertrain design~\citep{wang2014powertrain} &
+      Not confirmed &
+      One vehicle design &
+      Good global search and convergence (self-reported) &
+      15.6\% lower energy use than a conventional single-speed electric
+      vehicle (a design outcome, not an algorithm comparison) \\
+    QGA for UAV coalitions~\citep{mousavi2019uav} &
+      Not confirmed &
+      Simulations with large numbers of UAVs &
+      Not confirmed &
+      Better than the compared models across scenarios (self-reported) \\
+    IPOQEA~\citep{deng2020gate} &
+      Not confirmed &
+      Evaluated on one airport's operational data (Baiyun Airport);
+      scaling beyond that instance not confirmed &
+      Not confirmed &
+      Reports better optimization ability than the compared methods on
+      gate allocation (self-reported; baselines not confirmed) \\
+    MOQIGA~\citep{hussain2022moqiga} &
+      Not confirmed & Not confirmed & Not confirmed & Not confirmed \\
+    QNSGA-II~\citep{guzel2022qnsga2} &
+      Inherits NSGA-II's per-generation non-dominated-sorting cost,
+      since selection is left unmodified (Section~\ref{sec:taxonomy:selection});
+      the superposition-sampling step adds low-order per-Q-bit overhead &
+      Not confirmed &
+      Reported to converge faster than a plain NSGA-II baseline; the
+      magnitude and statistical significance of that claim are not
+      independently confirmed here &
+      Improved convergence speed relative to NSGA-II (self-reported) \\
+    Continuous QIEA-MOO~\citep{olvera2023continuous} &
+      Inherits NSGA-II's non-dominated-sorting cost; the proposed SQMEA
+      uses a single quantum register, requiring fewer qubits than the
+      other two variants &
+      Performance of the quantum-inspired variants degrades as the
+      number of decision variables (and hence Q-bits) grows, attributed
+      by the authors to the representation's intrinsic uncertainty;
+      bi-objective only &
+      Floating-point NSGA-II converged faster overall; quantum-inspired
+      variants converged more slowly on ZDT3 &
+      Three QIEA-MOO variants compared against each other and against
+      NSGA-II and SMPSO (30 runs, t-tests): no statistically significant
+      difference from NSGA-II; SQMEA best of the three QIEA variants on
+      constrained problems and complicated Pareto sets \\
+    MOQEA/D~\citep{deng2024moqead} &
+      Not confirmed &
+      ``Large-scale'' knapsack and gate-assignment instances; sizes not
+      confirmed &
+      Not confirmed &
+      Effective on large-scale knapsack; good gate assignments
+      (self-reported) \\
+    EAH-QNSGA-II~\citep{kumar2026eahqnsga2} &
+      Inherits NSGA-II's per-generation cost plus entanglement-crossover
+      and local-search overhead; the local-search pass is structurally
+      analogous to the local-search refinement in this survey's own case
+      study (Section~\ref{sec:case-study:mutation}), applied after the
+      main GA loop rather than during it &
+      Evaluated on a single real-world EV-charging-siting case study;
+      scaling behavior beyond that instance not confirmed &
+      Not confirmed &
+      Reports improved siting trade-offs on its case study relative to
+      baseline planning approaches; specific metrics not confirmed here \\
+\end{xltabular}
+\endgroup
+
+Read across both tables, three patterns stand out even before the
+critical analysis proper (Section~\ref{sec:critical-analysis}). First,
+selection mechanisms are more varied than the recent NSGA-II-based
+methods alone would suggest: the thirteen methods use NSGA-II's crowding
+distance~\citep{guzel2022qnsga2,olvera2023continuous,kumar2026eahqnsga2},
+Pareto ranking with an external archive~\citep{kim2006qmea}, preference-based
+archive selection~\citep{kim2011mqeaps}, an adaptive
+grid~\citep{zhang2012moqeavrp}, decomposition~\citep{deng2024moqead},
+and weighted sums~\citep{li2007hqga}. What is absent is equally clear:
+none uses reference-point (NSGA-III-style), strength-based
+(SPEA2-style), or hypervolume-driven (SMS-EMOA-style) selection. Second,
+four of the thirteen, all among the most cited, do not say in their
+abstracts how their several objectives are combined at
+all~\citep{wang2014powertrain,mousavi2019uav,deng2020gate,hussain2022moqiga}
+-- whether by Pareto ranking or by collapsing them into one weighted
+objective, which would make the method single-objective in practice.
+Third, reported performance is predominantly self-comparative -- a
+proposed method against a classical baseline, usually NSGA-II -- rather
+than cross-compared against other QIEA-MOO methods: in the sources
+gathered for this survey, the only such comparisons are against the
+authors' own variants, as when \citet{kim2011mqeaps} compare MQEA-PS
+with its predecessor MQEA. \citet{olvera2023continuous} are an
+instructive partial exception: they compare three QIEA-MOO variants
+against each other as well as against NSGA-II and SMPSO, over 16
+standard benchmark problems, 30 runs each, with statistical hypothesis
+testing -- and it is precisely this more careful protocol that surfaces
+a limitation (degrading performance as the number of decision variables
+grows) that single-instance evaluations elsewhere in the table are not
+positioned to detect. These observations recur as cross-cutting
+limitations in Section~\ref{sec:critical-analysis:cross-cutting}.
+
+Table~\ref{tab:feature-comparison-so} sets the single-objective
+baseline beside these two tables. Its last column replaces the
+selection mechanism with the rotation gate's reference solution, the
+component Section~\ref{sec:taxonomy:objectives} identifies as the main
+thing that changes between the two settings. Read against
+Table~\ref{tab:feature-comparison-taxonomy}, it shows that the
+representation and operator columns barely move between single- and
+multi-objective QIEAs (Q-bit chromosome plus rotation gate on both
+sides, with \citet{narayanan1996qiga}'s pre-Q-bit interference
+crossover the one exception), while the reference-solution question
+has a single obvious answer on the single-objective side and, on the
+multi-objective side, only three documented answers among the thirteen
+methods: random draws from a non-dominated archive in the QMEA/MQEA
+line~\citep{kim2009mqea,ryu2014dmqea}, random objective weights in
+\citet{li2007hqga}, and one single-objective subproblem per Q-bit string
+in \citet{deng2024moqead}.
+
+The table also shows, on the single-objective side, the scaling
+limitation that Section~\ref{sec:critical-analysis:cross-cutting}
+raises for the multi-objective one. \citet{gilea2026waste} --
+this survey's first author's own earlier work, evaluated on a
+single-objective formulation even though the problem it targets is
+naturally multi-objective -- found its QIEA ahead of a classical
+genetic algorithm on small TSPLIB instances but behind it as the number
+of cities grew, and behind it on all three real routes of 199--334
+locations (routes and genetic-algorithm baseline from
+\citet{banciu2025icstcc}), at about 3.85 times the running time. The authors attribute
+the loss to the repair step: as the number of cities grows, more of
+each tour is produced by repairing duplicates than by observing
+Q-bits, and the population loses diversity. This mirrors
+\citet{olvera2023continuous}'s finding for continuous problems, where
+the quantum-inspired variants also lost ground as the number of decision
+variables grew: in both cases the cost of turning Q-bits into a valid
+solution grows with problem size.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Single-objective QIEAs included as a comparison baseline
+    (Section~\ref{sec:taxonomy:objectives}). The last column gives the
+    solution the variation operator steers toward -- the component that
+    has no direct multi-objective equivalent.}
+  \label{tab:feature-comparison-so}
+  \begin{adjustwidth}{-2cm}{-2cm}
+  \centering
+  \begin{tabularx}{\linewidth}{@{}p{2.1cm}XXXX@{}}
+    \toprule
+    Method & Representation & Quantum-Inspired Operator(s) & Reference
+    Solution & Application Domain \\
+    \midrule
+    QIGA~\citep{narayanan1996qiga} &
+      Classical permutation strings, held in several parallel
+      ``universes'' (no Q-bit chromosome) &
+      Interference crossover (successive genes taken from successive
+      universes) &
+      None in the rotation-gate sense; recombination across
+      universes &
+      Travelling salesman problem (combinatorial) \\
+    QEA~\citep{han2002qea} &
+      Q-bit chromosome, observed to a binary string &
+      Rotation gate (lookup-table direction and magnitude) &
+      Best solution found so far, kept per individual and refreshed by
+      local and global migration &
+      0/1 knapsack (combinatorial) \\
+    QEA with H$_\epsilon$ gate~\citep{han2004hepsilon} &
+      Q-bit chromosome, observed to a binary string &
+      H$_\epsilon$ gate: rotation gate with a lower bound $\epsilon$ on
+      each Q-bit probability, plus a two-phase scheme &
+      Best solution found so far, as in QEA &
+      Numerical and combinatorial optimization problems (abstract
+      level) \\
+    QIEA for waste-collection routing~\citep{gilea2026waste} &
+      Q-bit chromosome; each tour position is encoded by
+      $\lceil \log_2 N \rceil$ Q-bits, observed to a city index, and the
+      resulting sequence is repaired into a valid permutation &
+      Rotation gate with a decaying angle, Pauli-X quantum mutation, and
+      qubit-level crossover &
+      Best individual of the current generation &
+      Travelling salesman problem: TSPLIB instances (14--52 cities) and
+      three real waste-collection routes (199--334 locations) \\
+    \bottomrule
+  \end{tabularx}
+  \end{adjustwidth}
+\end{table}

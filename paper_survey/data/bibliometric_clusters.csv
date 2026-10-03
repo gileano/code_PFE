@@ -1,0 +1,56 @@
+cluster,keyword,count
+1,convergence rate,182
+1,premature convergence,156
+1,quantum rotation gate,135
+1,local optima avoidance,127
+1,population diversity,121
+1,global optimization,100
+1,qubits,80
+1,exploration-exploitation balance,56
+1,hybrid metaheuristic,54
+1,local search,47
+1,function optimization,37
+1,global search,37
+1,continuous optimization,35
+1,global search ability,34
+1,bp neural network,30
+1,real-coded genetic algorithm,30
+1,benchmark functions,27
+1,simulated annealing,26
+1,image segmentation,25
+1,np-hard combinatorial optimization,24
+2,combinatorial optimization,213
+2,knapsack problem,115
+2,metaheuristic optimization,81
+2,genetic algorithm comparison,57
+2,superposition,37
+2,traveling salesman problem,31
+2,numerical optimization,28
+2,mutation operator,25
+2,np-complete problems,20
+3,multi-objective optimization,159
+3,parameter optimization,61
+3,wireless sensor networks,47
+3,power loss reduction,31
+3,makespan minimization,28
+3,distributed generation,27
+3,resource allocation,27
+3,fitness function,25
+3,pareto front,25
+3,energy efficiency,24
+3,pareto optimal solutions,24
+3,quality of service,23
+3,clustering,21
+3,energy consumption,21
+3,solution diversity,20
+4,quantum computing,103
+4,genetic algorithm,72
+4,feature selection,69
+4,particle swarm optimization,67
+4,support vector machine,39
+4,evolutionary algorithm,34
+4,hyperparameter optimization,30
+4,quantum-behaved particle swarm optimization,25
+4,parameter estimation,23
+4,dimensionality reduction,21
+4,quantum-inspired algorithms,20

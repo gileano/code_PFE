@@ -7,8 +7,11 @@ selection/diversity mechanism, hybridization with classical MOEAs, and
 application domain. The axes were derived inductively from recurring
 design choices across the literature identified in
 Section~\ref{sec:introduction:scope}, rather than imposed from an
-existing classification; they are a first pass, not yet checked against
-a fuller systematic literature review, and
+existing classification. They were not derived from the bibliometric
+sweep of Section~\ref{sec:bibliometric}, but two of its keyword
+clusters correspond to two of them: one gathers the operator and
+convergence vocabulary of the operator axis, another the application
+domains (Section~\ref{sec:bibliometric:clusters}).
 Section~\ref{sec:critical-analysis} revisits which surveyed methods are
 described in enough replicable detail to place along them with
 confidence. The five axes are not independent -- a method's operator
@@ -40,12 +43,25 @@ the best solution found so far, kept per individual and refreshed by
 local and global migration~\citep{han2002qea}. With several objectives
 there is no single best solution, only a set of mutually non-dominated
 ones, so every QIEA-MOO method must decide which of them each Q-bit
-individual rotates toward. The QMEA line of work answers by drawing each
-individual's reference at random from the non-dominated archive, a step
-its authors call global random migration~\citep{ryu2014dmqea}. This turns
+individual rotates toward. The QMEA/MQEA line of work answers by
+updating each Q-bit individual toward non-dominated solutions in an
+archive~\citep{kim2009mqea}, drawn at random, a step its authors call
+global random migration~\citep{ryu2014dmqea}. This turns
 the reference choice into a diversity mechanism in its own right:
 different individuals are pulled toward different parts of the front
-rather than all toward one point. For the NSGA-II-hybridized methods
+rather than all toward one point. \citet{li2007hqga}'s hybrid
+quantum-inspired genetic algorithm for multi-objective flow-shop
+scheduling gives a second answer: its Q-bit component scalarizes the
+objectives with randomly drawn weights, so that for each weight vector
+there is again a single best solution to rotate toward.
+\citet{deng2024moqead}'s MOQEA/D gives a third: it decomposes the
+problem into single-objective subproblems and assigns each Q-bit string
+its own, so each string again has a single best solution. Outside the
+thirteen methods, \citet{ho2013vectorqea} go further and redesign the
+QEA for multiple objectives, with a fitness assignment that counts how
+many objectives a solution improves and by how much, and a redesigned
+rotation-angle update. For the
+NSGA-II-hybridized methods
 (Section~\ref{sec:taxonomy:hybridization}), the sources gathered for
 this survey describe the outer NSGA-II loop in detail but do not, at
 the level of detail we could confirm, state how the rotation gate's
@@ -120,7 +136,12 @@ exploited by \citet{kumar2026eahqnsga2}'s EAH-QNSGA-II as an
 entanglement-driven crossover operator that couples pairs of individuals
 more tightly than independent single-point crossover would, combined
 with an adaptive (rather than fixed-table) quantum rotation step and a
-local-search refinement pass. Interference -- the third quantum
+local-search refinement pass. The word
+``superposition'' alone does not mark a method as quantum-inspired,
+however: \citet{florea2023superposition}'s ``superposition of
+populations'' runs NSGA-II and SPEA2 concurrently, each producing a
+share of every generation set by its recent solution quality, with no
+quantum-inspired representation or operator involved. Interference -- the third quantum
 phenomenon named alongside superposition and entanglement in
 Section~\ref{sec:introduction} as a general source of QIEA design
 inspiration -- has no multi-objective method in the currently surveyed
@@ -144,24 +165,33 @@ The selection axis asks how a method ranks and prunes its population
 across objectives -- the same paradigms introduced as classical MOEA
 baselines in Section~\ref{sec:background:moea}: crowding-distance-based,
 reference-point-based, strength/density-based, decomposition-based, and
-hypervolume-driven. A clear pattern across the QIEA-MOO methods surveyed
-here is that this mechanism is almost always \emph{inherited unchanged}
-from a classical MOEA rather than redesigned: \citet{guzel2022qnsga2}'s
-QNSGA-II and \citet{kumar2026eahqnsga2}'s EAH-QNSGA-II both retain
-NSGA-II's crowding-distance selection verbatim, as do the three
-continuous-space algorithms of \citet{olvera2023continuous} (each built
-on fast non-dominated sorting plus crowding distance), applying their
-quantum-inspired operators only to how new candidates are generated, not
-to how the population is ranked or pruned. \citet{kim2006qmea}'s earlier
-QMEA uses a simpler direct Pareto-dominance ranking, without the
-crowding-distance refinement NSGA-II adds on top of non-dominated
-sorting. Within the literature surveyed so far, no method pairs a Q-bit
-representation with reference-point-based (NSGA-III-style),
-strength/density-based (SPEA2-style), decomposition-based (MOEA/D-style),
-or hypervolume-driven (SMS-EMOA-style) selection -- an apparent
-concentration on the NSGA-II selection paradigm specifically that
+hypervolume-driven. Across the thirteen surveyed methods, selection is
+more varied than the recent literature alone suggests. The three recent
+NSGA-II-based methods inherit NSGA-II's selection \emph{unchanged}:
+\citet{guzel2022qnsga2}'s QNSGA-II and \citet{kumar2026eahqnsga2}'s
+EAH-QNSGA-II both retain its crowding distance verbatim, as do the three
+continuous-space algorithms of \citet{olvera2023continuous}, applying
+their quantum-inspired operators only to how new candidates are
+generated, not to how the population is ranked or pruned. The older
+QMEA/MQEA line ranks by Pareto dominance and keeps an external
+non-dominated archive~\citep{kim2006qmea,kim2009mqea}, and MQEA-PS
+fills that archive by user preference instead of
+dominance~\citep{kim2011mqeaps}. \citet{zhang2012moqeavrp} maintain
+diversity with a self-adaptive grid, in the spirit of PAES and
+PESA~\citep{knowles2000paes,corne2000pesa}. \citet{deng2024moqead}'s
+MOQEA/D decomposes the problem into single-objective subproblems, the
+MOEA/D paradigm. \citet{li2007hqga} combine a randomly weighted sum of
+the objectives, in their Q-bit component, with non-dominated sorting and
+population trimming in a permutation-based component. The remaining
+four methods do not state their selection mechanism in their
+abstracts~\citep{wang2014powertrain,mousavi2019uav,deng2020gate,hussain2022moqiga}.
+What none of the thirteen does is pair a Q-bit representation with
+reference-point-based (NSGA-III-style), strength/density-based
+(SPEA2-style), or hypervolume-driven (SMS-EMOA-style) selection -- the
+three paradigms with the strongest recent theoretical
+results (Section~\ref{sec:critical-analysis:per-category}), which
 Section~\ref{sec:critical-analysis} treats as a candidate limitation
-rather than evidence that other selection paradigms are unsuitable.
+rather than evidence that these paradigms are unsuitable.
 This project's own case study pairs all three of NSGA-II, NSGA-III, and
 SMS-EMOA selection with a classical (non-quantum-inspired) chromosome,
 so it demonstrates the reverse pairing is viable, but on the domain-
@@ -176,9 +206,11 @@ Closely related to the selection axis, the hybridization axis asks how
 tightly a method's quantum-inspired representation and operators are
 grafted onto an existing classical MOEA's overall algorithmic skeleton,
 versus how much of the surrounding framework is bespoke. On this axis,
-the methods surveyed cluster tightly around one design point: name and
-frame themselves as an explicit variant of a single classical MOEA --
-almost always NSGA-II -- with the Q-bit representation and one or two
+the surveyed methods fall into three design points. In the first,
+which the three most recent methods share, a method names and frames
+itself as an explicit variant of a single classical MOEA -- NSGA-II in
+every case found -- with the Q-bit
+representation and one or two
 quantum-inspired operators substituted into the generation step, while
 the outer non-dominated-sorting-plus-crowding-distance loop is left
 otherwise intact (\citet{guzel2022qnsga2},
@@ -187,9 +219,23 @@ same pattern twice over: their proposed SQMEA is explicitly a
 quantum-inspired version of NSGA-II, and NSGA-II (in both binary- and
 floating-point-coded form) is also one of the classical baselines they
 compare against.
-\citet{kim2006qmea}'s QMEA, predating this NSGA-II-hybrid convention,
-builds its Pareto-ranking selection directly rather than citing a
-specific classical MOEA as its base. This survey's own case study
+A second design point, older and more common among the most-cited
+methods, extends a QIEA with its own multi-objective machinery rather
+than grafting it onto a named MOEA: \citet{kim2006qmea}'s QMEA and its
+successors~\citep{kim2009mqea,kim2011mqeaps} build Pareto ranking and an
+archive directly into the QEA, \citet{zhang2012moqeavrp} add an adaptive
+grid, and \citet{deng2024moqead} borrow MOEA/D's decomposition idea
+without presenting the result as a variant of MOEA/D itself. A third
+design point hybridizes the QIEA with another metaheuristic rather than
+with an MOEA:
+\citet{li2007hqga} pair a Q-bit genetic algorithm with a
+permutation-based genetic algorithm, the first exploring a binary space
+and the second refining schedules directly, and \citet{deng2020gate}
+combine a QEA with particle swarm optimization and a niche co-evolution
+strategy. These two are also the most-cited multi-objective QIEAs in
+the bibliometric corpus, so the NSGA-II-variant design point, although
+the most common among recent methods, is also the newest of the three
+and so far the least cited. This survey's own case study
 (Section~\ref{sec:case-study}) sits at the opposite end of the same
 axis from the QIEA-MOO literature above: it hybridizes classical MOEAs
 (NSGA-II, NSGA-III, SMS-EMOA, used as unmodified per-block optimizers)
@@ -204,26 +250,36 @@ itself.
 
 The application-domain axis asks what kind of problem a method is
 evaluated on. Two largely disjoint clusters emerge across the literature
-surveyed so far. The first cluster comprises classical combinatorial or
+surveyed here. The first cluster comprises classical combinatorial or
 engineering optimization problems to which a quantum-\emph{inspired}
 algorithm is applied on ordinary classical hardware: multi-objective 0/1
-knapsack~\citep{kim2006qmea}, continuous benchmark
-problems~\citep{olvera2023continuous}, electric-vehicle
-charging-station siting~\citep{kumar2026eahqnsga2}, feature subset
-selection~\citep{vivek2025fss}, and -- as a self-citation and worked
-taxonomy example rather than an independent literature claim --
-waste-collection route optimization~\citep{gilea2026waste}. In every one
+knapsack~\citep{kim2006qmea,lu2013apmqea}, continuous and DTLZ benchmark
+problems~\citep{olvera2023continuous,kim2011mqeaps}, flow-shop and
+cloud-workflow scheduling~\citep{li2007hqga,hussain2022moqiga}, vehicle
+routing~\citep{zhang2012moqeavrp}, airport gate
+allocation~\citep{deng2020gate,deng2024moqead}, robot path
+planning~\citep{kim2011mqeaps}, UAV task
+allocation~\citep{mousavi2019uav}, electric-vehicle powertrain
+design~\citep{wang2014powertrain}, and electric-vehicle
+charging-station siting~\citep{kumar2026eahqnsga2}. In every one
 of these, ``quantum'' describes the algorithm's inspiration, not the
-problem: the knapsack, the charging network, and the waste-collection
-routes are entirely classical objects. The second cluster is the
+problem: knapsacks, schedules, routes, airport gates, vehicles, and
+charging networks are entirely classical objects. The second cluster is the
 opposite pairing: quantum circuit optimization, where the problem
 domain is genuinely quantum (a target unitary or circuit to reproduce)
 but the optimizer applied to it, in this survey's own case study and its
 foundational reference~\citep{ghlib2026scalable}, is an unmodified
-classical MOEA rather than a quantum-inspired one. We did not find a
-method in the literature surveyed so far that combines both --
-a Q-bit-represented, quantum-inspired MOEA applied to a quantum-computing
-problem domain such as circuit optimization or compilation. Whether that
-combination would offer any advantage over either cluster alone is an
-open question we return to as a candidate future direction in
-Section~\ref{sec:open-challenges}.
+classical MOEA rather than a quantum-inspired one. The two do meet on
+the single-objective side: the bibliometric corpus of
+Section~\ref{sec:bibliometric} contains QIEAs that evolve quantum
+circuits at the gate level~\citep{ding2008qcircuits}, design or
+synthesize circuits for given gate
+libraries~\citep{krylov2019qeqea,chou2022qcsynthesis}, and search
+parameterized-circuit architectures for quantum neural
+networks~\citep{li2025aqeaqas}. We did not, however, find a
+\emph{multi-objective} QIEA applied to a quantum-computing problem
+domain, even though such problems are naturally multi-objective --
+fidelity against depth and gate count in this survey's own case study.
+Whether that combination would offer any advantage over either cluster
+alone is an open question we return to as a candidate future direction
+in Section~\ref{sec:open-challenges}.

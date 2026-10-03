@@ -8,7 +8,15 @@ knapsack algorithm, yet no prior survey had taxonomized or critically
 compared QIEA-for-MOO methods on their own terms, separately from
 single-objective QIEA work on one side and classical MOO on the other.
 This survey addressed that gap through the four research questions set
-out in Section~\ref{sec:introduction:contributions}.
+out in Section~\ref{sec:introduction:contributions}, preceded by a
+bibliometric overview.
+
+\textbf{Field overview}: Section~\ref{sec:bibliometric} mapped 2{,}250
+QIEA papers from 1996--2026. Multi-objective work is under a tenth of
+the field but its share has roughly doubled since 2024, and in the
+keyword network it clusters with application domains rather than with
+the operator and convergence vocabulary of QIEA design -- an early
+signal of the pattern the rest of the survey documents in detail.
 
 \textbf{RQ1} (classification): Section~\ref{sec:taxonomy} organized the
 literature identified in Section~\ref{sec:introduction:scope} along five
@@ -18,9 +26,11 @@ and application domain.
 
 \textbf{RQ2} (comparison): Section~\ref{sec:feature-comparison} applied
 those axes systematically across the surveyed methods, and in doing so
-surfaced a pattern the taxonomy alone had only implied: an overwhelming
-concentration on NSGA-II's crowding distance as the selection mechanism
-of choice, and a benchmarking culture in which methods are routinely
+surfaced patterns the taxonomy alone had only implied: selection
+mechanisms that are varied but never reference-point-based,
+strength-based, or hypervolume-driven, with the most recent methods
+converging on NSGA-II's crowding distance; several highly cited methods
+that do not state how they combine their objectives; and a benchmarking culture in which methods are routinely
 compared against that same classical baseline but rarely against their
 own QIEA-MOO siblings.
 
@@ -34,8 +44,8 @@ across the field regardless of which taxonomy category a given method
 falls into. Comparing the surveyed methods with their single-objective
 baseline added one more: the rotation gate's reference solution, which
 has an obvious choice with one objective, is the component that changes
-most with several, yet it is the one the multi-objective literature
-specifies and studies least.
+most with several, yet only three of the thirteen surveyed methods
+document how they choose it.
 
 \textbf{RQ4} (a concrete instance):
 Section~\ref{sec:case-study} grounded several of these abstract claims
@@ -59,7 +69,8 @@ empirical results paper, not this one.
 
 Section~\ref{sec:open-challenges} closed by turning the critical
 analysis forward rather than only backward: untested pairings between
-the Q-bit representation and selection mechanisms beyond NSGA-II's,
+the Q-bit representation and the reference-point, strength-based, and
+hypervolume-driven selection paradigms,
 an interference-based operator not yet demonstrated in the
 multi-objective setting, concrete extensions
 to the case-study pipeline drawn from adjacent quantum-computing
