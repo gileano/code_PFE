@@ -47,7 +47,7 @@ remains comparatively sparse and scattered across
 domains~\citep{olvera2023continuous,guzel2022qnsga2,kumar2026eahqnsga2},
 compared to the much larger body of QIEA work on single- or
 bi-objective problems such as feature subset
-selection~\citep{vivek2025fss}. Part of the reason lies in the
+selection~\citep{zhang2011qieasurvey,vivek2025fss}. Part of the reason lies in the
 representation itself: the Q-bit chromosome encodes each individual as
 a vector of qubits that is observed into a binary string, a natural fit
 for binary and combinatorial problems~\citep{han2002qea} but not for
@@ -119,6 +119,15 @@ VEGA~\citep{schaffer1985vega}) to 2026. We include:
     (VEGA through SPEA2 and beyond), indicator-based methods, and
     decomposition-based methods -- since these form the baseline
     vocabulary the taxonomy in Section~\ref{sec:taxonomy} depends on.
+  \item Single-objective QIEAs, as a comparison baseline: the foundational
+    representation and operator
+    papers~\citep{narayanan1996qiga,han2002qea,han2004hepsilon} and
+    broad single-objective QIEA
+    surveys~\citep{zhang2011qieasurvey,vivek2025fss}. These are included
+    not as QIEA-MOO methods in their own right but to show what changes,
+    and what stays the same, when a QIEA moves from one objective to
+    several (Sections~\ref{sec:taxonomy:objectives}
+    and~\ref{sec:critical-analysis:so-to-mo}).
   \item Papers on (multi-objective) genetic algorithms for quantum
     circuit optimization specifically, since these motivate and inform
     the case study in Section~\ref{sec:case-study}.
@@ -129,12 +138,8 @@ VEGA~\citep{schaffer1985vega}) to 2026. We include:
 \end{itemize}
 We exclude quantum evolutionary algorithms designed to run on physical
 quantum hardware (QEA in the strict sense), except where a paper
-explicitly discusses the QiEA/QEA distinction, and we exclude
-single-objective-only QIEA work except where it is foundational to the
-field (e.g.\ the original Q-bit/Q-gate representation) or directly
-informs the taxonomy's operator-type axis
-(Section~\ref{sec:taxonomy:operator}). Only English-language sources are
-included.
+explicitly discusses the QiEA/QEA distinction. Only English-language
+sources are included.
 
 \subsection{Research Questions and Contributions}
 \label{sec:introduction:contributions}

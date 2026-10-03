@@ -11,7 +11,7 @@ scope here.
 =====================================================================
 LITERATURE
 =====================================================================
-Full literature list (53 entries) lives in paper_survey/references.bib,
+Full literature list (57 entries) lives in paper_survey/references.bib,
 each entry's own `note` field carrying its role/section mapping and any
 TODOs -- not duplicated here. Sourced from Report1/, moo.txt ("future
 work" MOO-algorithm landscape), and web search (classical-MOEA/QIEA-MOO
@@ -74,6 +74,28 @@ trim if the target venue caps abstracts at 250 words.
   (all-sizes tables: algorithm_comparison_all, fair_hv_comparison_all,
   algorithm_by_cell -- the last backs the cells-won, per-cell wall-clock,
   and per-size fair-HV-gap claims).
+
+2026-10-03 supervisor feedback (supervisor_feedback.txt, points 4-5):
+- Point 5 DONE (draft): single-objective QIEAs are now included as a
+  comparison baseline, no longer excluded. Section 1.1 gains an
+  inclusion bullet; new Section 3.1 (sec:taxonomy:objectives) -- the
+  main SO->MO difference is the rotation gate's reference solution
+  (SO: best-so-far per individual; QMEA line: random draw from the
+  nondominated archive, sourced via ryu2014dmqea; NSGA-II hybrids: not
+  documented in sources confirmed so far); new Table
+  tab:feature-comparison-so in Section 4; new Section 5 subsection
+  sec:critical-analysis:so-to-mo. Interference claims corrected in
+  Sections 3/5/7/8: narayanan1996qiga's SO interference crossover
+  exists, so "no interference operator" now applies to MO methods
+  only. Bib +4 (narayanan1996qiga, han2004hepsilon,
+  zhang2011qieasurvey, ryu2014dmqea; 57 entries). Abstract not yet
+  updated to mention the SO comparison. han2004hepsilon's application
+  domain and termination-criterion wording still need checking
+  against its full text.
+- Point 4 OPEN: Scopus bibliometric study (publications/year 1996-2026,
+  keyword clusters, top-10 most-cited with one paragraph each, as a
+  new Section 2). Waiting on the user's Scopus CSV export; cluster
+  figure tool (VOSviewer vs Python) not yet decided.
 
 Known remaining weaknesses (not yet addressed):
 - Only 5 QIEA-MOO methods surveyed; Section 3 hedges with "in the

@@ -12,7 +12,10 @@ citations already give a confident answer), and
 Table~\ref{tab:feature-comparison-performance} turns to complexity,
 scalability, convergence behavior, benchmarks, and reported performance
 -- the remaining dimensions RQ2
-(Section~\ref{sec:introduction:contributions}) asks about.
+(Section~\ref{sec:introduction:contributions}) asks about. A third,
+smaller table (Table~\ref{tab:feature-comparison-so}) lists the
+single-objective QIEAs included as a comparison baseline
+(Section~\ref{sec:taxonomy:objectives}).
 
 A methodological caveat applies to Table~\ref{tab:feature-comparison-performance}
 specifically, and is itself a preview of
@@ -201,3 +204,57 @@ number of decision variables grows) that single-instance evaluations
 elsewhere in the table are not positioned to detect. Both observations
 recur as cross-cutting limitations in
 Section~\ref{sec:critical-analysis:cross-cutting}.
+
+Table~\ref{tab:feature-comparison-so} sets the single-objective
+baseline beside these two tables. Its last column replaces the
+selection mechanism with the rotation gate's reference solution, the
+component Section~\ref{sec:taxonomy:objectives} identifies as the main
+thing that changes between the two settings. Read against
+Table~\ref{tab:feature-comparison-taxonomy}, it shows that the
+representation and operator columns barely move between single- and
+multi-objective QIEAs (Q-bit chromosome plus rotation gate on both
+sides, with \citet{narayanan1996qiga}'s pre-Q-bit interference
+crossover the one exception), while the reference-solution question
+has a single obvious answer on the single-objective side and, on the
+multi-objective side, a documented answer only for the QMEA line of
+work~\citep{ryu2014dmqea}.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Single-objective QIEAs included as a comparison baseline
+    (Section~\ref{sec:taxonomy:objectives}). The last column gives the
+    solution the variation operator steers toward -- the component that
+    has no direct multi-objective equivalent.}
+  \label{tab:feature-comparison-so}
+  \begin{adjustwidth}{-2cm}{-2cm}
+  \centering
+  \begin{tabularx}{\linewidth}{@{}p{2.1cm}XXXX@{}}
+    \toprule
+    Method & Representation & Quantum-Inspired Operator(s) & Reference
+    Solution & Application Domain \\
+    \midrule
+    QIGA~\citep{narayanan1996qiga} &
+      Classical permutation strings, held in several parallel
+      ``universes'' (no Q-bit chromosome) &
+      Interference crossover (successive genes taken from successive
+      universes) &
+      None in the rotation-gate sense; recombination across
+      universes &
+      Travelling salesman problem (combinatorial) \\
+    QEA~\citep{han2002qea} &
+      Q-bit chromosome, observed to a binary string &
+      Rotation gate (lookup-table direction and magnitude) &
+      Best solution found so far, kept per individual and refreshed by
+      local and global migration &
+      0/1 knapsack (combinatorial) \\
+    QEA with H$_\epsilon$ gate~\citep{han2004hepsilon} &
+      Q-bit chromosome, observed to a binary string &
+      H$_\epsilon$ gate: rotation gate with a lower bound $\epsilon$ on
+      each Q-bit probability, plus a two-phase scheme &
+      Best solution found so far, as in QEA &
+      Not confirmed against full text \\
+    \bottomrule
+  \end{tabularx}
+  \end{adjustwidth}
+\end{table}

@@ -139,6 +139,20 @@
 % (3) CORE QIEA / QIEA-MOO LITERATURE (chronological)
 % =======================================================================
 
+% Earliest quantum-inspired GA (single-objective, TSP): "many-universes"
+% population structure + an interference crossover operator. Added
+% 2026-10-03 for supervisor feedback point 5 (single-objective QIEAs kept as
+% a comparison baseline); notable as the one surveyed method built explicitly
+% around interference. Confirmed via web search 2026-10-03.
+@inproceedings{narayanan1996qiga,
+  title     = {Quantum-inspired genetic algorithms},
+  author    = {Narayanan, Ajit and Moore, Mark},
+  booktitle = {Proceedings of the IEEE International Conference on Evolutionary Computation (ICEC 1996)},
+  address   = {Nagoya, Japan},
+  pages     = {61--66},
+  year      = {1996},
+}
+
 % THE foundational QEA paper (Q-bit chromosome + Q-gate rotation operator) that
 % essentially every later QIEA, including the MOO variants, builds on. Section
 % 2 background -- cite before any QIEA-MOO variant. Confirmed via web search
@@ -154,6 +168,20 @@
   doi     = {10.1109/TEVC.2002.804320},
 }
 
+% Single-objective QEA follow-up: H-epsilon gate (rotation gate variant that
+% keeps Q-bit probabilities from fully collapsing to 0/1), two-phase scheme,
+% new termination criterion. Comparison-baseline reference (supervisor point
+% 5). Confirmed via web search 2026-10-03 (Semantic Scholar).
+@article{han2004hepsilon,
+  title   = {Quantum-inspired evolutionary algorithms with a new termination criterion, {H}$_\epsilon$ gate, and two-phase scheme},
+  author  = {Han, Kuk-Hyun and Kim, Jong-Hwan},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {8},
+  number  = {2},
+  pages   = {156--169},
+  year    = {2004},
+}
+
 % QMEA -- one of the earliest QIEA-for-MOO papers (extends han2002qea's
 % Q-bit/Q-gate representation to a Pareto-based multiobjective setting). Core
 % Section 2/4 reference alongside olvera2023continuous. Confirmed via web
@@ -164,6 +192,33 @@
   booktitle = {Proceedings of the 2006 IEEE Congress on Evolutionary Computation (CEC 2006)},
   pages     = {2601--2606},
   year      = {2006},
+}
+
+% Broad survey + empirical comparison of (mostly single-objective) QIEA
+% variants, combinatorial and numerical. Comparison-baseline reference
+% (supervisor point 5). Confirmed via web search 2026-10-03 (Springer).
+@article{zhang2011qieasurvey,
+  title   = {Quantum-inspired evolutionary algorithms: a survey and empirical study},
+  author  = {Zhang, Gexiang},
+  journal = {Journal of Heuristics},
+  volume  = {17},
+  pages   = {303--351},
+  year    = {2011},
+  doi     = {10.1007/s10732-010-9136-0},
+}
+
+% DMQEA, from the same group as kim2006qmea. Cited mainly as the source for
+% how the QMEA/MQEA line picks Q-gate reference solutions: drawn at random
+% from the nondominated archive ("global random migration"), per its
+% Section 3.2 / Algorithm 3. Confirmed from the full text (SCITEPRESS PDF)
+% 2026-10-03. Note it calls kim2006qmea "MQEA".
+@inproceedings{ryu2014dmqea,
+  title     = {{DMQEA}: Dual Multiobjective Quantum-inspired Evolutionary Algorithm},
+  author    = {Ryu, Si-Jung and Kim, Jong-Hwan and Lee, Ki-Baek},
+  booktitle = {Proceedings of the International Conference on Evolutionary Computation Theory and Applications (ECTA 2014)},
+  pages     = {207--214},
+  year      = {2014},
+  doi       = {10.5220/0005071802070214},
 }
 
 % Another quantum-inspired NSGA-II variant (qubit superposition to speed

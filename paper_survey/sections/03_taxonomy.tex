@@ -16,7 +16,55 @@ type constrains which representations it can pair with, and its
 selection mechanism is often inherited wholesale from the classical MOEA
 it hybridizes with -- but each highlights a different design decision
 worth comparing across methods, and Section~\ref{sec:feature-comparison}
-uses them as the columns of its systematic comparison table.
+uses them as the columns of its systematic comparison table. Before the
+five axes, Section~\ref{sec:taxonomy:objectives} sets out the contrast
+between single- and multi-objective QIEAs, which cuts across all of
+them.
+
+\subsection{Single- vs.\ Multi-Objective QIEAs}
+\label{sec:taxonomy:objectives}
+
+Single-objective QIEAs are not the subject of this survey, but they are
+the baseline every QIEA-MOO method starts from, and comparing the two
+shows which parts of a QIEA are tied to having one objective. Most of
+the machinery carries over unchanged. The Q-bit chromosome, observation
+into a binary string, and the rotation gate of Eq.~\ref{eq:qgate} are
+the same in \citet{han2002qea}'s single-objective QEA and in
+\citet{kim2006qmea}'s multi-objective QMEA, which applies them to a
+multi-objective knapsack problem without changing the encoding.
+
+What does not carry over is the rotation gate's \emph{reference
+solution}. The gate rotates each Q-bit toward the corresponding bit of a
+reference solution, and the single-objective QEA has an obvious choice:
+the best solution found so far, kept per individual and refreshed by
+local and global migration~\citep{han2002qea}. With several objectives
+there is no single best solution, only a set of mutually non-dominated
+ones, so every QIEA-MOO method must decide which of them each Q-bit
+individual rotates toward. The QMEA line of work answers by drawing each
+individual's reference at random from the non-dominated archive, a step
+its authors call global random migration~\citep{ryu2014dmqea}. This turns
+the reference choice into a diversity mechanism in its own right:
+different individuals are pulled toward different parts of the front
+rather than all toward one point. For the NSGA-II-hybridized methods
+(Section~\ref{sec:taxonomy:hybridization}), the sources gathered for
+this survey describe the outer NSGA-II loop in detail but do not, at
+the level of detail we could confirm, state how the rotation gate's
+reference solution is chosen.
+
+Two smaller differences follow from the same cause. First, the
+single-objective QEA keeps one reference solution per individual, while
+a QIEA-MOO method must keep an archive of non-dominated solutions, which
+adds memory and a per-generation archive-update cost. Second, the
+single-objective literature treats Q-bit convergence as the goal:
+\citet{han2004hepsilon} use the convergence of Q-bit probabilities
+toward 0 or 1 as a termination criterion, and introduce the
+H$_\epsilon$ gate specifically to keep those probabilities from
+collapsing completely. In a multi-objective setting, a population
+whose Q-bits all collapse toward one binary string has lost the
+diversity it needs to cover a Pareto front, so a mechanism like the
+H$_\epsilon$ gate's lower bound arguably matters more there than in the
+single-objective case it was designed for. Section~\ref{sec:critical-analysis:so-to-mo}
+returns to what these differences imply for the surveyed methods.
 
 \subsection{Representation Scheme}
 \label{sec:taxonomy:representation}
@@ -75,10 +123,18 @@ with an adaptive (rather than fixed-table) quantum rotation step and a
 local-search refinement pass. Interference -- the third quantum
 phenomenon named alongside superposition and entanglement in
 Section~\ref{sec:introduction} as a general source of QIEA design
-inspiration -- has no method in the currently surveyed set built
-explicitly around it as a variation operator; whether this reflects a
-genuine gap in the field or simply this survey's present literature
-coverage is a question we flag for the critical analysis
+inspiration -- has no multi-objective method in the currently surveyed
+set built explicitly around it as a variation operator. It does appear
+on the single-objective side, and earlier than the rotation gate itself:
+\citet{narayanan1996qiga}'s quantum-inspired genetic algorithm for the
+travelling salesman problem, the earliest QIEA we cover, keeps several
+parallel ``universes'' of solutions and builds new individuals with an
+\emph{interference crossover} that takes successive genes from successive
+universes. Interference was therefore part of quantum-inspired
+evolutionary design from the start, but did not survive into the
+rotation-gate-based multi-objective methods surveyed here. Whether this
+reflects a genuine gap in the field or simply this survey's present
+literature coverage is a question we flag for the critical analysis
 (Section~\ref{sec:critical-analysis}) rather than resolve here.
 
 \subsection{Selection and Diversity Mechanism}

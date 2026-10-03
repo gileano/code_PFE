@@ -36,7 +36,9 @@ combinatorial problems specifically.
 already noted that interference, named alongside superposition and
 entanglement as a general source of QIEA design inspiration
 (Section~\ref{sec:introduction}), has no dedicated implementation in the
-methods surveyed here. Taken together with how much of each surveyed
+multi-objective methods surveyed here, even though the earliest
+single-objective QIEA was built around an interference
+crossover~\citep{narayanan1996qiga}. Taken together with how much of each surveyed
 method's actual variation step reduces to the single rotation-gate
 update rule from \citet{han2002qea} -- superposition-based sampling in
 \citet{guzel2022qnsga2} and entanglement-driven crossover in
@@ -112,6 +114,57 @@ study of \citet{olvera2023continuous}, with its 16-problem standard
 suite, is the exception. Claims of general applicability therefore rest
 on a narrower evidentiary base than the breadth of domains represented
 across the cluster as a whole might suggest.
+
+\subsection{From Single to Multiple Objectives}
+\label{sec:critical-analysis:so-to-mo}
+
+Comparing the surveyed QIEA-MOO methods with their single-objective
+baseline (Section~\ref{sec:taxonomy:objectives},
+Table~\ref{tab:feature-comparison-so}) exposes a limitation that none of
+the five axes above shows on its own: the move to several objectives was
+made mostly by \emph{adding} classical MOO machinery around an unchanged
+single-objective QIEA core, not by rethinking that core.
+
+\textbf{The rotation gate's reference solution is under-specified.} In
+the single-objective QEA, the rotation gate always has a well-defined
+target, the best solution found so far~\citep{han2002qea}. A
+multi-objective method has to replace that target with something chosen
+from a set of non-dominated solutions, and this choice decides where on
+the front each Q-bit individual is pulled. It is therefore as much a
+part of the method's diversity mechanism as its crowding distance or
+archive. Yet among the surveyed methods, only the QMEA line documents
+it in the sources we could confirm -- a uniform random draw from the archive~\citep{ryu2014dmqea} -- and
+none compares alternatives such as choosing the reference by crowding
+distance, by reference direction, or by hypervolume contribution. The
+selection-axis finding above (every surveyed hybrid inherits NSGA-II's
+crowding distance unchanged) has a counterpart here: the part of the
+algorithm that is genuinely new in the multi-objective setting is also
+the part least often specified or studied.
+
+\textbf{Convergence means different things in the two settings.}
+Single-objective QIEA design treats Q-bit probabilities converging to 0
+or 1 as the desired end state, and uses it as a termination
+criterion~\citep{han2004hepsilon}. In a multi-objective setting, that
+same convergence means the population is collapsing onto one point of a
+front it is supposed to cover. Mechanisms that slow or bound it, such as
+the H$_\epsilon$ gate's floor on each probability~\citep{han2004hepsilon},
+were designed for the single-objective case. We did not find a surveyed
+QIEA-MOO method that adapts them to, or evaluates them for, the
+multi-objective case.
+
+\textbf{Single-objective benchmarks transfer more directly than
+single-objective results.} The 0/1 knapsack problem is used on both
+sides, by \citet{han2002qea} and in multi-objective form by
+\citet{kim2006qmea}, which makes it the one place where single- and
+multi-objective QIEA results could in principle be compared directly.
+Even there, the comparison is indirect: a single-objective QEA's
+advantage over a classical GA does not imply anything about a QIEA-MOO
+method's advantage over NSGA-II, since the component that differs
+between them (the reference solution, above) is exactly the one the
+single-objective result says nothing about. Broad single-objective
+comparisons such as \citet{zhang2011qieasurvey}'s empirical study of
+QIEA variants have no multi-objective counterpart among the sources
+gathered for this survey.
 
 \subsection{Cross-Cutting Open Problems}
 \label{sec:critical-analysis:cross-cutting}

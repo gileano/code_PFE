@@ -31,7 +31,11 @@ number of decision variables grows on continuous problems -- and three
 cross-cutting problems -- reproducibility gaps, weak benchmarking
 practices, and scalability claims rarely stress-tested -- that recur
 across the field regardless of which taxonomy category a given method
-falls into.
+falls into. Comparing the surveyed methods with their single-objective
+baseline added one more: the rotation gate's reference solution, which
+has an obvious choice with one objective, is the component that changes
+most with several, yet it is the one the multi-objective literature
+specifies and studies least.
 
 \textbf{RQ4} (a concrete instance):
 Section~\ref{sec:case-study} grounded several of these abstract claims
@@ -56,7 +60,8 @@ empirical results paper, not this one.
 Section~\ref{sec:open-challenges} closed by turning the critical
 analysis forward rather than only backward: untested pairings between
 the Q-bit representation and selection mechanisms beyond NSGA-II's,
-a still-undemonstrated interference-based operator, concrete extensions
+an interference-based operator not yet demonstrated in the
+multi-objective setting, concrete extensions
 to the case-study pipeline drawn from adjacent quantum-computing
 literature, and the wider field's movement toward learned and
 neural-guided search that neither QIEA-MOO nor this survey's case study
