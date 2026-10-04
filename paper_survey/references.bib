@@ -570,23 +570,31 @@
 }
 
 % Listed in moo.txt's SOURCES; companion runtime-analysis citation for NSGA-III
-% (debjain2014nsga3).
-@article{opris2024nsga3runtime,
-  title   = {Runtime Analyses of NSGA-III on Many-Objective Problems},
-  author  = {Opris, Andre and Dang, Duc-Cuong and Neumann, Frank and Sudholt, Dirk},
-  year    = {2024},
-  eprint  = {2404.11433},
+% (debjain2014nsga3). GECCO 2024 (venue/pages/DOI confirmed via Crossref
+% 2026-10-04).
+@inproceedings{opris2024nsga3runtime,
+  title     = {Runtime Analyses of {NSGA-III} on Many-Objective Problems},
+  author    = {Opris, Andre and Dang, Duc-Cuong and Neumann, Frank and Sudholt, Dirk},
+  booktitle = {Proceedings of the Genetic and Evolutionary Computation Conference (GECCO 2024)},
+  pages     = {1596--1604},
+  year      = {2024},
+  doi       = {10.1145/3638529.3654218},
+  eprint    = {2404.11433},
   archivePrefix = {arXiv},
 }
 
-% Accepted IJCAI 2025. Companion theoretical-guarantee citation for NSGA-III
+% IJCAI 2025 (venue/pages/DOI confirmed via Crossref 2026-10-04). Companion
+% theoretical-guarantee citation for NSGA-III
 % (debjain2014nsga3), listed in moo.txt's SOURCES (parallel to
 % alghouass2025spea2beatsnsga2 for SPEA2).
-@article{deng2025nsga3guarantees,
-  title   = {The First Theoretical Approximation Guarantees for the Non-Dominated Sorting Genetic Algorithm III (NSGA-III)},
-  author  = {Deng, Renzhong and Zheng, Weijie and Doerr, Benjamin},
-  year    = {2025},
-  eprint  = {2504.21552},
+@inproceedings{deng2025nsga3guarantees,
+  title     = {The First Theoretical Approximation Guarantees for the Non-Dominated Sorting Genetic Algorithm {III} ({NSGA-III})},
+  author    = {Deng, Renzhong and Zheng, Weijie and Doerr, Benjamin},
+  booktitle = {Proceedings of the 34th International Joint Conference on Artificial Intelligence (IJCAI 2025)},
+  pages     = {8867--8875},
+  year      = {2025},
+  doi       = {10.24963/ijcai.2025/986},
+  eprint    = {2504.21552},
   archivePrefix = {arXiv},
 }
 
@@ -903,11 +911,18 @@
 
 % Listed in moo.txt's SOURCES alongside the weak-constraint-Pareto-dominance
 % paper -- a limitations/critical-analysis-section candidate (Section 5) about
-% a structural weakness in Pareto-dominance-based EMO generally.
+% a structural weakness in Pareto-dominance-based EMO generally. Published in
+% IEEE TEVC under a revised title (arXiv v1: "...The Achilles' Heel of...");
+% venue/title/pages confirmed via Crossref 2026-10-04. Key kept for stability.
 @article{zheng2025weakparetoboundary,
-  title   = {Weak Pareto Boundary: The Achilles' Heel of Evolutionary Multi-Objective Optimization},
+  title   = {Weak {Pareto} Boundary: A Critical Challenge for Evolutionary Multiobjective Optimization},
   author  = {Zheng, Ruihao and Deng, Jingda and Wang, Zhenkun},
-  year    = {2025},
+  journal = {IEEE Transactions on Evolutionary Computation},
+  volume  = {30},
+  number  = {5},
+  pages   = {2215--2229},
+  year    = {2026},
+  doi     = {10.1109/TEVC.2025.3646963},
   eprint  = {2505.13854},
   archivePrefix = {arXiv},
 }
@@ -961,12 +976,13 @@
 
 % Noise/crosstalk-aware objective reference. Confirmed via web search
 % 2026-09-10 -- v1 was titled "CQC: A Crosstalk-Aware Quantum Program
-% Compilation Framework"; later versions retitled and (per search) added co-
-% authors (Liu, Wang, Stein, Guo, Huang) -- verify final author list against
-% the paper before citing.
-@article{hua2022crosstalk,
+% Compilation Framework"; later versions retitled and added co-authors.
+% Author list verified against the arXiv API 2026-10-04 (previous list had a
+% spurious "Gao, Hang" and was missing five authors). arXiv-only, no venue.
+@misc{hua2022crosstalk,
   title   = {A Synergistic Compilation Workflow for Tackling Crosstalk in Quantum Machines},
-  author  = {Hua, Fei and Jin, Yuwei and Li, Ang and Chen, Yanhao and Zhang, Chi and Hayes, Ari and Gao, Hang and Zhang, Eddy Z.},
+  author  = {Hua, Fei and Jin, Yuwei and Li, Ang and Liu, Chenxu and Wang, Meng and Chen, Yanhao and Zhang, Chi and Hayes, Ari and Stein, Samuel and Guo, Minghao and Huang, Yipeng and Zhang, Eddy Z.},
+  howpublished = {arXiv preprint arXiv:2207.05751},
   year    = {2022},
   eprint  = {2207.05751},
   archivePrefix = {arXiv},
@@ -1032,10 +1048,12 @@
   archivePrefix = {arXiv},
 }
 
-% Hyperedge-aware partitioning reference. Confirmed via web search 2026-09-10.
-@article{sweeney2025hypergraph,
+% Hyperedge-aware partitioning reference. Confirmed via web search 2026-09-10;
+% still arXiv-only as of 2026-10-04.
+@misc{sweeney2025hypergraph,
   title         = {Dynamic Hypergraph Partitioning of Quantum Circuits with Hybrid Execution},
   author        = {Sweeney, Shane and Guha, Krishnendu},
+  howpublished  = {arXiv preprint arXiv:2506.09963},
   year          = {2025},
   eprint        = {2506.09963},
   archivePrefix = {arXiv},
