@@ -101,6 +101,21 @@ For `qaoa_maxcut`-like cases, pass `--fidelity-approximate-backend statevector` 
 
 **Parallelism:** per-block fitness evaluation, in every `BLOCK_OPTIMIZERS` entry (`optimise_block_nsga2`/`optimise_block_smsemoa`/`optimise_block_nsga3`), always uses `joblib.Parallel(-1)` — all available cores, with no CLI knob to cap it. This is intentional: the runtime hardware's own thermal safety mechanisms handle CPU protection, so this software does not need to throttle its own usage.
 
+## Building the survey paper
+
+`paper_survey/` holds the LaTeX source of the survey paper (`main.tex`, `sections/`, `references.bib`, `figures/`). It can be compiled locally, without a TeX installation, through the `texlive/texlive` Docker image — the same full TeX Live distribution Overleaf uses, so local output matches Overleaf's:
+
+```bash
+docker pull texlive/texlive:latest   # one-time, ~9 GB
+
+cd paper_survey
+./build.sh          # build once -> main.pdf (aux files kept in build/)
+./build.sh watch    # rebuild on every source change; open build/main.pdf in an auto-reloading viewer
+./build.sh clean    # remove build/ and main.pdf
+```
+
+`build.sh` runs `latexmk` (pdflatex + bibtex, repeated until references settle) inside the container as your own user, so generated files aren't root-owned. Set `TEXLIVE_IMAGE` to use a different image/tag (e.g. a pinned TeX Live year). `paper_survey/build/` and `paper_survey/main.pdf` are gitignored. A full build takes ~10s; check `build/main.log` / `build/main.blg` for LaTeX and bibtex warnings. Overleaf remains the place to share the paper — upload a zip of `paper_survey/` (without `build/`) as before.
+
 ## Project Structure
 - `AG_mono/`: Mono-objective implementations.
 - `NSGA-II/`: Multi-objective implementation using DEAP's built-in NSGA-II.
@@ -110,5 +125,6 @@ For `qaoa_maxcut`-like cases, pass `--fidelity-approximate-backend statevector` 
 - `M1_finale/`: Canonical pipeline (partitioning, block-local NSGA-II/SMS-EMOA/NSGA-III via `BLOCK_OPTIMIZERS`, inter-block injection, compression) — see "Running experiments" above.
 - `run_experiment.py`, `run_sweep.py`, `aggregate_results.py`: CLI tooling for single runs, resumable multi-seed sweeps, and results aggregation.
 - `runs/`: Structured output of experiment runs (gitignored) — one directory per run, aggregated by `aggregate_results.py`.
+- `paper_survey/`: LaTeX source of the survey paper, with `build.sh` for local Docker-based compilation — see "Building the survey paper" above.
 - `tests/`: Pytest smoke test for the pipeline (no broader test suite exists).
 - `logs.txt`: Full narrative project log (scaling history, research findings, ablation results, current status). `moo.txt`: web-research notes on the wider Pareto-dominance MOO algorithm landscape.

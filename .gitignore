@@ -9,3 +9,5 @@ runs_backup_*/
 report/
 .pytest_cache/
 .idea/
+paper_survey/build/
+paper_survey/main.pdf
