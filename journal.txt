@@ -11,7 +11,8 @@ scope here.
 =====================================================================
 LITERATURE
 =====================================================================
-Full literature list (79 entries) lives in paper_survey/references.bib,
+Full literature list (80 entries as of 2026-10-08, 72 of them cited --
+unsrtnat prints only the cited ones) lives in paper_survey/references.bib,
 each entry's own `note` field carrying its role/section mapping and any
 TODOs -- not duplicated here. Sourced from Report1/, moo.txt ("future
 work" MOO-algorithm landscape), and web search (classical-MOEA/QIEA-MOO
@@ -35,7 +36,7 @@ Load-bearing points not obvious from the bib alone:
   Sections 2-5.
 
 =====================================================================
-DRAFT STATUS (as of 2026-10-02)
+DRAFT STATUS (as of 2026-10-08)
 =====================================================================
 All 8 sections drafted (Sections 1-2 on 2026-09-10, 3-8 on 2026-09-11),
 followed by a full narrative-coherence review (2026-09-11) and a
@@ -156,7 +157,27 @@ trim if the target venue caps abstracts at 250 words.
   preprint found); many table cells are abstract-level or "not
   confirmed" (Hussain 2022 and Lu & Yu 2013 have no abstract at all).
 
-Known remaining weaknesses (as of 2026-10-03; the earlier three -- only 5
+2026-10-08 review/fix pass (commit 4eda0f24):
+- QIEA-MOO now dated from 2003, not 2006 (abstract, 1, 9): the paper's
+  own OpenAlex corpus has multi-objective QIEAs from 2003 and 2005.
+  Added zhang2003nqea (Zhang, Jin & Hu, ISIC 2003, IIR filter design;
+  abstract only, objective handling not stated) as the anchor;
+  kim2006qmea is now "Pareto-based methods following shortly after".
+  The 2005 ones (Meshoul et al. LNCS 10.1007/11595014_19, no abstract;
+  Xiong, reactive power, Chinese journal) are not cited.
+- Section 7: NSGA-III's ~1.9x total wall-clock no longer blamed on
+  "circuits handed downstream being costlier". Measured from
+  results_master.csv: the whole gap is hw_efficient_ansatz/w_state at
+  n=20, ~40% stage_injection_s, ~60% outside the four timed stages,
+  none in block optimization; text now says the cause is not
+  established.
+- Section 4.3/6.1: "strongest recent theoretical results" narrowed to
+  NSGA-III and SPEA2 (no SMS-EMOA theory result is cited).
+- Section 4.2: removed the "genuine gap or our coverage?" hedge on
+  interference; now points to 6.1.
+- Layout: ~32 overfull hboxes remain (largest ~35pt); not addressed.
+
+Known remaining weaknesses (as of 2026-10-08; the earlier three -- only 5
 methods, gilea2026waste rows, drafting language -- are resolved, see above):
 - Most rows of the 13-method Section 5 tables rest on abstracts only;
   hussain2022moqiga and lu2013apmqea have no abstract anywhere checked.
@@ -164,8 +185,11 @@ methods, gilea2026waste rows, drafting language -- are resolved, see above):
   multi-objective, the "no MO QIEA on a quantum problem" claim (abstract,
   4.6, 8.1) must change.
 - Top-10 most-cited paragraphs in Section 2 are abstract-based.
-- Section 5 tables enlarged to 13 rows at \footnotesize -- check they
-  still fit on a page after compiling.
+- (Resolved: the 13-row Section 5 tables are page-breakable xltabular,
+  so fitting on one page is no longer required.)
+- PROPOSED STRUCTURE below still uses the pre-2026-10-03 8-section
+  numbering and lists the mutation-scheme finding as Section 6
+  material; the paper itself withholds it (see NOT DONE / OPEN).
 
 =====================================================================
 PROPOSED STRUCTURE

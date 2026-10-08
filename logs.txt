@@ -1,6 +1,6 @@
 PROJECT LOG — Quantum Circuit Optimization with Genetic Algorithms
 Generated: 2026-08-18
-Last updated: 2026-10-02
+Last updated: 2026-10-08
 
 NOTE ON THIS FILE (2026-09-07): condensed from a much longer (~1700-line)
 narrative at user request -- it had grown too big to be useful. Kept: current
@@ -65,6 +65,19 @@ SMS-EMOA 124s) despite its cheaper block-optimization stage -- the
 excess is almost all in hw_efficient_ansatz/w_state at n=20, split
 between stage_injection_s and time outside the four timed stages
 (probably final fidelity evaluation; not verified).
+
+UPDATE (2026-10-03 to 2026-10-08): survey now has 9 sections (new
+Section 2, bibliometric analysis via OpenAlex; others renumbered 03-09),
+single-objective QIEAs added as a baseline, in-depth multi-objective set
+expanded to 13 methods. 2026-10-08 review pass (commit 4eda0f24) fixed
+four overclaims -- detail in journal.txt's DRAFT STATUS. bib now 80
+entries (72 cited).
+NSGA-III wall-clock split, measured 2026-10-08 from results_master.csv
+(225 rows): the whole NSGA-III-minus-NSGA-II total gap (~11,650s summed)
+comes from hw_efficient_ansatz/w_state at n=20 (the other 13 cells net
+slightly negative); ~40% is stage_injection_s, ~60% is wall_clock_s
+minus the four timed stages, block optimization contributes nothing
+(NSGA-III slightly cheaper there). Why is still open.
 
 ROADMAP:
 1. OPEN: start empirical-paper results write-up.
@@ -293,7 +306,10 @@ OPEN ITEMS (consolidated)
   the remaining weaknesses listed in journal.txt's DRAFT STATUS section
   (abstract done 2026-10-02). See PRIORITY SHIFT above.
 - Explain NSGA-III's ~1.9x end-to-end wall-clock (see PRIORITY SHIFT
-  UPDATE) -- relevant to the empirical paper, not blocking the survey.
+  UPDATEs; the stage split is measured, the cause is not) -- relevant
+  to the empirical paper, not blocking the survey. Next step: time what
+  runs outside the four timed stages (likely final fidelity
+  evaluation) on hw_efficient_ansatz/w_state at n=20.
 - Paused until the survey reaches a stable draft: decide and start the
   mutation-scheme/hybrid-LAS/sa-injection re-run scope on the fixed
   injection code (roadmap item 8 above); re-check the greedy-pass
