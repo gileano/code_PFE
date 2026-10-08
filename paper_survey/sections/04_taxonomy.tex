@@ -153,10 +153,9 @@ parallel ``universes'' of solutions and builds new individuals with an
 \emph{interference crossover} that takes successive genes from successive
 universes. Interference was therefore part of quantum-inspired
 evolutionary design from the start, but did not survive into the
-rotation-gate-based multi-objective methods surveyed here. Whether this
-reflects a genuine gap in the field or simply this survey's present
-literature coverage is a question we flag for the critical analysis
-(Section~\ref{sec:critical-analysis}) rather than resolve here.
+rotation-gate-based multi-objective methods surveyed here.
+Section~\ref{sec:critical-analysis:per-category} considers what this
+narrow operator range implies for the field.
 
 \subsection{Selection and Diversity Mechanism}
 \label{sec:taxonomy:selection}
@@ -187,11 +186,12 @@ four methods do not state their selection mechanism in their
 abstracts~\citep{wang2014powertrain,mousavi2019uav,deng2020gate,hussain2022moqiga}.
 What none of the thirteen does is pair a Q-bit representation with
 reference-point-based (NSGA-III-style), strength/density-based
-(SPEA2-style), or hypervolume-driven (SMS-EMOA-style) selection -- the
-three paradigms with the strongest recent theoretical
-results (Section~\ref{sec:critical-analysis:per-category}), which
-Section~\ref{sec:critical-analysis} treats as a candidate limitation
-rather than evidence that these paradigms are unsuitable.
+(SPEA2-style), or hypervolume-driven (SMS-EMOA-style) selection, even
+though the first two have recently gained the strongest theoretical
+guarantees of their lineages
+(Section~\ref{sec:critical-analysis:per-category}).
+Section~\ref{sec:critical-analysis} treats this absence as a candidate
+limitation rather than evidence that these paradigms are unsuitable.
 This project's own case study pairs all three of NSGA-II, NSGA-III, and
 SMS-EMOA selection with a classical (non-quantum-inspired) chromosome,
 so it demonstrates the reverse pairing is viable, but on the domain-

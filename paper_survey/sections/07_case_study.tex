@@ -199,11 +199,12 @@ use -- an implementation detail of this pipeline's current software
 stack, not a general claim that NSGA-III is more efficient than
 NSGA-II as algorithms. Nor does it carry over to end-to-end cost: mean
 total wall-clock per run is roughly 1.9 times \emph{higher} for NSGA-III
-than for NSGA-II (331s vs.\ 176s; SMS-EMOA 124s), almost entirely
-because of the stages after block optimization on two families at
-$n{=}20$ (\texttt{hw\_efficient\_ansatz} and \texttt{w\_state}), where
-the circuits NSGA-III hands downstream turn out more expensive to
-process. This distinction matters because an earlier
+than for NSGA-II (331s vs.\ 176s; SMS-EMOA 124s). The whole difference
+comes from two families at $n{=}20$ (\texttt{hw\_efficient\_ansatz} and
+\texttt{w\_state}), and none of it from block optimization: about
+two fifths falls in the injection stage and the rest outside the
+pipeline's four timed stages. We have not established why. This
+distinction matters because an earlier
 measurement in this same project once suggested a much larger, roughly
 two-fold advantage for NSGA-III; closer, fresher re-measurement showed
 that figure to be a stale-versus-fresh timing artifact rather than a
