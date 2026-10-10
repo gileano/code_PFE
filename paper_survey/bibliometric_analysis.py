@@ -25,6 +25,7 @@ import csv
 import datetime
 import gzip
 import json
+import math
 import re
 import time
 from pathlib import Path
@@ -99,6 +100,7 @@ MIN_KEYWORD_COUNT = 20      # keywords rarer than this are left out of the netwo
 LOUVAIN_SEED = 0
 LABELS_PER_CLUSTER = 8      # only the most frequent keywords are labelled on the figure
 EDGE_DRAW_QUANTILE = 0.5    # only the stronger half of within-cluster links is drawn
+LABEL_FONTSIZE = 7.5        # keyword labels, in points as printed
 TOP_N_CITED = 10
 
 # Reference categorical palette (dataviz skill, light mode), fixed order.
@@ -216,30 +218,34 @@ def plot_trend(core, broad, retrieved):
     mo = collections.Counter(r["year"] for r in core if r["multi_objective"])
     br = collections.Counter(r["year"] for r in broad)
 
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(7.5, 5.6), sharex=True,
-                                   gridspec_kw={"height_ratios": [3, 2], "hspace": 0.35})
+    # Drawn at the printed size (the paper's text block is ~5in wide), so
+    # font sizes below are the sizes that appear on the page.
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(5.0, 4.4), sharex=True, layout="constrained",
+                                   gridspec_kw={"height_ratios": [3, 2]})
+    fig.get_layout_engine().set(h_pad=0.08)
     so_v = [so[y] for y in years]
     mo_v = [mo[y] for y in years]
     ax1.bar(years, so_v, width=0.8, color=SERIES[0], label="Single-objective", edgecolor="white", linewidth=0.6)
     ax1.bar(years, mo_v, width=0.8, bottom=so_v, color=SERIES[1], label="Multi-objective",
             edgecolor="white", linewidth=0.6)
-    ax1.set_title("(a) QIEA publications per year", loc="left", fontsize=10, color=TEXT_PRIMARY)
+    ax1.set_title("(a) QIEA publications per year", loc="left", fontsize=9, color=TEXT_PRIMARY)
     ax1.set_ylabel("Publications", fontsize=9, color=TEXT_SECONDARY)
     ax1.legend(frameon=False, fontsize=8, loc="upper left")
     _style(ax1)
 
     ax2.bar(years, [br[y] for y in years], width=0.8, color=SERIES[0], edgecolor="white", linewidth=0.6)
-    ax2.set_title("(b) Evolutionary computation + quantum computing, publications per year",
-                  loc="left", fontsize=10, color=TEXT_PRIMARY)
+    ax2.set_title("(b) Evolutionary computation + quantum computing",
+                  loc="left", fontsize=9, color=TEXT_PRIMARY)
     ax2.set_ylabel("Publications", fontsize=9, color=TEXT_SECONDARY)
     ticks = years[::5]  # 1996, 2001, ..., 2026
     ax2.set_xticks(ticks)
     ax2.set_xticklabels([str(y) for y in ticks[:-1]] + [f"{YEAR_MAX}*"])
+    ax1.tick_params(labelbottom=True)  # sharex hides the top panel's year labels otherwise
     ax2.set_xlabel(f"Publication year (*{YEAR_MAX} partial, to {retrieved})", fontsize=9, color=TEXT_SECONDARY)
     _style(ax2)
     FIG_DIR.mkdir(exist_ok=True)
     out = FIG_DIR / "bibliometric_trend.png"
-    fig.savefig(out, dpi=200, bbox_inches="tight")
+    fig.savefig(out, dpi=200)
     plt.close(fig)
     print(f"📎 {out}")
 
@@ -277,47 +283,91 @@ def keyword_clusters(core):
     return G, comms, freq
 
 
-def _place_labels(ax, fig, pos, keys):
+def _seg_hits_box(p, q, box, steps=30):
+    """True if segment p-q passes through `box` (sampled, good enough at pixel scale)."""
+    return any(box.contains(p[0] + (q[0] - p[0]) * i / steps, p[1] + (q[1] - p[1]) * i / steps)
+               for i in range(steps + 1))
+
+
+def _segs_cross(p1, p2, q1, q2):
+    def orient(a, b, c):
+        return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+    return (orient(p1, p2, q1) * orient(p1, p2, q2) < 0
+            and orient(q1, q2, p1) * orient(q1, q2, p2) < 0)
+
+
+def _place_labels(ax, fig, pos, keys, node_size, centre, obstacles=(), bands=None):
     """Label `keys` near their nodes. Tries offsets in 8 directions at growing
     distances and keeps the first spot whose box overlaps neither a placed
-    label nor any node; a leader line is drawn once a label moves away."""
+    label nor any other node, and whose leader line (drawn once a label moves
+    away) crosses no other label, node or leader. Directions pointing away
+    from the node's cluster centre are tried first, so labels sit on the
+    outside of the cluster. `node_size` maps each node to its scatter size
+    (points^2); `centre` maps it to its cluster's centre (data units);
+    `obstacles` are other artists (e.g. titles) labels must not cover; with
+    `bands` (node -> (y_min, y_max) in data units), a label stays within its
+    cluster's row, so it cannot be read as belonging to the next cluster."""
     fig.canvas.draw()
     renderer = fig.canvas.get_renderer()
     to_px = ax.transData.transform
-    node_boxes = []
+    px_per_pt = fig.dpi / 72
+    node_boxes = {}
     for k, (x, y) in pos.items():
         px, py = to_px((x, y))
-        node_boxes.append(matplotlib.transforms.Bbox([[px - 6, py - 6], [px + 6, py + 6]]))
-    placed = []
-    dirs = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, 1), (1, -1), (-1, -1)]
+        h = 0.5 * node_size[k] ** 0.5 * px_per_pt
+        node_boxes[k] = matplotlib.transforms.Bbox([[px - h, py - h], [px + h, py + h]])
+    placed = [o.get_window_extent(renderer).expanded(1.05, 1.2) for o in obstacles]
+    leaders = []
+    # Labels must stay on the canvas (the figure is saved untrimmed at its
+    # printed size), with a small margin for text-hinting differences.
+    canvas = fig.bbox.padded(-3 * px_per_pt)
+    dirs = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, 1), (1, -1), (-1, -1),
+            (1, 0.5), (-1, 0.5), (1, -0.5), (-1, -0.5), (0.5, 1), (-0.5, 1), (0.5, -1), (-0.5, -1)]
     for k in keys:
         x, y = pos[k]
-        own = to_px((x, y))
+        own = tuple(to_px((x, y)))
+        cpx = to_px(centre[k])
+        if bands is not None:
+            lo, hi = sorted(to_px((0, yb))[1] for yb in bands[k])
+        ox, oy = own[0] - cpx[0], own[1] - cpx[1]
+        k_dirs = sorted(dirs, key=lambda d: -(d[0] * ox + d[1] * oy) / (math.hypot(*d) * (math.hypot(ox, oy) or 1)))
         chosen = None
-        for r in (9, 18, 28, 40, 55):
-            for dx, dy in dirs:
-                ha = "center" if dx == 0 else ("left" if dx > 0 else "right")
-                va = "center" if dy == 0 else ("bottom" if dy > 0 else "top")
+        r0 = 0.5 * node_size[k] ** 0.5 + 2  # start just outside the node's edge
+        for r in (r0, r0 + 8, r0 + 18, r0 + 30, r0 + 45, r0 + 60, r0 + 80, r0 + 100, r0 + 125):
+            for dx, dy in k_dirs:
+                ha = "center" if abs(dx) < 1 else ("left" if dx > 0 else "right")
+                va = "center" if abs(dy) < 1 else ("bottom" if dy > 0 else "top")
                 t = ax.annotate(k, (x, y), xytext=(dx * r, dy * r), textcoords="offset points",
-                                ha=ha, va=va, fontsize=7.5, color=TEXT_PRIMARY,
+                                ha=ha, va=va, fontsize=LABEL_FONTSIZE, color=TEXT_PRIMARY,
                                 bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.85))
                 box = t.get_window_extent(renderer).expanded(1.03, 1.15)
-                hits_node = any(box.overlaps(b) for b in node_boxes
-                                if not (abs(b.x0 + 6 - own[0]) < 1e-6 and abs(b.y0 + 6 - own[1]) < 1e-6))
-                if not hits_node and not any(box.overlaps(b) for b in placed):
+                ok = ((bands is None or (lo <= box.y0 and box.y1 <= hi))
+                      and canvas.x0 <= box.x0 and box.x1 <= canvas.x1 and canvas.y0 <= box.y0 and box.y1 <= canvas.y1
+                      and not any(box.overlaps(b) for n, b in node_boxes.items() if n != k)
+                      and not any(box.overlaps(b) for b in placed)
+                      and not any(_seg_hits_box(a, b, box) for a, b in leaders))
+                seg = None
+                if ok and r > r0:  # this spot needs a leader line: check it too
+                    seg = (own, (own[0] + dx * r * px_per_pt, own[1] + dy * r * px_per_pt))
+                    ok = (not any(_seg_hits_box(*seg, b) for b in placed)
+                          and not any(_seg_hits_box(*seg, b) for n, b in node_boxes.items() if n != k)
+                          and not any(_segs_cross(*seg, *l) for l in leaders))
+                if ok:
                     chosen = (t, box, r)
+                    if seg:
+                        leaders.append(seg)
                     break
                 t.remove()
             if chosen:
                 break
         if chosen is None:  # fall back to directly above, accepting overlap
             t = ax.annotate(k, (x, y), xytext=(0, 9), textcoords="offset points", ha="center",
-                            fontsize=7.5, color=TEXT_PRIMARY,
+                            fontsize=LABEL_FONTSIZE, color=TEXT_PRIMARY,
                             bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.85))
             chosen = (t, t.get_window_extent(renderer), 9)
             print(f"⚠️ label '{k}' could not avoid overlaps")
         t, box, r = chosen
-        if r > 18:
+        if r > r0:
             t.arrow_patch = None
             ax.annotate("", (x, y), xytext=t.get_position(), textcoords="offset points",
                         arrowprops=dict(arrowstyle="-", color=TEXT_SECONDARY, lw=0.5))
@@ -336,34 +386,49 @@ def _ordered_subgraph(G, nodes):
 
 
 def plot_clusters(G, comms, freq):
-    """One region per cluster on a grid; within-cluster layout by co-occurrence.
-    Links between clusters are left out of the drawing (counted in the summary)."""
-    ncols = 2
-    fig, ax = plt.subplots(figsize=(11, 10))
+    """One row per cluster, stacked to fill a float page at the full text
+    width; within-cluster layout by co-occurrence. Links between clusters are
+    left out of the drawing (counted in the summary)."""
+    sx = 1.5   # horizontal stretch of each cluster's layout (spans ~[-1, 1]): wide rows suit horizontal labels
+    gap = 0.6  # vertical space between rows, in layout units
+    # Each row's height grows with its cluster's size, so the densest cluster
+    # gets room for its labels' leader lines.
+    sy = [max(1.0, len(c) / 16) for c in comms]
+    cy = [0.0]  # row i is centred on cy[i] and spans cy[i] +/- sy[i]
+    for i in range(1, len(comms)):
+        cy.append(cy[-1] - sy[i - 1] - gap - sy[i])
+    # Drawn at the printed size (the paper's text block is ~5in wide), so
+    # font and node sizes here are the sizes that appear on the page.
+    fig, ax = plt.subplots(figsize=(5.0, 6.85), dpi=200)  # place labels at the saved resolution
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
     pos = {}
     for i, c in enumerate(comms):
         sub = _ordered_subgraph(G, c)
         p = nx.kamada_kawai_layout(sub, weight=None)  # unweighted: spaces nodes evenly in dense clusters
-        cx, cy = (i % ncols) * 3.2, -(i // ncols) * 3.0
-        pos.update({k: (cx + 0.9 * x, cy + 0.9 * y) for k, (x, y) in p.items()})
+        pos.update({k: (sx * x, cy[i] + sy[i] * y) for k, (x, y) in p.items()})
+    node_size = {k: 12 + 1.2 * freq[k] for k in pos}
+    centre = {k: (0, cy[i]) for i, c in enumerate(comms) for k in c}
+    bands = {k: (cy[i] - sy[i] - gap / 2, cy[i] + sy[i] + gap / 2) for i, c in enumerate(comms) for k in c}
+    titles = []
     for i, c in enumerate(comms):
         sub = _ordered_subgraph(G, c)
         weights = sorted(d["weight"] for _, _, d in sub.edges(data=True))
         cut = weights[int(EDGE_DRAW_QUANTILE * (len(weights) - 1))] if weights else 0
         strong = [(a, b) for a, b, d in sub.edges(data=True) if d["weight"] >= cut]
-        nx.draw_networkx_edges(sub, pos, edgelist=strong, ax=ax, edge_color=GRID, width=0.8)
+        nx.draw_networkx_edges(sub, pos, edgelist=strong, ax=ax, edge_color=GRID, width=0.7)
         nodes = sorted(c)
         nx.draw_networkx_nodes(G, pos, nodelist=nodes, ax=ax, node_color=SERIES[i % len(SERIES)],
-                               node_size=[25 + 2.5 * freq[k] for k in nodes], edgecolors="white",
-                               linewidths=1.0, label=f"Cluster {i + 1}")
-        cx, cy = (i % ncols) * 3.2, -(i // ncols) * 3.0
-        ax.text(cx - 1.3, cy + 1.35, f"Cluster {i + 1}", fontsize=10, color=TEXT_PRIMARY,
-                fontweight="bold", va="top")
-    ax.margins(0.08)
-    _place_labels(ax, fig, pos, [k for c in comms for k in sorted(c, key=lambda k: (-freq[k], k))[:LABELS_PER_CLUSTER]])
+                               node_size=[node_size[k] for k in nodes], edgecolors="white",
+                               linewidths=0.7, label=f"Cluster {i + 1}")
+        titles.append(ax.text(-2.95, cy[i] + sy[i] + 0.25, f"Cluster {i + 1}", fontsize=9, color=TEXT_PRIMARY,
+                              fontweight="bold", va="top"))
+    ax.set_xlim(-3.0, 2.9)
+    ax.set_ylim(cy[-1] - sy[-1] - 0.25, cy[0] + sy[0] + 0.3)
+    _place_labels(ax, fig, pos, [k for c in comms for k in sorted(c, key=lambda k: (-freq[k], k))[:LABELS_PER_CLUSTER]],
+                  node_size, centre, titles, bands)
     ax.set_axis_off()
     out = FIG_DIR / "bibliometric_clusters.png"
-    fig.savefig(out, dpi=200, bbox_inches="tight")
+    fig.savefig(out, dpi=200)
     plt.close(fig)
     print(f"📎 {out}")
 

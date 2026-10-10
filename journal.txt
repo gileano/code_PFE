@@ -36,7 +36,7 @@ Load-bearing points not obvious from the bib alone:
   Sections 2-5.
 
 =====================================================================
-DRAFT STATUS (as of 2026-10-08)
+DRAFT STATUS (as of 2026-10-10)
 =====================================================================
 All 8 sections drafted (Sections 1-2 on 2026-09-10, 3-8 on 2026-09-11),
 followed by a full narrative-coherence review (2026-09-11) and a
@@ -176,6 +176,33 @@ trim if the target venue caps abstracts at 250 words.
 - Section 4.2: removed the "genuine gap or our coverage?" hedge on
   interference; now points to 6.1.
 - Layout: ~32 overfull hboxes remain (largest ~35pt); not addressed.
+
+2026-10-10 figure-legibility pass (same commit as this entry), from supervisor
+feedback (paper_survey/supervisor_feedback.txt): add years to Fig 1a's
+x-axis; enlarge Figs 2, 3, 6 (illegible at print size; Fig 6 wasted
+space on a few nodes).
+- Root cause: figures were drawn on canvases far wider than the ~5in
+  text block (no geometry package), so LaTeX shrank their text (Fig 2's
+  labels printed at ~3.4pt). Figs 1, 2, 6 are now drawn at printed size
+  and saved untrimmed, so the font sizes in the code are those on the
+  page.
+- Fig 1: year labels on panel (a); panel (b) title shortened.
+- Fig 2: clusters stacked one per row, filling its float page at full
+  width; labels 7.5pt as printed. The label placer in
+  bibliometric_analysis.py now keeps labels on the canvas and inside
+  their cluster's row, tries outward spots first, and draws leader lines
+  that cross no label, node or leader; the larger Cluster 1 gets a
+  taller row. Data and quoted numbers unchanged (cached OpenAlex data).
+- Fig 3: QFT circuit is now quantikz source (figures/qft_example.tex,
+  main.tex loads tikz + quantikz2 -- needs TeX Live 2023+ on Overleaf),
+  gate for gate from qft_circuit(4); qft_example.png removed.
+- Fig 6: new paper_survey/make_case_study_figures.py rebuilds it from
+  pipeline code (circular layout grouped by Louvain block, nodes
+  coloured by block, inter-block edge 4-7 dashed); its partition is
+  checked against the recorded seed-0 run's metrics.json (matches).
+  Caption's apology for isolated-node placement replaced.
+- Not checked: Figs 4-5 and 7-10 (generate_report.py) may have the same
+  small-text problem.
 
 Known remaining weaknesses (as of 2026-10-08; the earlier three -- only 5
 methods, gilea2026waste rows, drafting language -- are resolved, see above):

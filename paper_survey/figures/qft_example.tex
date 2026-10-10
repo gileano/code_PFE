@@ -1,0 +1,11 @@
+% 4-qubit QFT, gate for gate as produced by M1_finale's qft_circuit(4)
+% (qiskit synth_qft_full): controlled-phase gates are drawn with the control
+% dot on the qubit Qiskit lists as control and the P box on the target.
+% Regenerate the gate list with:
+%   python -c "from M1_finale.final_m1_script import qft_circuit; print(qft_circuit(4))"
+\begin{quantikz}[column sep=0.17cm, row sep={0.75cm,between origins}]
+\lstick{$q_0$} & & & & \gate{P(\frac{\pi}{8})} & & & \gate{P(\frac{\pi}{4})} & & \gate{P(\frac{\pi}{2})} & \gate{H} & \swap{3} & \\
+\lstick{$q_1$} & & & \gate{P(\frac{\pi}{4})} & & & \gate{P(\frac{\pi}{2})} & & \gate{H} & \ctrl{-1} & \swap{1} & & \\
+\lstick{$q_2$} & & \gate{P(\frac{\pi}{2})} & & & \gate{H} & \ctrl{-1} & \ctrl{-2} & & & \targX{} & & \\
+\lstick{$q_3$} & \gate{H} & \ctrl{-1} & \ctrl{-2} & \ctrl{-3} & & & & & & & \targX{} &
+\end{quantikz}
