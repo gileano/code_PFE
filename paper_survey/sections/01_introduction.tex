@@ -23,11 +23,15 @@ algorithms} (QIEAs), founded on Han and Kim's Q-bit chromosome and
 Q-gate rotation operator~\citep{han2002qea} and since applied across
 combinatorial and continuous optimization
 alike~\citep{rehman2025evolutionary,vivek2025fss}. Following
-\citet{rehman2025evolutionary}, we adopt the terminology that separates
-\emph{quantum-inspired} evolutionary algorithms (QiEA: classical
+\citet{rehman2025evolutionary}, this survey adopts the terminology that separates
+\emph{quantum-inspired} evolutionary algorithms (QIEA: classical
 algorithms inspired by quantum phenomena) from \emph{quantum} evolutionary
 algorithms (QEA: algorithms designed for and executed on physical quantum
-hardware). This survey is scoped to the former.
+hardware). This survey is scoped to the former. Han and Kim's
+algorithm~\citep{han2002qea}, the canonical QIEA, is itself named QEA
+by its authors; outside this paragraph and the scope statement of
+Section~\ref{sec:introduction:scope}, ``QEA'' in this survey refers to
+that quantum-inspired algorithm, not to hardware-executed ones.
 
 Whether classical or quantum-inspired, evolutionary algorithms are above
 all optimization methods -- yet the optimization problems they are
@@ -48,8 +52,8 @@ shortly after.
 Yet the literature applying QIEA specifically to multi-objective problems
 remains comparatively sparse and scattered across
 domains~\citep{olvera2023continuous,guzel2022qnsga2,kumar2026eahqnsga2},
-compared to the much larger body of QIEA work on single- or
-bi-objective problems such as feature subset
+compared to the much larger body of QIEA work on single-objective
+problems such as feature subset
 selection~\citep{zhang2011qieasurvey,vivek2025fss}. Part of the reason lies in the
 representation itself: the Q-bit chromosome encodes each individual as
 a vector of qubits that is observed into a binary string, a natural fit
@@ -64,13 +68,15 @@ true Pareto front owing to their precision advantage, and that NSGA-II
 converged faster overall, even though the quantum-inspired variants
 were statistically competitive -- and that the quantum-inspired
 variants' performance degraded as the number of decision variables,
-and with it the number of Q-bits, increased. No survey, to our knowledge, systematically
-taxonomizes and critically compares QIEA-for-MOO methods on their own
-terms. This is the gap this survey addresses.
+and with it the number of Q-bits, increased. No survey, to the best of the authors' knowledge, systematically
+taxonomizes and critically compares QIEA-for-MOO methods as a distinct
+class, separately from single-objective QIEA surveys and classical MOO
+surveys. This is the gap this survey addresses.
 
-Beyond the mechanics of any one algorithm, the appeal of cheaper,
-shallower, more efficient optimization has a stake that outlives any
-individual benchmark result: computing's energy footprint. Large-scale
+Beyond the mechanics of any individual algorithm, the push for
+lighter, highly efficient optimization addresses an imperative that
+transcends standard benchmark performance: mitigating the substantial
+energy footprint of modern computing. Large-scale
 classical compute -- from generative-AI training runs to combinatorial
 optimization on classical hardware -- carries real energy and
 sustainability costs~\citep{sai2026generative}, and reducing the resources
@@ -94,13 +100,25 @@ claims in a concrete example, Section~\ref{sec:case-study} presents a
 case study built on this project's own quantum-circuit-optimization
 pipeline, which partitions a target circuit into qubit blocks, evolves a
 cheaper per-block circuit via a pluggable multi-objective optimizer, and
-reassembles the result. That pipeline is itself a direct extension of
+reassembles the result. This pipeline extends
 \citet{ghlib2026scalable}'s scalable, block-partitioned NSGA-II framework
-for quantum circuit optimization, adding NSGA-III and SMS-EMOA as
-alternative per-block optimizers. The case study is presented as an
-illustrative worked example, not as this survey's primary evidence; full
-empirical validation of that pipeline is the subject of a separate,
-forthcoming empirical results paper.
+for quantum circuit optimization. The partitioning, block-level genetic
+encoding, inter-block gate injection, and compression stages are
+inherited from that framework, which uses NSGA-II as its only per-block
+optimizer. The present work contributes three extensions on top of it:
+(i) NSGA-III and SMS-EMOA as alternative per-block optimizers behind a
+common interface, compared against NSGA-II on a 225-run baseline (three
+algorithms, five benchmark circuit families, five seeds each);
+(ii) scale-aware Monte-Carlo fidelity estimation (an echo-test estimator
+and a statevector estimator, configured per circuit family) that
+extends the evaluated circuit sizes to 20 qubits (16 for QAOA MaxCut);
+and (iii) a shared-reference hypervolume comparison for ranking
+algorithms fairly, together with reproducible experiment tooling
+through which two correctness bugs, introduced during these extensions,
+were found and fixed. The case study is presented as an illustrative
+worked example, not as this survey's primary evidence; full empirical
+validation of this pipeline is the subject of a separate, forthcoming
+empirical results paper.
 
 \subsection{Scope and Inclusion Criteria}
 \label{sec:introduction:scope}
@@ -114,10 +132,10 @@ VEGA~\citep{schaffer1985vega}) to 2026. This targeted selection is
 complemented by a bibliometric sweep of the QIEA literature as a whole,
 2{,}250 papers from 1996--2026 retrieved from OpenAlex, which also
 contributes its ten most-cited papers to the survey
-(Section~\ref{sec:bibliometric}). We include:
+(Section~\ref{sec:bibliometric}). The survey includes:
 \begin{itemize}
   \item Papers proposing or surveying quantum-inspired evolutionary
-    algorithms (in the QiEA sense above) applied to multi-objective or
+    algorithms (in the QIEA sense above) applied to multi-objective or
     many-objective optimization problems, on continuous or combinatorial
     search spaces.
   \item Classical (non-quantum-inspired) multi-objective evolutionary
@@ -143,9 +161,9 @@ contributes its ten most-cited papers to the survey
     introduction and the conclusion, and not treated as QIEA/MOO-technical
     literature.
 \end{itemize}
-We exclude quantum evolutionary algorithms designed to run on physical
+It excludes quantum evolutionary algorithms designed to run on physical
 quantum hardware (QEA in the strict sense), except where a paper
-explicitly discusses the QiEA/QEA distinction. Only English-language
+explicitly discusses the QIEA/QEA distinction. Only English-language
 sources are included.
 
 The multi-objective methods that the taxonomy
@@ -155,12 +173,21 @@ stated rule rather than by hand. They are the ten most-cited papers in
 the bibliometric corpus of Section~\ref{sec:bibliometric} that are
 tagged multi-objective and whose own optimization method is a QIEA --
 skipping papers that use a QIEA only as a comparison baseline, and
-papers without an English full text --
-\citep{deng2020gate,li2007hqga,kim2011mqeaps,kim2006qmea,deng2024moqead,hussain2022moqiga,mousavi2019uav,wang2014powertrain,zhang2012moqeavrp,lu2013apmqea},
-plus three recent methods found by the targeted search that a
-citation-based rule would miss because they have had little time to be
-cited~\citep{guzel2022qnsga2,olvera2023continuous,kumar2026eahqnsga2}.
-This gives thirteen methods. For most of them, the comparison rests on
+papers without an English full text. In order of publication, these are
+QMEA~\citep{kim2006qmea}, HQGA~\citep{li2007hqga},
+MQEA-PS~\citep{kim2011mqeaps}, MOQEA~\citep{zhang2012moqeavrp},
+APMQEA~\citep{lu2013apmqea}, a QGA for powertrain
+design~\citep{wang2014powertrain}, a QGA for UAV
+coalitions~\citep{mousavi2019uav}, IPOQEA~\citep{deng2020gate},
+MOQIGA~\citep{hussain2022moqiga}, and MOQEA/D~\citep{deng2024moqead}.
+They are complemented by three recent methods found by the targeted
+search that a citation-based rule would miss because they have had
+little time to be cited: QNSGA-II~\citep{guzel2022qnsga2}, a continuous
+QIEA-MOO~\citep{olvera2023continuous}, and
+EAH-QNSGA-II~\citep{kumar2026eahqnsga2}. Each of these papers proposes
+exactly one method, so the selection counts methods and papers alike,
+and the phrase ``the surveyed methods'' refers to this set throughout.
+For most of them, the comparison rests on
 what the paper's abstract states; Section~\ref{sec:feature-comparison}
 marks what could not be confirmed.
 
@@ -171,7 +198,7 @@ This survey is organized around four research questions:
 \begin{description}
   \item[RQ1:] How can quantum-inspired evolutionary algorithms for
     multi-objective optimization be systematically classified?
-  \item[RQ2:] How do the surveyed methods compare in representation,
+  \item[RQ2:] How do the surveyed methods compare in solution representation,
     operators, selection mechanism, complexity, scalability, and
     reported performance?
   \item[RQ3:] What are the main limitations of the QIEA-for-MOO
@@ -189,11 +216,11 @@ per research question, preceded by a bibliometric overview of the field:
     multi-objective work, its keyword clusters, and its ten most-cited
     papers (Section~\ref{sec:bibliometric}).
   \item \textbf{(RQ1)} A taxonomy of QIEA-for-MOO methods along five axes --
-    representation scheme, quantum-inspired operator type,
+    solution representation scheme, quantum-inspired operator type,
     selection/diversity mechanism, hybridization with classical MOEAs,
     and application domain (Section~\ref{sec:taxonomy}).
   \item \textbf{(RQ2)} A systematic feature comparison of the surveyed methods against
-    that taxonomy, covering representation, operator type, selection
+    that taxonomy, covering solution representation, operator type, selection
     mechanism, and application domain alongside complexity, scalability,
     convergence properties, and reported performance
     (Section~\ref{sec:feature-comparison}).

@@ -51,18 +51,18 @@ much less diversity than the three-phenomenon (superposition,
 interference, entanglement) framing common in this literature's
 introductions would suggest.
 
-\textbf{Selection and diversity mechanism.} The thirteen surveyed
+\textbf{Selection and diversity mechanism.} The surveyed
 methods use a range of selection mechanisms -- NSGA-II's crowding
 distance, Pareto ranking with an archive, preference-based archive
 selection, an adaptive grid, decomposition, and weighted sums
 (Section~\ref{sec:taxonomy:selection}) -- but two weaknesses stand out.
-First, four of the thirteen, all among the most cited, do not state in
+First, four of the surveyed methods, all among the most cited, do not state in
 their abstracts how their objectives are combined at
 all~\citep{wang2014powertrain,mousavi2019uav,deng2020gate,hussain2022moqiga}.
 A reader cannot tell from the abstract whether such a method searches
 for a Pareto front or optimizes a single weighted objective, which is
 the most basic fact about a multi-objective method. Second, none of the
-thirteen pairs the Q-bit representation with NSGA-III's
+surveyed methods pairs the Q-bit representation with NSGA-III's
 reference-point niching, SPEA2's density estimator, or SMS-EMOA's
 hypervolume-driven selection. This gap is worth weighing
 against results that postdate most of the surveyed
@@ -90,17 +90,17 @@ using the amplitude pair's own uncertainty as a diversity signal, rather
 than only its observed bit value). The older QMEA/MQEA line goes
 further, building its archive into the QEA
 itself~\citep{kim2009mqea,kim2011mqeaps}, and
-\citet{ho2013vectorqea}, outside the thirteen methods, redesign the
+\citet{ho2013vectorqea}, outside the surveyed methods, redesign the
 QEA's fitness assignment and rotation-angle update for several
 objectives -- so a deeper integration has been shown to be possible,
 but the recent methods have not followed it. A second, related weakness is
 evaluative rather than architectural: as already noted from
 Table~\ref{tab:feature-comparison-performance}
 (Section~\ref{sec:feature-comparison}), every reported performance claim
-in the surveyed set that we could confirm compares the proposed method
+in the surveyed set that could be confirmed compares the proposed method
 against a classical baseline -- NSGA-II in most cases, conventional
 planning approaches in \citet{kumar2026eahqnsga2}'s case -- and no two
-independently published QIEA-MOO methods among the thirteen are
+independently published QIEA-MOO methods among those surveyed are
 benchmarked against each other in the sources gathered for this survey.
 The only QIEA-MOO-to-QIEA-MOO comparisons are against the authors' own
 variants: \citet{kim2011mqeaps} against their earlier MQEA, and
@@ -141,7 +141,7 @@ the five axes above shows on its own: the move to several objectives was
 made mostly by \emph{adding} classical MOO machinery around an unchanged
 single-objective QIEA core, not by rethinking that core;
 \citet{ho2013vectorqea}'s redesigned fitness assignment and angle update
-are the clearest exception we found.
+are the clearest exception found.
 
 \textbf{The rotation gate's reference solution is under-specified.} In
 the single-objective QEA, the rotation gate always has a well-defined
@@ -150,7 +150,7 @@ multi-objective method has to replace that target with something chosen
 from a set of non-dominated solutions, and this choice decides where on
 the front each Q-bit individual is pulled. It is therefore as much a
 part of the method's diversity mechanism as its crowding distance or
-archive. Yet among the thirteen surveyed methods, only three answers are
+archive. Yet among the surveyed methods, only three answers are
 documented -- a random draw from a non-dominated archive in the
 QMEA/MQEA line~\citep{kim2009mqea,ryu2014dmqea}, a randomly weighted sum
 of the objectives in \citet{li2007hqga}'s hybrid, and one
@@ -173,8 +173,8 @@ criterion~\citep{han2004hepsilon}. In a multi-objective setting, that
 same convergence means the population is collapsing onto one point of a
 front it is supposed to cover. Mechanisms that slow or bound it, such as
 the H$_\epsilon$ gate's floor on each probability~\citep{han2004hepsilon},
-were designed for the single-objective case. We did not find a surveyed
-QIEA-MOO method that adapts them to, or evaluates them for, the
+were designed for the single-objective case. No surveyed
+QIEA-MOO method was found that adapts them to, or evaluates them for, the
 multi-objective case.
 
 \textbf{Single-objective benchmarks transfer more directly than
@@ -290,7 +290,7 @@ single-scale evaluation of any one of these families
 -- exactly the evaluative pattern this subsection has already flagged
 as the norm in the QIEA-MOO literature surveyed above -- would report
 only one point on what is evidently not even a consistent trend across
-problem instances, let alone across algorithms. We do not attempt to
+problem instances, let alone across algorithms. No attempt is made to
 adjudicate here whether the declining trend reflects a genuine scaling
 limitation of the pipeline or simply the exact fidelity metric's own
 well-known exponential contraction toward zero for two generically

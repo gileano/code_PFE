@@ -1,0 +1,238 @@
+SUPERVISOR REVIEW — changes applied to the survey paper
+Source of comments: paper_survey/main_feedback.pdf (annotations by Florea Adrian)
+Changes applied: 2026-10-23
+Page numbers (p.) refer to main_feedback.pdf. Comments translated from Romanian.
+Build after all changes: main.pdf, 60 pages (was 57), no errors, no undefined references.
+
+=====================================================================
+ABSTRACT (main.tex)
+=====================================================================
+1. (p.1) Reformulate the opening sentence.
+   -> Replaced verbatim with the supervisor's sentence: "By integrating core
+      principles of quantum mechanics---specifically Q-bit chromosome
+      representations and quantum rotation-gate operators---quantum-inspired
+      evolutionary algorithms (QIEAs) enhance the search efficiency and
+      diversity of classical evolutionary paradigms."
+
+2. (p.1) "representation" -> "solution representation".
+   -> Applied in the abstract and the taxonomy axis renamed throughout:
+      RQ2 and contributions list (01_introduction), taxonomy intro and
+      subsection title "Solution Representation Scheme" plus its first
+      sentence (04_taxonomy), conclusion axis list (09_conclusion),
+      feature-comparison intro (05_feature_comparison). Table column headers
+      left as "Representation" to keep the table width.
+
+3. (p.1) Use "This work proposes" instead of "We"; prefer impersonal style.
+   -> All ~31 first-person uses (we/our/us) rewritten impersonally across the
+      whole paper, e.g. "We propose" -> "This work proposes", "We close with"
+      -> "The paper closes with", "to our knowledge" -> "to the best of the
+      authors' knowledge", "We queried OpenAlex" -> "OpenAlex ... was queried".
+      No first-person pronouns remain.
+
+4. (p.1) Reformulate the "thirteen methods" paragraph.
+   -> Supervisor's paragraph applied, but without the number thirteen (per
+      supervisor's wish): "A review of the most-cited and most recent
+      multi-objective QIEA methods reveals ...". "only three of these methods"
+      kept, as it is a specific finding.
+
+5. (p.1) Link the ending to the identified niche and the PhD continuation (FADSE).
+   -> Abstract closing sentence replaced: a lead-in naming the gap (no
+      multi-objective QIEA applied to a quantum-computing problem domain yet)
+      followed by the supervisor's FADSE text verbatim.
+   -> New subsection added to back it up: Section 8 "Ongoing Work: QIEA-MOO
+      Variants in FADSE" (label sec:open-challenges:fadse), drafted from the
+      supervisor's wording and patrausanu2024frameworks / patrausanu2026thomae.
+      Section 8 intro updated from "four groups" to "five groups".
+      TO CHECK: does it accurately describe what is being built in FADSE?
+
+=====================================================================
+INTRODUCTION (01_introduction.tex, 07_case_study.tex, 09_conclusion.tex)
+=====================================================================
+6. (p.2, p.4) "QiEA" vs "QIEA" consistency.
+   -> The 3 "QiEA" occurrences changed to "QIEA" (157 other uses already QIEA).
+
+7. (p.2) Remove "or bi-objective" (looks contradictory with multi-objective).
+   -> Removed; now "QIEA work on single-objective problems such as feature
+      subset selection". The two "bi-objective" uses in Section 5 describe
+      benchmark suites (ZDT etc.) and were kept.
+
+8. (p.3) Unclear what "on their own terms" means.
+   -> Replaced in all 3 places. Abstract: "has not yet been the subject of a
+      dedicated survey". Intro: "as a distinct class, separately from
+      single-objective QIEA surveys and classical MOO surveys". Conclusion:
+      phrase dropped.
+
+9. (p.3) Reformulate the energy-footprint sentence.
+   -> Replaced verbatim with the supervisor's sentence ("Beyond the mechanics
+      of any individual algorithm, the push for lighter, highly efficient
+      optimization addresses an imperative ...").
+
+10. (p.3) State explicitly what this work did in Section 7 vs. Ghlib [18].
+11. (p.3) Say here that [18] was extended with NSGA-III and SMS-EMOA;
+          "this pipeline" instead of "that pipeline".
+   -> Intro paragraph rewritten: inherited from [18] = partitioning, block-level
+      genetic encoding, inter-block gate injection, compression (NSGA-II as
+      only per-block optimizer). Contributions of this work: (i) NSGA-III and
+      SMS-EMOA as alternative per-block optimizers, 225-run baseline;
+      (ii) scale-aware Monte-Carlo fidelity estimation (echo-test and
+      statevector) reaching 20 qubits (16 for QAOA MaxCut); (iii) shared-
+      reference (fair) hypervolume comparison and reproducible tooling, through
+      which two bugs introduced during these extensions were found and fixed.
+      "that pipeline" -> "this pipeline". A shorter version of the same list
+      added to the opening of Section 7.
+      TO CHECK: the "inherited from [18]" list against Ghlib et al.'s paper.
+
+12. (p.5) Which are the 13 methods? Methods or articles?
+27. (p.19) Same question.
+   -> Intro now names every selected method with its citation, in publication
+      order: QMEA, HQGA, MQEA-PS, MOQEA, APMQEA, QGA for powertrain design,
+      QGA for UAV coalitions, IPOQEA, MOQIGA, MOQEA/D (ten most cited), plus
+      QNSGA-II, continuous QIEA-MOO, EAH-QNSGA-II (three recent). States that
+      each paper proposes exactly one method and that "the surveyed methods"
+      refers to this set throughout.
+   -> "thirteen" removed from the whole paper (16 occurrences in sections
+      04, 05, 06, 09 -> "the surveyed methods" / "those surveyed"). "ten
+      most-cited" and "three recent" kept only in the selection rule.
+
+=====================================================================
+BIBLIOMETRIC ANALYSIS (02_bibliometric_analysis.tex)
+=====================================================================
+13. (p.6) Reformulate the section's opening paragraph.
+   -> Replaced with the supervisor's paragraph ("Prior to analyzing individual
+      methods, this section presents a comprehensive mapping ...").
+
+14. (p.7) Is the record-count enumeration needed? Give only start and end.
+   -> Now: "The cleaning reduced the QIEA query from 2,835 records to 2,250
+      papers, and the broad query from 935 to 558."
+
+15. (p.7) Hand-corrected publication years: details that don't belong in a
+    scientific article.
+   -> Sentence deleted.
+
+16. (p.11) Cluster 1 title: extend or use "Key Concepts in QIEA".
+   -> "Key concepts in QIEA: search dynamics and operators" (table and list).
+
+17. (p.11) Move "NP-hard combinatorial optimization" to Cluster 2.
+   -> Moved in the table (placed by frequency, 24 occurrences); keyword counts
+      updated (Cluster 1: 20 -> 19, Cluster 2: 9 -> 10). Disclosed in the
+      table caption that Louvain assigned it to Cluster 1. The raw
+      data/bibliometric_clusters.csv is unchanged; the figure labels clusters
+      only by number, so no regeneration needed.
+
+18. (p.11) Cluster 4 title: extend or use "Optimization Paradigms and Algorithms".
+   -> "Optimization paradigms and algorithms: hybrids with other methods".
+   -> Rendering fix for 16/18: the longer labels overflowed the line in the
+      default description list. The list now uses enumitem's
+      [style=unboxed] so labels wrap, and \needspace keeps the 2.3 heading,
+      its intro sentence and the Cluster 1 label on the same page.
+
+19. (p.12) Mention Han & Kim named it QEA, distinct from QEA (quantum hardware)
+    in our paper.
+   -> Parenthetical added at Han & Kim's entry ("the authors' own name, not to
+      be confused with QEA in the sense of Section 1, i.e. algorithms executed
+      on quantum hardware"). Matching sentence added to the intro's QIEA/QEA
+      definition: outside that definition, "QEA" refers to Han & Kim's
+      quantum-inspired algorithm.
+
+20. (p.12) Narayanan & Moore entry: sentence missing a verb.
+   -> "Proposes the first quantum-inspired genetic algorithm."
+
+21. (p.13) Complete as "the previously introduced QEA algorithm".
+   -> "Improves the previously introduced QEA algorithm (entry 1) in three ways".
+
+22. (p.13) Justify "most-cited general survey of the field".
+   -> Verified against the corpus data: only survey among the top ten; 297
+      citations vs 71 for the next most-cited QIEA-specific review. Text now
+      says so explicitly.
+
+23. (p.13) Explain cognitive radio in parentheses.
+   -> "(wireless systems in which unlicensed users dynamically access licensed
+      frequency bands left idle by their owners)".
+
+24. (p.14) Which were the two publication-year errors?
+   -> Limitations sentence rewritten without the dangling reference: "OpenAlex
+      has broad coverage but imperfect metadata (e.g. occasional incorrect
+      publication years), so some errors may remain in the long tail."
+
+=====================================================================
+BACKGROUND (03_background.tex)
+=====================================================================
+25. (p.15) x is actually a vector of inputs (x1, ..., xn).
+   -> Decision vector now written x = (x1, x2, ..., xn) in Omega, with image
+      f(x) in objective space. The two solutions in the dominance definition
+      renamed x and y (previously x1, x2, which would clash with the vector
+      components). Formal Pareto-dominance (and weak dominance) definition
+      added as an equation.
+
+26. (p.15) Add formulas for the quality indicators.
+   -> Display equations added for HV (Lebesgue measure), IGD, Deb et al.'s
+      spread Delta, spacing, Coverage C(A,B), and TSHD D(A,B). Spread and
+      spacing written to match M1_finale/final_m1_script.py's spread_delta /
+      compute_spacing, so the case-study numbers agree with the formulas.
+
+=====================================================================
+TAXONOMY / FEATURE COMPARISON (04_taxonomy.tex, 05_feature_comparison.tex)
+=====================================================================
+28. (p.19) Unclear expression "at the combinatorial end".
+   -> The range is now defined explicitly: from purely binary (combinatorial)
+      problems, where the observed bit string is the solution, to continuous
+      problems, where each variable is decoded from several Q-bits. Feature
+      selection placed at the binary extreme (one Q-bit per feature).
+
+29. (p.22) Sentence sounds bad, adds nothing; isn't NSGA-II widely cited?
+   -> Rewritten: the two hybrids are the most-cited multi-objective QIEAs; the
+      QIEA variants built on NSGA-II (itself one of the most widely cited
+      MOEAs) are the most common recent design but too recent to have
+      accumulated comparable citations.
+
+30. (p.24) Remove "Not confirmed (no abstract available)"; the abstract exists.
+   -> "(no abstract available)" removed from the APMQEA and MOQIGA rows;
+      "Not confirmed" kept. (Abstracts could not be retrieved automatically:
+      ScienceDirect blocks access, Crossref/OpenAlex have none.)
+
+31. (p.28) "this survey's first author's own earlier work" adds little.
+   -> Aside removed.
+
+=====================================================================
+CASE STUDY (07_case_study.tex, 08_open_challenges.tex)
+=====================================================================
+32. (p.35) Specify the data source for Figure 4.
+   -> New "Experimental data" paragraph in Section 7 (label
+      sec:case-study:data): 225-run core baseline (3 optimizers x 5 circuit
+      families x 3 qubit counts x 5 seeds, 100 generations, population 100),
+      completed 6 September 2026 after the injection-stage fix, on a single
+      laptop (Intel Core i7-12700H, 64 GB RAM), all figures/tables generated
+      by script from the aggregated results; code at
+      https://github.com/gileano/code_PFE/tree/ULBS_qiea.
+   -> "Source: 225-run core baseline (Section 7.x)" added to the captions of
+      Table 5 (algorithm comparison), Figure 4, the HV table, the HV bar
+      figure, and the Section 8 wall-clock scaling figure. The HV-vs-generation
+      figure is labelled "a single pipeline run with the core baseline's
+      configuration" (not confirmed to be one of the 225 runs).
+      TO CHECK: the repository must be public before submission.
+
+33. (p.39) NSGA-II keeps the best individuals, so HV should not decrease;
+    explain why it goes up and down.
+   -> Old explanation (crowding distance trading convergence for diversity)
+      replaced. Cause, from the code: each generation's HV is computed after
+      normalizing by that generation's own population min/max, with a
+      reference point derived from the same bounds (evaluate_run /
+      normalize_objectives in final_m1_script.py). When the population's
+      range widens, the front shrinks in normalized coordinates and HV drops
+      even though the front has not deteriorated. Text notes that with a fixed
+      reference point elitist NSGA-II's HV should not fall, apart from small
+      losses from crowding-distance truncation. Figure caption now says
+      "Adaptive (per-generation-normalized) hypervolume".
+      Based on code inspection; not re-run with a fixed reference point.
+
+=====================================================================
+BIBLIOGRAPHY (references.bib) — highlighted references without comments
+=====================================================================
+B1. (p.50-55) Several references highlighted without a comment.
+   -> Acronyms braced in 19 titles so unsrtnat no longer lowercases them
+      (e.g. "Qnsga-ii" -> QNSGA-II, "nsgaii" -> NSGA-II, SMS-EMOA, SPEA2,
+      MOEA/D, MOPSO, AI, IoT, TSP). "Pareto" and "Thomae" braced in titles.
+   -> DOI added to Narayanan & Moore (10.1109/ICEC.1996.542334).
+      TO ASK: the supervisor's intent for the other highlighted references
+      (Deng et al. 2022, Li & Wang 2007, Ding et al. 2008, Krylov & Lukac
+      2019, Chou et al. 2022, Li et al. 2025).

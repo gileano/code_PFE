@@ -5,7 +5,7 @@ Section~\ref{sec:taxonomy} introduced five classification axes and
 applied them narratively to the QIEA-for-MOO methods surveyed.
 This section applies the same axes systematically, one row per method,
 across two tables: Table~\ref{tab:feature-comparison-taxonomy} recaps
-representation, operator type, selection mechanism, and application
+solution representation, operator type, selection mechanism, and application
 domain, and
 Table~\ref{tab:feature-comparison-performance} turns to complexity,
 scalability, convergence behavior, benchmarks, and reported performance
@@ -63,7 +63,7 @@ returns to.
 \setlength{\LTcapwidth}{\textwidth}
 \begin{xltabular}{\dimexpr\textwidth+4cm\relax}{@{}p{2.1cm}XXXX@{}}
   \caption{Representation, operator, selection, and domain summary of
-    the thirteen surveyed QIEA-MOO methods, in order of publication
+    the surveyed QIEA-MOO methods, in order of publication
     (recap of the taxonomy axes, Section~\ref{sec:taxonomy}; method
     selection rule in Section~\ref{sec:introduction:scope}).}
   \label{tab:feature-comparison-taxonomy} \\
@@ -110,7 +110,7 @@ returns to.
       grid for diversity &
       Multi-objective vehicle routing with customer satisfaction \\
     APMQEA~\citep{lu2013apmqea} &
-      Not confirmed (no abstract available) &
+      Not confirmed &
       Not confirmed &
       Adaptive population size; other details not confirmed &
       Multi-objective 0/1 knapsack (combinatorial) \\
@@ -132,7 +132,7 @@ returns to.
       confirmed) &
       Three-objective airport gate allocation (real-world operations) \\
     MOQIGA~\citep{hussain2022moqiga} &
-      Not confirmed (no abstract available) &
+      Not confirmed &
       Not confirmed &
       Not confirmed &
       Healthcare workflow scheduling in hybrid clouds with hard and soft
@@ -296,7 +296,7 @@ returns to.
 Read across both tables, three patterns stand out even before the
 critical analysis proper (Section~\ref{sec:critical-analysis}). First,
 selection mechanisms are more varied than the recent NSGA-II-based
-methods alone would suggest: the thirteen methods use NSGA-II's crowding
+methods alone would suggest: the surveyed methods use NSGA-II's crowding
 distance~\citep{guzel2022qnsga2,olvera2023continuous,kumar2026eahqnsga2},
 Pareto ranking with an external archive~\citep{kim2006qmea}, preference-based
 archive selection~\citep{kim2011mqeaps}, an adaptive
@@ -304,7 +304,7 @@ grid~\citep{zhang2012moqeavrp}, decomposition~\citep{deng2024moqead},
 and weighted sums~\citep{li2007hqga}. What is absent is equally clear:
 none uses reference-point (NSGA-III-style), strength-based
 (SPEA2-style), or hypervolume-driven (SMS-EMOA-style) selection. Second,
-four of the thirteen, all among the most cited, do not say in their
+four of the surveyed methods, all among the most cited, do not say in their
 abstracts how their several objectives are combined at
 all~\citep{wang2014powertrain,mousavi2019uav,deng2020gate,hussain2022moqiga}
 -- whether by Pareto ranking or by collapsing them into one weighted
@@ -335,7 +335,7 @@ multi-objective QIEAs (Q-bit chromosome plus rotation gate on both
 sides, with \citet{narayanan1996qiga}'s pre-Q-bit interference
 crossover the one exception), while the reference-solution question
 has a single obvious answer on the single-objective side and, on the
-multi-objective side, only three documented answers among the thirteen
+multi-objective side, only three documented answers among the surveyed
 methods: random draws from a non-dominated archive in the QMEA/MQEA
 line~\citep{kim2009mqea,ryu2014dmqea}, random objective weights in
 \citet{li2007hqga}, and one single-objective subproblem per Q-bit string
@@ -344,9 +344,8 @@ in \citet{deng2024moqead}.
 The table also shows, on the single-objective side, the scaling
 limitation that Section~\ref{sec:critical-analysis:cross-cutting}
 raises for the multi-objective one. \citet{gilea2026waste} --
-this survey's first author's own earlier work, evaluated on a
-single-objective formulation even though the problem it targets is
-naturally multi-objective -- found its QIEA ahead of a classical
+evaluated on a single-objective formulation even though the problem it
+targets is naturally multi-objective -- found its QIEA ahead of a classical
 genetic algorithm on small TSPLIB instances but behind it as the number
 of cities grew, and behind it on all three real routes of 199--334
 locations (routes and genetic-algorithm baseline from

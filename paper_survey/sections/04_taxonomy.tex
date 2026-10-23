@@ -1,8 +1,8 @@
 \section{Taxonomy}
 \label{sec:taxonomy}
 
-We organize the surveyed QIEA-for-MOO literature along five axes:
-representation scheme, quantum-inspired operator type,
+The surveyed QIEA-for-MOO literature is organized along five axes:
+solution representation scheme, quantum-inspired operator type,
 selection/diversity mechanism, hybridization with classical MOEAs, and
 application domain. The axes were derived inductively from recurring
 design choices across the literature identified in
@@ -57,14 +57,14 @@ there is again a single best solution to rotate toward.
 \citet{deng2024moqead}'s MOQEA/D gives a third: it decomposes the
 problem into single-objective subproblems and assigns each Q-bit string
 its own, so each string again has a single best solution. Outside the
-thirteen methods, \citet{ho2013vectorqea} go further and redesign the
+surveyed methods, \citet{ho2013vectorqea} go further and redesign the
 QEA for multiple objectives, with a fitness assignment that counts how
 many objectives a solution improves and by how much, and a redesigned
 rotation-angle update. For the
 NSGA-II-hybridized methods
 (Section~\ref{sec:taxonomy:hybridization}), the sources gathered for
 this survey describe the outer NSGA-II loop in detail but do not, at
-the level of detail we could confirm, state how the rotation gate's
+the level of detail that could be confirmed, state how the rotation gate's
 reference solution is chosen.
 
 Two smaller differences follow from the same cause. First, the
@@ -82,10 +82,10 @@ H$_\epsilon$ gate's lower bound arguably matters more there than in the
 single-objective case it was designed for. Section~\ref{sec:critical-analysis:so-to-mo}
 returns to what these differences imply for the surveyed methods.
 
-\subsection{Representation Scheme}
+\subsection{Solution Representation Scheme}
 \label{sec:taxonomy:representation}
 
-The representation axis asks what an individual encodes and how that
+The solution-representation axis asks what an individual encodes and how that
 encoding is turned into an evaluable candidate solution. The canonical
 QIEA representation is Han and Kim's Q-bit chromosome
 (Section~\ref{sec:background:quantum}, Eq.~\ref{eq:qubit}): a string of
@@ -102,11 +102,16 @@ decision vector is real-valued rather than binary:
 but add an explicit decoding step after it, converting each observed
 binary string into floating-point decision variables before fitness
 evaluation -- so that the precision with which a real value can be
-represented is bounded by how many Q-bits are allotted to it. Feature subset selection sits at the
-combinatorial end of this spectrum and is, per
-\citet{vivek2025fss}'s survey, one of the domains where the Q-bit
-representation is used closest to its original binary-observation form,
-since a feature is naturally either included or excluded.
+represented is bounded by how many Q-bits are allotted to it.
+Representations can therefore be placed along a range: at one extreme,
+purely binary (combinatorial) problems, where the observed bit string
+\emph{is} the solution and no decoding is needed; at the other,
+continuous problems, where every variable has to be decoded from
+several Q-bits. Feature subset selection belongs to the first, purely
+binary extreme and is, per \citet{vivek2025fss}'s survey, one of the
+domains where the Q-bit representation is used closest to its original
+binary-observation form, since a feature is naturally either included
+or excluded (one Q-bit per feature).
 
 Notably, this survey's own case study (Section~\ref{sec:case-study}) does
 not use a Q-bit representation at all: its individuals are classical,
@@ -115,7 +120,7 @@ domain-specific chromosomes -- lists of gate tuples
 ordinary (non-quantum-inspired) genetic operators. This is not an
 oversight but a reminder that the representation axis is orthogonal to
 whether a method's \emph{problem domain} happens to be quantum computing;
-we return to this distinction under application domain
+this distinction is revisited under application domain
 (Section~\ref{sec:taxonomy:application}).
 
 \subsection{Quantum-Inspired Operator Type}
@@ -148,7 +153,7 @@ inspiration -- has no multi-objective method in the currently surveyed
 set built explicitly around it as a variation operator. It does appear
 on the single-objective side, and earlier than the rotation gate itself:
 \citet{narayanan1996qiga}'s quantum-inspired genetic algorithm for the
-travelling salesman problem, the earliest QIEA we cover, keeps several
+travelling salesman problem, the earliest QIEA covered here, keeps several
 parallel ``universes'' of solutions and builds new individuals with an
 \emph{interference crossover} that takes successive genes from successive
 universes. Interference was therefore part of quantum-inspired
@@ -164,7 +169,7 @@ The selection axis asks how a method ranks and prunes its population
 across objectives -- the same paradigms introduced as classical MOEA
 baselines in Section~\ref{sec:background:moea}: crowding-distance-based,
 reference-point-based, strength/density-based, decomposition-based, and
-hypervolume-driven. Across the thirteen surveyed methods, selection is
+hypervolume-driven. Across the surveyed methods, selection is
 more varied than the recent literature alone suggests. The three recent
 NSGA-II-based methods inherit NSGA-II's selection \emph{unchanged}:
 \citet{guzel2022qnsga2}'s QNSGA-II and \citet{kumar2026eahqnsga2}'s
@@ -184,7 +189,7 @@ the objectives, in their Q-bit component, with non-dominated sorting and
 population trimming in a permutation-based component. The remaining
 four methods do not state their selection mechanism in their
 abstracts~\citep{wang2014powertrain,mousavi2019uav,deng2020gate,hussain2022moqiga}.
-What none of the thirteen does is pair a Q-bit representation with
+What none of the surveyed methods does is pair a Q-bit representation with
 reference-point-based (NSGA-III-style), strength/density-based
 (SPEA2-style), or hypervolume-driven (SMS-EMOA-style) selection, even
 though the first two have recently gained the strongest theoretical
@@ -232,10 +237,11 @@ with an MOEA:
 permutation-based genetic algorithm, the first exploring a binary space
 and the second refining schedules directly, and \citet{deng2020gate}
 combine a QEA with particle swarm optimization and a niche co-evolution
-strategy. These two are also the most-cited multi-objective QIEAs in
-the bibliometric corpus, so the NSGA-II-variant design point, although
-the most common among recent methods, is also the newest of the three
-and so far the least cited. This survey's own case study
+strategy. These two hybrids are also the most-cited multi-objective
+QIEAs in the bibliometric corpus. The QIEA variants built on
+NSGA-II -- itself one of the most widely cited MOEAs -- are the most
+common design among recent methods, but they are too recent to have
+accumulated comparable citations. This survey's own case study
 (Section~\ref{sec:case-study}) sits at the opposite end of the same
 axis from the QIEA-MOO literature above: it hybridizes classical MOEAs
 (NSGA-II, NSGA-III, SMS-EMOA, used as unmodified per-block optimizers)
@@ -276,10 +282,10 @@ circuits at the gate level~\citep{ding2008qcircuits}, design or
 synthesize circuits for given gate
 libraries~\citep{krylov2019qeqea,chou2022qcsynthesis}, and search
 parameterized-circuit architectures for quantum neural
-networks~\citep{li2025aqeaqas}. We did not, however, find a
+networks~\citep{li2025aqeaqas}. This survey did not, however, find a
 \emph{multi-objective} QIEA applied to a quantum-computing problem
 domain, even though such problems are naturally multi-objective --
 fidelity against depth and gate count in this survey's own case study.
 Whether that combination would offer any advantage over either cluster
-alone is an open question we return to as a candidate future direction
+alone is an open question, revisited as a candidate future direction
 in Section~\ref{sec:open-challenges}.

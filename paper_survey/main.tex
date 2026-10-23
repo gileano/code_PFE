@@ -11,6 +11,8 @@
 \usepackage{xltabular} % page-breakable tabularx (Section 5 comparison tables)
 \usepackage{array}
 \usepackage{changepage}
+\usepackage{enumitem} % style=unboxed lets long description labels wrap (Section 2.3)
+\usepackage{needspace}
 \usepackage{hyperref}
 \usepackage{cleveref}
 \usepackage[numbers,sort&compress]{natbib}
@@ -30,34 +32,47 @@ Taxonomy, Features, and Limitations}
 \maketitle
 
 \begin{abstract}
-Quantum-inspired evolutionary algorithms (QIEAs) borrow the Q-bit
-chromosome and rotation-gate operator from quantum mechanics to improve
-classical evolutionary search. Their multi-objective optimization (MOO)
+By integrating core principles of quantum mechanics---specifically
+Q-bit chromosome representations and quantum rotation-gate
+operators---quantum-inspired evolutionary algorithms (QIEAs) enhance the
+search efficiency and diversity of classical evolutionary paradigms. Their multi-objective optimization (MOO)
 branch, active since at least 2003, remains sparse, scattered across
-domains, and, to our knowledge, unsurveyed on its own terms. A
+domains, and, to the best of the authors' knowledge, has not yet been
+the subject of a dedicated survey. A
 bibliometric analysis of 2{,}250 QIEA papers from 1996--2026 shows
 multi-objective work making up under a tenth of the field, with its
 share roughly doubling since 2024, and clustering with application
-domains rather than with algorithm design. We propose a taxonomy of
-QIEA-for-MOO methods along five axes (representation, operator type,
+domains rather than with algorithm design. This work proposes a taxonomy of
+QIEA-for-MOO methods along five axes (solution representation, operator type,
 selection mechanism, hybridization, and application domain), apply it
 in a feature comparison that uses single-objective QIEAs as a baseline, and critically analyze the
-field's limitations. Across thirteen methods selected by citation,
-selection mechanisms are varied but never reference-point- or
-hypervolume-based, several highly cited methods do not state how they
-combine objectives, and methods are rarely benchmarked against one
-another. The rotation gate's reference solution, obvious with one
-objective, changes most with several, yet only three methods document
-their choice.
+field's limitations. A review of the most-cited and most recent
+multi-objective QIEA methods reveals significant diversity in selection
+mechanisms, none of which adopt reference-point or hypervolume-based
+indicators. Furthermore, several widely cited approaches fail to clarify
+how objectives are aggregated, and systematic comparative benchmarking
+remains scarce. In particular, while defining the reference solution for
+quantum rotation gates is straightforward in single-objective
+optimization, multi-objective scenarios introduce substantial
+complexity---a design choice explicitly documented by only three of
+these methods.
 Reproducibility gaps, weak benchmarking, and scalability claims tested
 at a single problem size recur across method categories. An
 illustrative case study, a block-partitioned quantum-circuit-optimization
 pipeline extending a published NSGA-II framework with NSGA-III and
 SMS-EMOA, shows how an adaptive, per-run hypervolume reference point can
 change a cross-algorithm ranking and how a correctness bug can silently
-invalidate weeks of results. We close with open challenges, including
-the untested combination of a multi-objective QIEA with a
-quantum-computing problem domain.
+invalidate weeks of results. Finally, building on the identified
+gap---no multi-objective QIEA has yet been applied to a
+quantum-computing problem domain---and on a synthesis of key features
+in existing platforms, this paper outlines future research avenues and
+details ongoing developments within FADSE (Framework for Automatic
+Design Space Exploration), an open-source platform developed at Lucian
+Blaga University of Sibiu. By providing a standardized infrastructure
+for metaheuristic execution, benchmark interfacing, and performance
+evaluation, FADSE enables the simulation of both multi-objective QIEA
+variants incorporating adaptive quantum-inspired operators and
+resource-efficient hybrid QIEA--memetic architectures.
 \end{abstract}
 
 \input{sections/01_introduction}

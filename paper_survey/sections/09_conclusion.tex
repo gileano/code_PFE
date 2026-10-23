@@ -5,7 +5,7 @@ Section~\ref{sec:introduction} opened with a gap: quantum-inspired
 evolutionary algorithms have been applied to multi-objective problems
 since at least \citet{zhang2003nqea}'s 2003 quantum evolutionary
 algorithm for multi-objective digital-filter design, yet no prior survey had taxonomized or critically
-compared QIEA-for-MOO methods on their own terms, separately from
+compared QIEA-for-MOO methods separately from
 single-objective QIEA work on one side and classical MOO on the other.
 This survey addressed that gap through the four research questions set
 out in Section~\ref{sec:introduction:contributions}, preceded by a
@@ -20,7 +20,7 @@ signal of the pattern the rest of the survey documents in detail.
 
 \textbf{RQ1} (classification): Section~\ref{sec:taxonomy} organized the
 literature identified in Section~\ref{sec:introduction:scope} along five
-axes -- representation scheme, quantum-inspired operator type,
+axes -- solution representation scheme, quantum-inspired operator type,
 selection and diversity mechanism, hybridization with classical MOEAs,
 and application domain.
 
@@ -44,7 +44,7 @@ across the field regardless of which taxonomy category a given method
 falls into. Comparing the surveyed methods with their single-objective
 baseline added one more: the rotation gate's reference solution, which
 has an obvious choice with one objective, is the component that changes
-most with several, yet only three of the thirteen surveyed methods
+most with several, yet only three of the surveyed methods
 document how they choose it.
 
 \textbf{RQ4} (a concrete instance):
@@ -52,7 +52,7 @@ Section~\ref{sec:case-study} grounded several of these abstract claims
 in a concrete worked example: this project's own block-partitioned
 quantum-circuit-optimization pipeline, itself a direct extension of
 \citet{ghlib2026scalable}'s scalable, block-partitioned NSGA-II
-framework. We want to restate plainly what that case study was and was
+framework. It is worth restating plainly what that case study was and was
 not. It was illustrative -- a way to show, with a real,
 actively-maintained codebase, what a swappable selection mechanism
 looks like in practice, how an adaptive hypervolume computation can

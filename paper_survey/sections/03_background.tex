@@ -50,11 +50,24 @@ entanglement-inspired operators are discussed there rather than here.
 
 A multi-objective optimization problem (MOP) seeks to simultaneously
 optimize $m \geq 2$ objective functions
-$f_1(x), \dots, f_m(x)$ over a decision space $x \in \Omega$. Because the
-objectives typically conflict, there is generally no single $x$ that
-minimizes (or maximizes) all of them at once; instead, a solution
-$x_1$ is said to \emph{Pareto-dominate} $x_2$ if $x_1$ is at least as
-good as $x_2$ on every objective and strictly better on at least one. A
+$f_1(\mathbf{x}), \dots, f_m(\mathbf{x})$ over a decision space
+$\Omega$, where each candidate solution $\mathbf{x} = (x_1, x_2, \dots,
+x_n) \in \Omega$ is a vector of $n$ decision variables (inputs), and
+$\mathbf{f}(\mathbf{x}) = (f_1(\mathbf{x}), \dots, f_m(\mathbf{x}))$ is
+its image in objective space. Because the
+objectives typically conflict, there is generally no single $\mathbf{x}$ that
+minimizes (or maximizes) all of them at once; instead, assuming
+minimization, a solution $\mathbf{x}$ is said to \emph{Pareto-dominate}
+a solution $\mathbf{y}$, written $\mathbf{x} \prec \mathbf{y}$, if it is at
+least as good on every objective and strictly better on at least one:
+\begin{equation}
+  \mathbf{x} \prec \mathbf{y} \iff
+  \forall i \in \{1,\dots,m\}: f_i(\mathbf{x}) \le f_i(\mathbf{y})
+  \;\wedge\;
+  \exists j \in \{1,\dots,m\}: f_j(\mathbf{x}) < f_j(\mathbf{y}).
+\end{equation}
+\emph{Weak} dominance, $\mathbf{x} \preceq \mathbf{y}$, drops the strict
+condition. A
 solution is \emph{Pareto-optimal} if no other feasible solution
 dominates it, and the image of the set of all Pareto-optimal solutions
 in objective space is the \emph{Pareto front}. Rather than a single best
@@ -69,7 +82,9 @@ sufficient: a tightly clustered set of points on the front converges well
 but covers it poorly, while a widely spread set may cover a region no
 solution actually dominates. The indicators most relevant to this
 survey -- all among those commonly offered by MOEA software
-frameworks~\citep{patrausanu2024frameworks} -- are:
+frameworks~\citep{patrausanu2024frameworks} -- are listed below for a
+solution set $A$ with $N = |A|$ objective vectors, again assuming
+minimization:
 \begin{itemize}
   \item \textbf{Hypervolume (HV)}: the volume of objective space
     dominated by a solution set relative to a fixed reference point --
@@ -78,7 +93,15 @@ frameworks~\citep{patrausanu2024frameworks} -- are:
     the basis of hypervolume-driven selection in
     SMS-EMOA~\citep{beume2007smsemoa}. Its value is sensitive to the
     reference point and normalization used, a methodological detail
-    Section~\ref{sec:case-study:hypervolume} returns to.
+    Section~\ref{sec:case-study:hypervolume} returns to. Formally, for a
+    reference point $\mathbf{r}$ dominated by every point of $A$,
+    \begin{equation}
+      HV(A, \mathbf{r}) = \lambda\Big(\bigcup_{\mathbf{a} \in A}
+      [\mathbf{f}(\mathbf{a}), \mathbf{r}]\Big),
+    \end{equation}
+    where $[\mathbf{f}(\mathbf{a}), \mathbf{r}]$ is the axis-aligned box
+    between $\mathbf{f}(\mathbf{a})$ and $\mathbf{r}$, and $\lambda$ is the
+    Lebesgue measure (volume) in $\mathbb{R}^m$. Larger is better.
   \item \textbf{Inverted Generational Distance (IGD)}: the average
     distance from each point on a reference (true or best-known) Pareto
     front to its nearest neighbor in the algorithm's output set,
@@ -86,21 +109,53 @@ frameworks~\citep{patrausanu2024frameworks} -- are:
     front to be known or well-approximated -- a requirement this
     survey's own case study (Section~\ref{sec:case-study}) does not
     meet for any of its benchmark circuit families, so IGD does not
-    itself recur there.
+    itself recur there. For a reference front $P^*$,
+    \begin{equation}
+      IGD(A, P^*) = \frac{1}{|P^*|} \sum_{\mathbf{p} \in P^*}
+      \min_{\mathbf{a} \in A} \big\lVert \mathbf{p} - \mathbf{f}(\mathbf{a})
+      \big\rVert_2,
+    \end{equation}
+    and smaller is better.
   \item \textbf{Spread and spacing}: measures of how evenly solutions are
     distributed along the approximated front, independent of how close
     that front is to the true optimum. Spread recurs in the case study
-    (Section~\ref{sec:case-study:algorithms}); spacing does not.
+    (Section~\ref{sec:case-study:algorithms}); spacing does not. With
+    the points of $A$ sorted along the front, $d_i$ the Euclidean
+    distance between consecutive points ($i = 1, \dots, N-1$),
+    $\bar{d}$ their mean, and $d_f$, $d_l$ the distances from the two
+    extreme points of $A$ to the extremes of the reference front,
+    Deb et al.'s spread~\citep{deb2002nsga2} is
+    \begin{equation}
+      \Delta(A) = \frac{d_f + d_l + \sum_{i=1}^{N-1} \lvert d_i - \bar{d}
+      \rvert}{d_f + d_l + (N-1)\,\bar{d}},
+    \end{equation}
+    which is $0$ for a perfectly even set spanning the whole front.
+    Spacing instead uses each point's distance to its nearest neighbor
+    in $A$, $e_i = \min_{j \ne i} \lVert \mathbf{f}(\mathbf{a}_i) -
+    \mathbf{f}(\mathbf{a}_j) \rVert_2$, with mean $\bar{e}$:
+    \begin{equation}
+      S(A) = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (e_i - \bar{e})^2},
+    \end{equation}
+    also $0$ for perfectly uniform spacing. Both are smaller-is-better.
   \item \textbf{Coverage (C)}: a binary indicator that directly compares
     two solution sets $A$ and $B$. $C(A,B)$ is the fraction of solutions
     in $B$ weakly dominated by at least one solution in
-    $A$~\citep{zitzler1999spea,zitzler2003performance}, so $C(A,B)=1$
+    $A$~\citep{zitzler1999spea,zitzler2003performance},
+    \begin{equation}
+      C(A, B) = \frac{\lvert \{ \mathbf{b} \in B \mid \exists\, \mathbf{a}
+      \in A : \mathbf{a} \preceq \mathbf{b} \} \rvert}{\lvert B \rvert},
+    \end{equation}
+    so $C(A,B)=1$
     means every solution in $B$ is dominated by or equal to some
     solution in $A$. Since $C(A,B)$ and $C(B,A)$ are not complementary,
     both directions must be reported.
   \item \textbf{Two Set Hypervolume Difference (TSHD)}: the hypervolume
     dominated by one set but not by the other,
-    $D(A,B) = HV(A \cup B) - HV(B)$~\citep{zitzler1999thesis}. Unlike
+    \begin{equation}
+      D(A,B) = HV(A \cup B) - HV(B)
+    \end{equation}
+    \citep{zitzler1999thesis}, computed against the same reference point
+    $\mathbf{r}$ for both terms. Unlike
     Coverage, it measures by how much, not only whether, one set
     improves on the other, making it a direct hypervolume-based
     comparison between two algorithms' output fronts.

@@ -4,16 +4,18 @@
 Section~\ref{sec:critical-analysis} looked backward: what the surveyed
 QIEA-for-MOO literature and this survey's own case study already show
 to be weak or under-tested. This section looks forward, organized into
-four groups -- the two open questions this survey's own analysis raised
+five groups -- the two open questions this survey's own analysis raised
 without answering, methodological directions for QIEA-MOO as a field,
-technical extensions specific to the case-study pipeline, and the
-broader trajectory the field appears to be moving toward.
+technical extensions specific to the case-study pipeline, the
+broader trajectory the field appears to be moving toward, and the
+ongoing work, within the FADSE platform, that is meant to address
+several of these gaps.
 
 \subsection{Open Questions Raised by This Survey}
 \label{sec:open-challenges:raised}
 
 Two specific questions surfaced earlier in this survey without being
-resolved, and we restate them here as concrete starting points rather
+resolved, and they are restated here as concrete starting points rather
 than let them dissolve into the more general directions below.
 
 First, Section~\ref{sec:taxonomy:application} found the application
@@ -23,9 +25,9 @@ combinatorial or engineering problems, and classical (non-quantum-
 inspired) algorithms applied to a genuinely quantum problem domain, as
 in this survey's own case study. Single-objective QIEAs have been
 applied to quantum circuits~\citep{ding2008qcircuits,krylov2019qeqea,chou2022qcsynthesis,li2025aqeaqas},
-but we found no \emph{multi-objective} QIEA applied to a
+but no \emph{multi-objective} QIEA applied to a
 quantum-computing problem domain such as circuit optimization or
-compilation. Concretely, this would mean encoding a gate sequence as a
+compilation was found. Concretely, this would mean encoding a gate sequence as a
 string of Q-bit amplitude pairs, with rotation-gate (and perhaps
 entanglement- or interference-inspired) operators evolving that
 encoding directly, and a multi-objective selection mechanism trading
@@ -41,13 +43,13 @@ state-of-the-art synthesis method. Whether a multi-objective version
 would offer any advantage over either cluster alone (e.g.\ a more
 natural search-space geometry for gate sequences, given that both
 objects are already expressed in the language of qubits and rotations)
-is, to our knowledge, untested.
+is, to the best of the authors' knowledge, untested.
 
 Second, Section~\ref{sec:case-study:hypervolume} found that NSGA-III's
 Pareto front is not only smaller than NSGA-II's or SMS-EMOA's under a
 shared-reference (fair) hypervolume comparison in this project's own
-pipeline, but increasingly so as problem size grows. We could state
-\emph{that} finding with confidence; we could not state \emph{why}
+pipeline, but increasingly so as problem size grows. \emph{That} finding
+can be stated with confidence; \emph{why} cannot be stated
 without further investigation reaching beyond survey scope --
 specifically, whether it traces to Deb and Jain's reference-point
 niching providing systematically less selection pressure toward a
@@ -81,7 +83,7 @@ Section~\ref{sec:taxonomy:operator} -- is entirely open. Relatedly, a
 genuinely interference-based quantum-inspired operator, as opposed to
 the rotation-gate-plus-one-bolt-on pattern found throughout the
 surveyed literature, has yet to be demonstrated in a multi-objective
-QIEA; the only one we found is \citet{narayanan1996qiga}'s
+QIEA; the only one found is \citet{narayanan1996qiga}'s
 single-objective interference crossover, which predates the Q-bit
 chromosome and so would first need adapting to it. A third
 direction is evaluative rather than architectural: establishing a
@@ -143,7 +145,7 @@ $12$, and its own $n{=}16$ ceiling respectively), plausibly an artifact
 of the statevector-backend fidelity settings that
 Section~\ref{sec:case-study:pipeline} notes are applied per family
 above certain thresholds rather than a genuine efficiency gain at
-larger $n$ -- a wrinkle we did not investigate further here.
+larger $n$ -- a wrinkle not investigated further here.
 Classical-shadow or tensor-network fidelity
 estimation~\citep{fu2022shadow} is a concrete candidate for pushing
 past where the current echo-test and statevector Monte-Carlo backends
@@ -156,7 +158,8 @@ become memory- or time-bound.
     pooled across the three per-block optimizers of the 225-run core
     baseline (log-scaled $y$-axis). Four families grow sharply with
     $n$; \texttt{qaoa\_maxcut}'s three-point trend is not monotonic
-    (see discussion above).}
+    (see discussion above). Source: 225-run core baseline
+    (Section~\ref{sec:case-study:data}).}
   \label{fig:scaling-wallclock}
 \end{figure}
 
@@ -183,8 +186,8 @@ indicator-based, reference-set-based, preference-based, and
 dimensionality-reduction methods) is a reminder that this survey's own
 five classical baselines (Section~\ref{sec:background:moea}) sample
 only some of that landscape. Preference articulation has been tried
-in a QIEA-MOO only within the MQEA line~\citep{kim2011mqeaps}, and we
-found no QIEA-MOO method built around dimensionality reduction.
+in a QIEA-MOO only within the MQEA line~\citep{kim2011mqeaps}, and no
+QIEA-MOO method built around dimensionality reduction was found.
 \citet{zheng2026paretoneural}'s more recent five-level taxonomy --
 classical MOEA, ML-guided, RL-driven, LLM-driven, and hybrid
 neuro-evolutionary methods -- places every method surveyed in this
@@ -193,7 +196,7 @@ this taxonomy describes is moving toward learned and neural surrogate
 models and RL- or LLM-guided search rather than purely evolutionary
 operators, a considerably larger architectural departure than any
 single direction in Sections~\ref{sec:open-challenges:methodological}
-or~\ref{sec:open-challenges:pipeline} above. We do not read this as a
+or~\ref{sec:open-challenges:pipeline} above. This is not read as a
 reason to treat QIEA-MOO or block-partitioned quantum circuit
 optimization as obsolete -- both remain useful, interpretable,
 comparatively cheap-to-run methods exactly where a learned surrogate's
@@ -211,3 +214,35 @@ addressed the weak Pareto boundary directly -- rather than continuing to
 build on the dominance relation as-is -- would be responding to a
 weakness identified only a year before this survey, not one already
 absorbed into current practice.
+
+\subsection{Ongoing Work: QIEA-MOO Variants in FADSE}
+\label{sec:open-challenges:fadse}
+
+Several of the gaps above -- unreleased implementations, methods rarely
+benchmarked against one another, and the untested pairing of a
+multi-objective QIEA with a quantum-computing problem domain -- are
+less properties of any one algorithm than of the infrastructure the
+field lacks. \citet{patrausanu2024frameworks}'s review of MOEA
+software frameworks (PlatEMO, pymoo, jMetal, Evolver, and FADSE)
+compares their algorithm and problem libraries, quality indicators,
+parallelization, and extensibility, and argues for common, extensible
+platforms on which implementations are public and comparisons share a
+basis. Building on that synthesis, ongoing work extends FADSE
+(Framework for Automatic Design Space Exploration), an open-source
+platform developed at Lucian Blaga University of Sibiu, toward
+QIEA-MOO. FADSE provides a standardized infrastructure for
+metaheuristic execution, benchmark interfacing, and performance
+evaluation; within it, the ongoing developments target two classes of
+algorithm: multi-objective QIEA variants incorporating adaptive
+quantum-inspired operators -- including the choice of the rotation
+gate's reference solution, which Section~\ref{sec:critical-analysis}
+found under-specified in most surveyed methods -- and resource-efficient hybrid QIEA--memetic
+architectures, in which a Q-bit population is coupled with local
+refinement of promising individuals. Running both on one platform,
+against the same benchmarks and indicators -- including the rugged,
+discrete Thomae-like functions of \citet{patrausanu2026thomae} alongside
+standard suites -- is intended to supply the cross-method comparisons
+this survey found missing, and a natural host for the first
+multi-objective QIEA applied to a quantum-computing problem domain
+such as the circuit-optimization task of
+Section~\ref{sec:case-study}.

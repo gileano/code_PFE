@@ -1,19 +1,22 @@
 \section{Bibliometric Analysis}
 \label{sec:bibliometric}
 
-Before turning to individual methods, this section maps the QIEA
-literature as a whole: how large it is, how it has grown over the last
-30 years, how much of it is multi-objective, which themes it clusters
-into, and which papers have been most influential. It complements the
-targeted selection of Section~\ref{sec:introduction:scope}: that
-selection decides which methods the taxonomy examines in depth, while
-this section gives the field-level context in which to read them.
+Prior to analyzing individual methods, this section presents a
+comprehensive mapping of the broader Quantum-Inspired Evolutionary
+Algorithm (QIEA) literature. Specifically, it examines publication
+trends and growth trajectories over the past three decades, the
+proportion of multi-objective approaches, primary thematic clusters,
+and key seminal contributions. In doing so, it complements the targeted
+selection in Section~\ref{sec:introduction:scope}: while
+Section~\ref{sec:introduction:scope} establishes the criteria for
+in-depth taxonomic analysis, this section provides the macro-level
+contextual background against which those methods are evaluated.
 
 \subsection{Data and Method}
 \label{sec:bibliometric:method}
 
-We queried OpenAlex~\citep{priem2022openalex}, a fully open index of
-scholarly works covering all major publishers, on 3 October 2026. Two
+OpenAlex~\citep{priem2022openalex}, a fully open index of
+scholarly works covering all major publishers, was queried on 3 October 2026. Two
 queries were run against titles and abstracts, restricted to
 publication years 1996--2026:
 \begin{itemize}
@@ -42,12 +45,9 @@ does not return, such as some publisher-withheld abstracts, and this
 step removed off-topic matches (e.g.\ quantum-dot physics papers) at the
 cost of also dropping some genuine records whose abstract is not
 available. (4) Records with the same normalized title were merged,
-keeping the most-cited version. The QIEA query went from 2{,}835
-records to 2{,}654, 2{,}603, 2{,}341, and finally 2{,}250 papers; the
-broad query from 935 to 558. Two publication years were corrected by
-hand where OpenAlex disagreed with the paper's own DOI
-(\citet{narayanan1996qiga}, dated 2002 in OpenAlex, and
-\citet{han2001pqga}, also dated 2002).
+keeping the most-cited version. The cleaning reduced the QIEA query
+from 2{,}835 records to 2{,}250 papers, and the broad query from 935
+to 558.
 
 A paper was tagged multi-objective if its title, abstract, or keywords
 mention multi-, many-, bi-, two-, three-, or four-objective
@@ -110,21 +110,22 @@ discussed in Section~\ref{sec:introduction}.
   \label{fig:bibliometric-trend}
 \end{figure}
 
+\needspace{8\baselineskip} % keep heading, intro and the first two-line cluster label together
 \subsection{Keyword Clusters}
 \label{sec:bibliometric:clusters}
 
 The keyword network splits into four clusters
 (Figure~\ref{fig:bibliometric-clusters},
 Table~\ref{tab:bibliometric-clusters}):
-\begin{description}
-  \item[Cluster 1, search dynamics and operators (20 keywords).]
+\begin{description}[style=unboxed]
+  \item[Cluster 1, key concepts in QIEA: search dynamics and operators (19 keywords).]
     Convergence rate, premature convergence, the quantum rotation gate,
     population diversity, and the exploration--exploitation balance.
     This is the algorithm-design core of the field, corresponding to
     the representation and operator axes of
     Sections~\ref{sec:taxonomy:representation}
     and~\ref{sec:taxonomy:operator}.
-  \item[Cluster 2, combinatorial benchmarks (9 keywords).]
+  \item[Cluster 2, combinatorial benchmarks (10 keywords).]
     Combinatorial optimization, the knapsack and travelling salesman
     problems, and superposition: the lineage of the original
     single-objective papers~\citep{narayanan1996qiga,han2002qea}.
@@ -133,7 +134,8 @@ Table~\ref{tab:bibliometric-clusters}):
     together with wireless sensor networks, power-loss reduction,
     distributed generation, makespan minimization, resource allocation,
     and energy efficiency.
-  \item[Cluster 4, hybrids with other methods (11 keywords).] Genetic
+  \item[Cluster 4, optimization paradigms and algorithms: hybrids with
+    other methods (11 keywords).] Genetic
     algorithms, particle swarm optimization (including its
     quantum-behaved variant), feature selection, support vector
     machines, and hyperparameter optimization: QIEAs combined with, or
@@ -170,32 +172,35 @@ definitive.
   \centering
   \small
   \caption{Keywords in each cluster of
-    Figure~\ref{fig:bibliometric-clusters}, most frequent first.}
+    Figure~\ref{fig:bibliometric-clusters}, most frequent first. One
+    keyword, \emph{NP-hard combinatorial optimization}, assigned by the
+    Louvain method to Cluster~1, is listed under Cluster~2, with which it
+    is semantically aligned.}
   \label{tab:bibliometric-clusters}
   \begin{tabularx}{\linewidth}{@{}p{3.2cm}X@{}}
     \toprule
     Cluster & Keywords \\
     \midrule
-    1. Search dynamics and operators &
+    1. Key concepts in QIEA: search dynamics and operators &
       convergence rate, premature convergence, quantum rotation gate,
       local optima avoidance, population diversity, global optimization,
       qubits, exploration-exploitation balance, hybrid metaheuristic,
       local search, function optimization, global search, continuous
       optimization, global search ability, BP neural network,
       real-coded genetic algorithm, benchmark functions, simulated
-      annealing, image segmentation, NP-hard combinatorial optimization \\
+      annealing, image segmentation \\
     2. Combinatorial benchmarks &
       combinatorial optimization, knapsack problem, metaheuristic
       optimization, genetic algorithm comparison, superposition,
       traveling salesman problem, numerical optimization, mutation
-      operator, NP-complete problems \\
+      operator, NP-hard combinatorial optimization, NP-complete problems \\
     3. Multi-objective engineering applications &
       multi-objective optimization, parameter optimization, wireless
       sensor networks, power loss reduction, makespan minimization,
       distributed generation, resource allocation, fitness function,
       Pareto front, energy efficiency, Pareto optimal solutions, quality
       of service, clustering, energy consumption, solution diversity \\
-    4. Hybrids with other methods &
+    4. Optimization paradigms and algorithms: hybrids with other methods &
       quantum computing, genetic algorithm, feature selection, particle
       swarm optimization, support vector machine, evolutionary
       algorithm, hyperparameter optimization, quantum-behaved particle
@@ -251,7 +256,9 @@ order.
 \end{table}
 
 \textbf{1. \citet{han2002qea}.} Introduces the quantum-inspired
-evolutionary algorithm (QEA): individuals are strings of Q-bits, each a
+evolutionary algorithm (QEA, the authors' own name, not to be confused
+with QEA in the sense of Section~\ref{sec:introduction}, i.e.\
+algorithms executed on quantum hardware): individuals are strings of Q-bits, each a
 probabilistic superposition of 0 and 1, and a Q-gate (rotation gate)
 drives them toward better solutions. On the knapsack problem, QEA
 performs well even with a small population and without the premature
@@ -260,8 +267,8 @@ representation and operator described in
 Section~\ref{sec:background:quantum}, and the one nearly every later
 method in this survey builds on.
 
-\textbf{2. \citet{narayanan1996qiga}.} The first quantum-inspired
-genetic algorithm. Drawing on the many-universes interpretation of
+\textbf{2. \citet{narayanan1996qiga}.} Proposes the first
+quantum-inspired genetic algorithm. Drawing on the many-universes interpretation of
 quantum mechanics, it runs several populations (``universes'') in
 parallel and combines them with an interference crossover, compared
 against a classical genetic algorithm on the travelling salesman
@@ -270,7 +277,8 @@ better on a small instance. It predates the Q-bit chromosome, and is
 the only method in this survey built around interference
 (Section~\ref{sec:taxonomy:operator}).
 
-\textbf{3. \citet{han2004hepsilon}.} Improves QEA in three ways: a
+\textbf{3. \citet{han2004hepsilon}.} Improves the previously
+introduced QEA algorithm (entry 1) in three ways: a
 termination criterion that gives a clearer meaning to the convergence
 of Q-bit individuals, the H$_\epsilon$ gate (a rotation gate that keeps
 each Q-bit probability away from exactly 0 or 1), and a two-phase
@@ -290,8 +298,10 @@ three objectives are handled by Pareto ranking or combined into one.
 classical computers that proposes a unified framework for them,
 reviews their theoretical development and their applications from
 combinatorial to numerical optimization, and compares the performance
-of different QIEA types empirically. It is the most-cited general
-survey of the field.
+of different QIEA types empirically. Unlike the method and application
+papers around it in this list, it is a survey, and it is the most-cited
+survey in the corpus: 297 citations, against 71 for the next most-cited
+QIEA-specific review.
 
 \textbf{6. \citet{li2007hqga}.} A hybrid quantum-inspired genetic
 algorithm for multi-objective flow-shop scheduling. A Q-bit genetic
@@ -307,7 +317,9 @@ for any one weight vector there is again a single best solution to
 rotate toward.
 
 \textbf{7. \citet{zhao2009cognitive}.} Formulates spectrum allocation in
-cognitive radio as an optimization problem and solves it with a
+cognitive radio (wireless systems in which unlicensed users
+dynamically access licensed frequency bands left idle by their owners)
+as an optimization problem and solves it with a
 genetic algorithm, a quantum genetic algorithm, and particle swarm
 optimization, using a mapping between the channel-assignment matrix and
 each algorithm's encoding to shrink the search space. All three
@@ -345,9 +357,8 @@ rather than one optimum.
 \label{sec:bibliometric:limitations}
 
 Four limitations apply. OpenAlex has broad coverage but imperfect
-metadata: the two publication-year errors corrected above were found
-only because they affected highly cited papers, and others may remain
-in the long tail. The keywords are assigned automatically, not by
+metadata (e.g.\ occasional incorrect publication years), so some
+errors may remain in the long tail. The keywords are assigned automatically, not by
 authors, so the clusters describe OpenAlex's reading of each abstract.
 The multi-objective tag is a text match, which will miss papers that
 describe several objectives without these terms and include some that
