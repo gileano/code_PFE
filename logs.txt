@@ -1,6 +1,6 @@
 PROJECT LOG — Quantum Circuit Optimization with Genetic Algorithms
 Generated: 2026-08-18
-Last updated: 2026-10-08
+Last updated: 2026-10-23
 
 NOTE ON THIS FILE (2026-09-07): condensed from a much longer (~1700-line)
 narrative at user request -- it had grown too big to be useful. Kept: current
@@ -78,6 +78,21 @@ comes from hw_efficient_ansatz/w_state at n=20 (the other 13 cells net
 slightly negative); ~40% is stage_injection_s, ~60% is wall_clock_s
 minus the four timed stages, block optimization contributes nothing
 (NSGA-III slightly cheaper there). Why is still open.
+
+UPDATE (2026-10-23): supervisor review of the survey applied (all 33
+annotations in paper_survey/main_feedback.pdf; record in
+paper_survey/supervisor_review.txt, summary in journal.txt DRAFT
+STATUS; commit a8ffa1ec). Pipeline-relevant findings from that pass:
+- The per-generation HV in plot_moo_history (evaluate_run called per
+  generation, M1_finale/final_m1_script.py) normalizes by THAT
+  generation's population min/max and sets ref = max+0.1, so the curve
+  can drop whenever the population's range widens, even under elitist
+  NSGA-II. Same adaptive-normalization issue as the cross-algorithm HV
+  finding below, now across generations. Not re-run with a fixed
+  reference point; if the empirical paper shows convergence curves,
+  compute them against one fixed normalization/reference per run.
+- The survey now cites github.com/gileano/code_PFE/tree/ULBS_qiea as
+  the code/data source -- the repo must be public before submission.
 
 ROADMAP:
 1. OPEN: start empirical-paper results write-up.
@@ -304,7 +319,10 @@ OPEN ITEMS (consolidated)
 =====================================================================
 - Finish the survey paper (paper_survey/) -- current main focus: address
   the remaining weaknesses listed in journal.txt's DRAFT STATUS section
-  (abstract done 2026-10-02). See PRIORITY SHIFT above.
+  (abstract done 2026-10-02; supervisor review applied 2026-10-23, its
+  open checks listed there). See PRIORITY SHIFT above.
+- Optional: fixed-reference per-generation HV for plot_moo_history (see
+  2026-10-23 UPDATE above).
 - Explain NSGA-III's ~1.9x end-to-end wall-clock (see PRIORITY SHIFT
   UPDATEs; the stage split is measured, the cause is not) -- relevant
   to the empirical paper, not blocking the survey. Next step: time what

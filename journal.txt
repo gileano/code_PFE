@@ -36,7 +36,7 @@ Load-bearing points not obvious from the bib alone:
   Sections 2-5.
 
 =====================================================================
-DRAFT STATUS (as of 2026-10-10)
+DRAFT STATUS (as of 2026-10-23)
 =====================================================================
 All 8 sections drafted (Sections 1-2 on 2026-09-10, 3-8 on 2026-09-11),
 followed by a full narrative-coherence review (2026-09-11) and a
@@ -204,10 +204,60 @@ space on a few nodes).
 - Not checked: Figs 4-5 and 7-10 (generate_report.py) may have the same
   small-text problem.
 
+2026-10-23 supervisor-review pass (commit a8ffa1ec): all 33 annotations in
+paper_survey/main_feedback.pdf (Florea Adrian, in Romanian) applied;
+point-by-point record in paper_survey/supervisor_review.txt, not repeated
+here. Paper now 60 pages. Changes worth knowing about beyond wording:
+- Abstract: supervisor's rewrites for the opening and the method-review
+  paragraph; closing now ties the identified gap (no MO QIEA on a
+  quantum-computing problem domain) to ongoing FADSE work. New Section 8
+  subsection sec:open-challenges:fadse backs it, drafted only from the
+  supervisor's wording + patrausanu2024frameworks/patrausanu2026thomae --
+  needs the user's check against what is actually being built.
+- Impersonal style: no we/our/us left anywhere (~31 rewrites).
+- "thirteen" removed everywhere at the supervisor's wish (abstract and
+  16 body uses -> "the surveyed methods"); the intro now names all 13
+  methods with citations and says each paper proposes one method.
+  "ten most-cited" + "three recent" kept only in the selection rule.
+- Intro/Section 7 now state what this work adds to ghlib2026scalable:
+  NSGA-III/SMS-EMOA (225-run baseline), Monte-Carlo fidelity estimation
+  to n=20, fair HV + tooling; the two injection bugs are stated as
+  introduced during these extensions (user confirmed). "Inherited from
+  [18]" list (partitioning, encoding, injection, compression) is from
+  repo history, not checked against Ghlib's paper.
+- Taxonomy axis renamed "solution representation (scheme)"; QiEA -> QIEA;
+  QEA naming note (Han & Kim's QEA vs hardware QEA) in Sections 1 and 2.
+- Section 2: funnel reduced to start/end counts; hand-corrected years
+  removed; Cluster 1/4 retitled; "NP-hard combinatorial optimization"
+  moved to Cluster 2 in the table with a caption disclosure (raw CSV
+  unchanged); Zhang 2011 "most-cited survey" now backed by corpus numbers
+  (297 vs 71). Description list uses enumitem [style=unboxed] + needspace
+  (long labels overflowed).
+- Section 3: vector x, formal dominance, display formulas for HV, IGD,
+  spread Delta, spacing, Coverage, TSHD (spread/spacing match
+  final_m1_script.py).
+- Section 7: new "Experimental data" paragraph (sec:case-study:data:
+  225 runs, 2026-09-06, i7-12700H/64GB laptop, GitHub ULBS_qiea link);
+  "Source:" added to case-study captions. HV-vs-generation figure's
+  non-monotonic HV re-explained: per-generation adaptive normalization
+  in evaluate_run, not crowding-distance trade-off (code inspection only;
+  not re-run with a fixed reference point).
+- Bib: acronyms braced in 19 titles (unsrtnat lowercased e.g. QNSGA-II),
+  Pareto/Thomae braced, Narayanan DOI added.
+
 Known remaining weaknesses (as of 2026-10-08; the earlier three -- only 5
 methods, gilea2026waste rows, drafting language -- are resolved, see above):
 - Most rows of the 13-method Section 5 tables rest on abstracts only;
-  hussain2022moqiga and lu2013apmqea have no abstract anywhere checked.
+  hussain2022moqiga and lu2013apmqea abstracts still not retrieved
+  (supervisor says they exist; ScienceDirect blocks automated access --
+  user could paste them). "(no abstract available)" removed from the
+  table 2026-10-23; cells still read "Not confirmed".
+- Open from the 2026-10-23 pass: verify the FADSE subsection and the
+  "inherited from Ghlib" list; make github.com/gileano/code_PFE public
+  before submission (cited in Section 7); ask the supervisor why he
+  highlighted six references without comment (deng2020gate, li2007hqga,
+  ding2008qcircuits, krylov2019qeqea, chou2022qcsynthesis,
+  li2025aqeaqas).
 - chou2022qcsynthesis full text not seen (closed access): if it is
   multi-objective, the "no MO QIEA on a quantum problem" claim (abstract,
   4.6, 8.1) must change.
