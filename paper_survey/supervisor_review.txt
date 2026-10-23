@@ -236,3 +236,18 @@ B1. (p.50-55) Several references highlighted without a comment.
       TO ASK: the supervisor's intent for the other highlighted references
       (Deng et al. 2022, Li & Wang 2007, Ding et al. 2008, Krylov & Lukac
       2019, Chou et al. 2022, Li et al. 2025).
+
+=====================================================================
+ADDITIONAL CHANGE (not from the supervisor's annotations)
+=====================================================================
+A1. Acknowledgements section added (main.tex, unnumbered, after the
+    Conclusion and before the References; commit 7db58f3d):
+    "The authors used Claude (Anthropic), through the Claude Code
+    command-line tool, in all stages of this work: literature search and
+    screening, the bibliometric analysis, development of the
+    quantum-circuit-optimization pipeline and its experiments, figure
+    generation, drafting and revising the text, and preparation of the
+    LaTeX manuscript. The authors reviewed and edited all output and take
+    full responsibility for the content of this publication."
+    TO CHECK: once the target journal is chosen, check whether it wants
+    this as a separate "Declaration of generative AI use" section instead.
