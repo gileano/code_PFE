@@ -254,6 +254,26 @@ revising the text and LaTeX preparation removed. Rebuilt locally
 venue's AI-disclosure policy before submission (most publishers require
 disclosing AI help with writing/editing).
 
+2026-10-27 (later): author line anonymized for review (main.tex; original
+kept as a comment -- restore for camera-ready). Still identifying: the
+GitHub URL (gileano, ULBS_qiea) in Section 7, Lucian Blaga University
+of Sibiu in the abstract and Section 8, and self-citations
+(gilea2026waste, Florea papers) -- not yet anonymized.
+New Section 7 subsection sec:case-study:energy ("Energy-Efficiency
+Implications") + Table tab:case-study-energy, numbers from new
+generate_report.py tables energy_proxies_by_{circuit,algorithm}. Two
+points kept apart: (1) optimizer compute cost -- baseline 13.1h summed,
+124s/176s/331s per run SMS-EMOA/NSGA-II/NSGA-III, 48-394s per family;
+compute time, NOT measured energy (RAPL logging deliberately skipped);
+(2) circuit resources -- depth -34% to -66% for four families but +33%
+for qft, and median fidelity_final 0.029 (2/225 runs >= 0.5), so the
+hardware-side saving is stated as conditional on fidelity. This is the
+first place the paper states absolute fidelity is low. The two
+Report1/Quantum_app_{chemistry,energy}.docx "case studies" were
+reviewed and NOT used: chatbot-style output, no sources, unsourced
+numbers, and they assume a Hadamard interference operator in MO QIEAs
+that the survey itself found none of.
+
 Known remaining weaknesses (as of 2026-10-08; the earlier three -- only 5
 methods, gilea2026waste rows, drafting language -- are resolved, see above):
 - Most rows of the 13-method Section 5 tables rest on abstracts only;
@@ -261,6 +281,8 @@ methods, gilea2026waste rows, drafting language -- are resolved, see above):
   (supervisor says they exist; ScienceDirect blocks automated access --
   user could paste them). "(no abstract available)" removed from the
   table 2026-10-23; cells still read "Not confirmed".
+- Finish anonymization for double-blind review if the venue needs it
+  (GitHub URL, Sibiu affiliation, self-citations; see 2026-10-27).
 - Check the target venue's AI-disclosure policy against the narrowed
   Acknowledgements (2026-10-27).
 - Open from the 2026-10-23 pass: verify the FADSE subsection and the

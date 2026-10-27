@@ -10,7 +10,9 @@ present work adds NSGA-III and SMS-EMOA as alternative per-block
 optimizers (Section~\ref{sec:case-study:algorithms}), scale-aware
 Monte-Carlo fidelity estimation reaching 20 qubits
 (Section~\ref{sec:case-study:pipeline}), and a shared-reference
-hypervolume comparison (Section~\ref{sec:case-study:hypervolume}). As stated in
+hypervolume comparison (Section~\ref{sec:case-study:hypervolume}); the
+section closes by reading these results against the survey's
+energy-efficiency motivation (Section~\ref{sec:case-study:energy}). As stated in
 Section~\ref{sec:introduction}, the case study is illustrative, not this
 survey's primary evidence -- full empirical validation of the pipeline,
 including the ablations Sections~\ref{sec:case-study:mutation} and
@@ -428,3 +430,94 @@ reference-point niching versus crowding-distance-based and
 hypervolume-driven diversity rather than about measurement artifacts --
 remains open and is revisited as a candidate direction in
 Section~\ref{sec:open-challenges}.
+
+\subsection{Energy-Efficiency Implications}
+\label{sec:case-study:energy}
+
+Section~\ref{sec:introduction} motivated QIEA-for-MOO partly on
+energy-efficiency grounds: reducing the resources an optimization
+problem requires is part of a broader case for sustainable
+computing~\citep{sai2026generative,banciu2026aiot}, and
+optimization-driven resource management already delivers measurable
+energy and emission savings in other domains~\citep{moga2025rlmicrogrid}.
+The case study touches this argument at two distinct points, which
+have to be kept apart because the evidence for each is of a different
+kind: the classical compute spent \emph{running} the optimizer, and the
+quantum resources the \emph{resulting} circuit would consume on
+hardware. No energy was measured directly in either case; what the
+225-run baseline records are compute time and circuit depth, used below
+as proxies, not as energy figures.
+
+\paragraph{Cost of the optimization itself.}
+The whole baseline consumed about 13.1 hours of summed wall-clock time
+on the single laptop described in Section~\ref{sec:case-study:data},
+and the choice of per-block optimizer alone moves that cost
+substantially: mean total wall-clock per run is 124s for SMS-EMOA,
+176s for NSGA-II, and 331s for NSGA-III, a spread of about 2.7 times
+between the cheapest and the most expensive optimizer on the same
+circuits, sizes, and seeds. Circuit family matters at least as much,
+from a mean of 48s per run for \texttt{qaoa\_maxcut} to 394s for
+\texttt{hw\_efficient\_ansatz} (Table~\ref{tab:case-study-energy}),
+and Figure~\ref{fig:scaling-wallclock} shows that cost growing sharply
+with qubit count. The pipeline's block partitioning and Monte-Carlo
+fidelity estimation are what make the 20-qubit sizes reachable on this
+hardware at all, since exact fidelity computation is intractable beyond
+roughly a dozen qubits (Section~\ref{sec:case-study:pipeline}). Two
+caveats apply. First, compute time is a proxy for energy only under a
+roughly constant power draw, which a laptop with all cores busy and
+dynamic frequency scaling does not guarantee; a per-run energy
+measurement would be needed before stating savings in joules. Second,
+the cheapest optimizer is not the most effective one: NSGA-II, at
+about 1.4 times SMS-EMOA's mean cost, reaches the highest mean
+\texttt{fidelity\_final} (Table~\ref{tab:case-study-algorithms}), so an
+energy-aware choice of optimizer is itself a trade-off, not a free
+saving.
+
+\paragraph{Resources of the resulting circuit.}
+On quantum hardware, a shallower circuit with fewer gates means
+shorter execution and less exposure to decoherence, and therefore
+potentially fewer repetitions and less device time per useful result.
+The optimized circuits are markedly shallower for four of the five
+families -- mean depth reductions of 34\% to 66\% -- but \emph{deeper}
+for \texttt{qft}, by 33\% on average
+(Table~\ref{tab:case-study-energy}), so depth reduction is not
+something the pipeline delivers uniformly. More importantly, depth
+reductions only translate into a hardware saving if the shorter
+circuit still does the same job, and on the current baseline it
+mostly does not: median \texttt{fidelity\_final} across the 225 runs
+is 0.029, and only two runs, both on \texttt{weak\_random}, reach a
+fidelity of 0.5. A circuit that is 60\% shallower but reproduces the
+target poorly is not an energy saving but a different computation.
+The case study therefore supports the energy argument for the
+optimization process as a measurable, controllable cost, and frames the
+hardware-side saving as conditional: it becomes a claim only once the
+fidelity of the shortened circuits is high enough for them to replace
+the originals, which the forthcoming empirical results paper has to
+establish rather than assume. The same caution applies to the
+literature reviewed in Section~\ref{sec:critical-analysis}: an energy
+or resource reduction reported without the quality of the solution
+that achieves it is not yet evidence of efficiency.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Resource proxies per circuit family on the 225-run core
+    baseline (45 runs per family, pooled over its three qubit counts and
+    the three per-block optimizers). Depth change is relative to the
+    input circuit (negative = shallower); wall-clock is per run, end to
+    end. Compute time is reported, not energy. Source: 225-run core
+    baseline (Section~\ref{sec:case-study:data}).}
+  \label{tab:case-study-energy}
+  \begin{tabularx}{\textwidth}{@{}p{3.4cm}YYYY@{}}
+    \toprule
+    Circuit family & Mean depth change & Mean fidelity\_final &
+    Runs with fidelity $\geq 0.5$ & Mean wall-clock (s) \\
+    \midrule
+    \texttt{weak\_random}         & $-58\%$ & 0.321 & 2 & 105 \\
+    \texttt{qaoa\_maxcut}         & $-66\%$ & 0.045 & 0 & 48 \\
+    \texttt{w\_state}             & $-54\%$ & 0.057 & 0 & 334 \\
+    \texttt{hw\_efficient\_ansatz} & $-34\%$ & 0.039 & 0 & 394 \\
+    \texttt{qft}                  & $+33\%$ & 0.029 & 0 & 170 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}

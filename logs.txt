@@ -1,6 +1,6 @@
 PROJECT LOG — Quantum Circuit Optimization with Genetic Algorithms
 Generated: 2026-08-18
-Last updated: 2026-10-23
+Last updated: 2026-10-27
 
 NOTE ON THIS FILE (2026-09-07): condensed from a much longer (~1700-line)
 narrative at user request -- it had grown too big to be useful. Kept: current
@@ -93,6 +93,21 @@ STATUS; commit a8ffa1ec). Pipeline-relevant findings from that pass:
   compute them against one fixed normalization/reference per run.
 - The survey now cites github.com/gileano/code_PFE/tree/ULBS_qiea as
   the code/data source -- the repo must be public before submission.
+
+UPDATE (2026-10-27): survey gained a Section 7 energy-efficiency
+subsection (detail in journal.txt). Pipeline-relevant facts measured
+for it from results_master.csv (225-run baseline), via new
+generate_report.py tables energy_proxies_by_circuit/_by_algorithm:
+- Absolute fidelity is low: median fidelity_final 0.029, 154/225 runs
+  < 0.1, only 2 runs (both weak_random) >= 0.5, none >= 0.9. Per-family
+  means: weak_random 0.321, others 0.029-0.057. Relevant to the
+  empirical paper -- depth reductions are not yet equivalent circuits.
+- Depth change (depth_after/depth_before - 1): -34% to -66% mean for
+  four families, but qft gets DEEPER (+33% mean, up to +119%).
+- Compute: 13.1h summed wall-clock for the baseline; 48s
+  (qaoa_maxcut) to 394s (hw_efficient_ansatz) mean per run.
+- Energy itself is not measured; RAPL logging in run_experiment.py was
+  considered and deliberately skipped for now.
 
 ROADMAP:
 1. OPEN: start empirical-paper results write-up.

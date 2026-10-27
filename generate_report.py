@@ -385,6 +385,33 @@ def table_scaling(df: pd.DataFrame) -> pd.DataFrame:
     return g.sort_values(["circuit", "n_qubits"])
 
 
+def table_energy_proxies(df: pd.DataFrame, group_col: str) -> pd.DataFrame:
+    """Resource proxies behind the survey paper's energy-efficiency subsection, on the
+    all-sizes algorithm-comparison baseline, grouped by `group_col` ("circuit" or
+    "block_algorithm"): relative depth change (negative = shallower), final fidelity,
+    and total/mean compute time. Compute time only -- no energy is measured."""
+    baseline = df[
+        (~df["is_legacy_schema"])
+        & (df["mutation_scheme"] == "point")
+        & (df["hybrid_las"] == False)
+        & (df["injection_method"] == "stochastic")
+    ].copy()
+    baseline["depth_change"] = baseline["depth_after"] / baseline["depth_before"] - 1
+    g = baseline.groupby(group_col).agg(
+        n_runs=("run_id", "count"),
+        depth_change_mean=("depth_change", "mean"),
+        depth_change_min=("depth_change", "min"),
+        depth_change_max=("depth_change", "max"),
+        fidelity_final_mean=("fidelity_final", "mean"),
+        fidelity_final_median=("fidelity_final", "median"),
+        fidelity_final_max=("fidelity_final", "max"),
+        runs_fidelity_ge_0_5=("fidelity_final", lambda s: int((s >= 0.5).sum())),
+        wall_clock_s_mean=("wall_clock_s", "mean"),
+        wall_clock_h_total=("wall_clock_s", lambda s: s.sum() / 3600),
+    ).reset_index()
+    return g
+
+
 # ---------------------------------------------------------------------------
 # Figures
 # ---------------------------------------------------------------------------
@@ -507,6 +534,9 @@ def main(argv=None):
         "injection_method_comparison": table_injection_method_comparison(df),
         "injection_method_legacy": table_injection_method_legacy(df),
         "scaling": table_scaling(df),
+        # Survey paper's energy-efficiency subsection (sec:case-study:energy).
+        "energy_proxies_by_circuit": table_energy_proxies(df, "circuit"),
+        "energy_proxies_by_algorithm": table_energy_proxies(df, "block_algorithm"),
     }
     for name, table in tables.items():
         table.to_csv(tables_dir / f"{name}.csv", index=False)
