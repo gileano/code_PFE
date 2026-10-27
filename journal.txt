@@ -36,7 +36,7 @@ Load-bearing points not obvious from the bib alone:
   Sections 2-5.
 
 =====================================================================
-DRAFT STATUS (as of 2026-10-23)
+DRAFT STATUS (as of 2026-10-27)
 =====================================================================
 All 8 sections drafted (Sections 1-2 on 2026-09-10, 3-8 on 2026-09-11),
 followed by a full narrative-coherence review (2026-09-11) and a
@@ -245,6 +245,15 @@ here. Paper now 60 pages. Changes worth knowing about beyond wording:
 - Bib: acronyms braced in 19 titles (unsrtnat lowercased e.g. QNSGA-II),
   Pareto/Thomae braced, Narayanan DOI added.
 
+2026-10-27: Acknowledgements (main.tex) narrowed at the user's request --
+the AI-use disclosure now lists only literature search/screening, the
+bibliometric analysis, and pipeline development ("in parts of this
+work", was "in all stages"); experiments, figure generation, drafting/
+revising the text and LaTeX preparation removed. Rebuilt locally
+(./build.sh): 61 pages, no undefined references. Open: check the target
+venue's AI-disclosure policy before submission (most publishers require
+disclosing AI help with writing/editing).
+
 Known remaining weaknesses (as of 2026-10-08; the earlier three -- only 5
 methods, gilea2026waste rows, drafting language -- are resolved, see above):
 - Most rows of the 13-method Section 5 tables rest on abstracts only;
@@ -252,6 +261,8 @@ methods, gilea2026waste rows, drafting language -- are resolved, see above):
   (supervisor says they exist; ScienceDirect blocks automated access --
   user could paste them). "(no abstract available)" removed from the
   table 2026-10-23; cells still read "Not confirmed".
+- Check the target venue's AI-disclosure policy against the narrowed
+  Acknowledgements (2026-10-27).
 - Open from the 2026-10-23 pass: verify the FADSE subsection and the
   "inherited from Ghlib" list; make github.com/gileano/code_PFE public
   before submission (cited in Section 7); ask the supervisor why he
