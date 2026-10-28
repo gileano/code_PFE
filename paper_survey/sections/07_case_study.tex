@@ -12,7 +12,14 @@ Monte-Carlo fidelity estimation reaching 20 qubits
 (Section~\ref{sec:case-study:pipeline}), and a shared-reference
 hypervolume comparison (Section~\ref{sec:case-study:hypervolume}); the
 section closes by reading these results against the survey's
-energy-efficiency motivation (Section~\ref{sec:case-study:energy}). As stated in
+energy-efficiency motivation (Section~\ref{sec:case-study:energy}), and
+then leaves the pipeline for two hypothetical application scenarios, a
+chemical production plant and an industrial microgrid, that carry the
+survey's findings over to energy-intensive domains
+(Sections~\ref{sec:case-study:scenario-chemistry}
+and~\ref{sec:case-study:scenario-microgrid}). Those two are problem
+formulations only: no experiment was run for them and they report no
+results. As stated in
 Section~\ref{sec:introduction}, the case study is illustrative, not this
 survey's primary evidence -- full empirical validation of the pipeline,
 including the ablations Sections~\ref{sec:case-study:mutation} and
@@ -521,3 +528,182 @@ that achieves it is not yet evidence of efficiency.
     \bottomrule
   \end{tabularx}
 \end{table}
+
+\subsection{Hypothetical Application Scenario: Chemical Process Eco-Efficiency}
+\label{sec:case-study:scenario-chemistry}
+
+This and the next subsection apply the survey's findings to two
+application domains in which energy is part of the objective itself,
+not only a cost of computing: the design and operation of a chemical
+production plant, and the day-ahead dispatch of an industrial
+microgrid. Unlike the rest of this section, both are hypothetical. No
+experiment was run for either, and no performance figure is given,
+because none could be given without one. The problem formulations are
+simplified for illustration and are not taken from a published study.
+What the two subsections do instead is ask what the taxonomy
+(Section~\ref{sec:taxonomy}) and the limitations identified in
+Section~\ref{sec:critical-analysis} imply for anyone considering a
+multi-objective QIEA for such a problem; Table~\ref{tab:case-study-scenarios}
+summarizes the answer for both.
+
+\paragraph{Problem.}
+Consider a continuously operated plant producing methanol from syngas,
+with three units:
+steam methane reforming, methanol synthesis, and distillation. Three
+objectives conflict: maximize net annual profit, minimize specific
+greenhouse-gas emissions per tonne of methanol, and minimize specific
+thermal energy consumption per tonne. The decision vector mixes
+continuous operating parameters (steam-to-carbon ratio, reformer
+temperature, synthesis pressure, distillation reflux ratios) with
+discrete design choices (which hot and cold streams the heat-exchanger
+network matches, and how many catalyst beds the synthesis reactor uses).
+Evaluating one candidate requires a rigorous flowsheet simulation, so
+each objective evaluation is expensive, and heat integration makes the
+objective landscape discontinuous wherever the network's stream matches
+change.
+
+\paragraph{What the survey implies.}
+\emph{Representation.} The decision vector sits at both ends of the
+representation range of Section~\ref{sec:taxonomy:representation} at
+once. The stream matches and bed count are binary or small-integer
+choices, which a Q-bit chromosome observes directly; the operating
+parameters are continuous and must be decoded from several Q-bits each,
+which fixes their precision in advance and is the setting in which
+\citet{olvera2023continuous} saw the quantum-inspired variants degrade
+as the number of variables grew. None of the surveyed multi-objective
+methods documents a mixed binary--continuous encoding, so the split
+between the two parts of the chromosome would be the designer's own
+choice. \emph{Feasibility.} Many observed stream-match combinations are
+thermodynamically infeasible, and a Q-bit observation is unconstrained,
+so a repair step or a penalty is unavoidable. \citet{gilea2026waste}'s
+QIEA fell behind a classical genetic algorithm as its problem grew, a
+loss its authors attribute to the repair step producing more and more
+of each solution (Section~\ref{sec:feature-comparison}); the same risk
+applies here.
+\emph{Evaluation budget.} With a simulator in the loop, the number of
+evaluations, not the optimizer's own overhead, sets the cost. The claim
+that matters is therefore whether a QIEA reaches a given front quality
+in fewer evaluations than a classical MOEA at an equal budget. The
+surveyed performance claims each rest on a single problem and an
+author-chosen classical baseline
+(Section~\ref{sec:critical-analysis:per-category}), so they do not
+establish that such an advantage would transfer to a simulator-bound
+problem. \emph{Operators and selection.} The usual remedy for a
+population stuck in one region of a discontinuous landscape is a
+diversity-restoring operator. No surveyed multi-objective QIEA has an
+interference-based or reset operator for this
+(Section~\ref{sec:taxonomy:operator}); its only lever is the rotation
+gate's angle schedule, so such an operator would be a contribution in
+its own right, not a component to reuse. With three objectives, the
+reference-point and hypervolume-driven selection that no surveyed QIEA
+pairs with a Q-bit representation (Section~\ref{sec:taxonomy:selection})
+would be natural candidates to try. \emph{Prior work.} A keyword
+screen of the Section~\ref{sec:bibliometric} corpus found no
+multi-objective QIEA for chemical process design or operation; the
+closest is refinery crude-oil scheduling. A study of this scenario
+would therefore be new ground for QIEA-MOO rather than a comparison
+with existing work.
+
+\subsection{Hypothetical Application Scenario: Industrial Microgrid Dispatch}
+\label{sec:case-study:scenario-microgrid}
+
+\paragraph{Problem.}
+Consider a manufacturing site supplied by rooftop solar photovoltaics,
+a combined heat and power (CHP) gas turbine, a battery, and a grid
+connection with time-of-use tariffs and peak-demand charges. The task
+is to fix the next day's dispatch schedule in 15-minute intervals, so
+$T{=}96$ time steps. At each step, four quantities are decided: the
+CHP unit's power output and the battery's charge or discharge power
+(both continuous), whether each shiftable batch production load runs
+(binary), and the heat output of an auxiliary boiler (continuous) --
+$96 \times 4 = 384$ decision variables in total, with one shiftable
+load. Three objectives conflict: minimize daily cost (grid energy,
+fuel, and battery degradation), minimize wasted energy (CHP heat dumped
+plus solar output curtailed), and minimize peak grid import. Power and
+heat must balance in every interval, and the battery's state of charge
+links each interval to the next.
+
+\paragraph{What the survey implies.}
+\emph{Scale.} The problem has 288 continuous variables. At an
+illustrative precision of 10 Q-bits per continuous variable, the
+chromosome would hold 2,976 Q-bits, far beyond the problems on which
+\citet{olvera2023continuous} already saw performance degrade with the
+number of decision variables. \emph{Coupling across time.} Each Q-bit
+is observed independently, so the representation itself carries no
+dependency between genes: a schedule observed from a Q-bit chromosome
+can drain the battery at one interval and need it two hours later. The
+state-of-charge constraint has to be enforced by repair or penalty, with
+the same scaling risk as in the chemical scenario. The only
+entanglement-inspired operator in the surveyed set, the crossover of
+\citet{kumar2026eahqnsga2}, couples pairs of individuals
+(Section~\ref{sec:taxonomy:operator}), not genes within one chromosome,
+so no surveyed operator addresses this kind of dependency. \emph{Run time.} A dispatch
+schedule recomputed every 15 minutes, as in model-predictive control,
+must be produced within that interval. The case study shows that the
+choice of optimizer alone moved compute cost by a factor of about 2.7
+(Section~\ref{sec:case-study:energy}), and \citet{gilea2026waste}'s
+QIEA took about 3.85 times a classical genetic algorithm's running time,
+so wall-clock time would have to be reported next to front quality,
+not inferred from the number of generations. \emph{Prior work.} Unlike
+the chemical scenario, this domain is not new to quantum-inspired
+optimization. The most-cited power-system QIEA in the corpus solves
+dynamic economic dispatch with wind generation as a single-objective
+problem~\citep{lee2011qgadispatch}, and the corpus also contains
+multi-objective QIEAs for economic--emission dispatch and microgrid
+capacity allocation, outside the in-depth set of
+Section~\ref{sec:critical-analysis}. Reinforcement learning is an
+established alternative for microgrid energy
+management~\citep{moga2025rlmicrogrid}. A QIEA-MOO study of this
+scenario would therefore need to compare against these existing
+methods, and against each other, which is the comparison
+Section~\ref{sec:critical-analysis:per-category} found missing.
+\emph{Reporting.} The lesson of Section~\ref{sec:case-study:energy}
+applies directly: an energy saving such as less dumped heat counts only
+alongside the cost and peak-import values of the same schedule, and
+fronts from different optimizers have to be compared with a shared
+hypervolume reference point (Section~\ref{sec:case-study:hypervolume}).
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{The two hypothetical application scenarios of
+    Sections~\ref{sec:case-study:scenario-chemistry}
+    and~\ref{sec:case-study:scenario-microgrid}, read against the
+    survey's taxonomy and limitations. Both formulations are
+    illustrative; no experiment was run and no result is reported.}
+  \label{tab:case-study-scenarios}
+  \begin{adjustwidth}{-2cm}{-2cm}
+  \centering
+  \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.9cm}YY@{}}
+    \toprule
+    & Chemical plant (methanol) & Industrial microgrid \\
+    \midrule
+    Objectives & Profit; specific emissions; specific thermal energy &
+      Daily cost; wasted energy; peak grid import \\
+    Decision variables & Mixed: continuous operating parameters, discrete
+      heat-exchanger matches and bed count &
+      384: 288 continuous, 96 binary (96 steps $\times$ 4) \\
+    Representation issue & Mixed binary--continuous encoding, not
+      documented by any surveyed method &
+      Thousands of Q-bits after decoding; no inter-gene dependency \\
+    Feasibility & Infeasible stream matches; repair or penalty &
+      Power/heat balance, battery state of charge linking intervals \\
+    Dominant cost & Simulator calls (equal-budget comparison needed) &
+      Wall-clock within a 15-minute control interval \\
+    Operator gap & No diversity-restoring (interference or reset)
+      operator in MO QIEAs & No operator couples genes within a
+      chromosome \\
+    Prior QIEA work & None found in the corpus &
+      Single- and multi-objective dispatch QIEAs exist \\
+    \bottomrule
+  \end{tabularx}
+  \end{adjustwidth}
+\end{table}
+
+Both scenarios have the features on which the surveyed literature gives
+the least guidance: mixed or very many decision variables, hard
+constraints, evaluations that are expensive or must finish within a
+fixed time, and three objectives. That makes them candidate benchmarks
+for the open questions of Section~\ref{sec:open-challenges} rather than
+demonstrations that QIEA-MOO suits them. Whether it does is an
+empirical question, which is precisely why no answer is given here.

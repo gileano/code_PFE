@@ -274,6 +274,31 @@ reviewed and NOT used: chatbot-style output, no sources, unsourced
 numbers, and they assume a Hadamard interference operator in MO QIEAs
 that the survey itself found none of.
 
+2026-10-28: Section 7 gained two subsections at the user's request,
+built from Report1/Quantum_app_{chemistry,energy}.docx (reversing the
+2026-10-27 decision not to use them): sec:case-study:scenario-chemistry
+(methanol plant) and sec:case-study:scenario-microgrid (96-step
+industrial microgrid dispatch), plus Table tab:case-study-scenarios.
+Both are labelled HYPOTHETICAL problem formulations with no results.
+Kept from the .docx files: the problem setups only. Dropped: every
+performance number (45%/62% fewer evaluations, 37.8% emissions cut,
+71.2->91.6% efficiency, the $ cost table -- unsourced chatbot output),
+the Hadamard-interference operator, and the specific variable ranges.
+Each scenario is instead read against the survey's own findings
+(representation/decoding, repair, evaluation budget, operator and
+selection gaps, prior work, reporting). A keyword screen of the
+Section 2 OpenAlex corpus backs the "prior work" sentences: no
+multi-objective QIEA for chemical process design (closest: refinery
+crude-oil scheduling), but several for economic-emission dispatch and
+microgrid capacity allocation -- stated qualitatively, not cited
+individually. Open: add 2-3 of those dispatch/microgrid MO-QIEA
+citations to the bib if the claim should be backed by references.
+Abstract (same day): one sentence added naming the two scenarios as
+hypothetical; the closing FADSE sentence ("By providing a standardized
+infrastructure ... QIEA--memetic architectures") dropped to compensate.
+Abstract now 346 words -- still well over a 250-word cap if the venue
+has one.
+
 Known remaining weaknesses (as of 2026-10-08; the earlier three -- only 5
 methods, gilea2026waste rows, drafting language -- are resolved, see above):
 - Most rows of the 13-method Section 5 tables rest on abstracts only;
