@@ -29,8 +29,9 @@ Load-bearing points not obvious from the bib alone:
   be framed as an extension of it, not one illustrative example among
   others.
 - gilea2026waste (user's own first paper): PDP 2026 (Euromicro), March
-  2026, DOI 10.23919/PDP.2026.00054 (given by the user 2026-10-03; not yet
-  on Crossref then, pages unknown). Single-objective -- see 2026-10-03 notes.
+  2026, DOI 10.23919/PDPCPS00030.2026.00057, pp. 380-387 (corrected
+  2026-10-28 from Crossref; the DOI given 2026-10-03,
+  10.23919/PDP.2026.00054, does not resolve). Single-objective -- see 2026-10-03 notes.
 - banciu2026aiot, moga2025rlmicrogrid, and sai2026generative are
   motivation-only (Section 1 energy-efficiency framing) -- keep out of
   Sections 2-5.
@@ -152,7 +153,8 @@ trim if the target venue caps abstracts at 250 words.
 - florea2023superposition (supervisor; "superposition" is not quantum)
   cited in 4.2 and 8.2; banciu2025icstcc cited as the source of the
   waste-paper routes/GA baseline.
-- gilea2026waste venue resolved: PDP 2026, DOI 10.23919/PDP.2026.00054.
+- gilea2026waste venue resolved: PDP 2026 (DOI later corrected, see
+  LITERATURE above).
 - Still open: chou2022qcsynthesis full text (closed access, no
   preprint found); many table cells are abstract-level or "not
   confirmed" (Hussain 2022 and Lu & Yu 2013 have no abstract at all).
@@ -336,6 +338,16 @@ references; bibliography via Definitions/mdpi.bst (set by the class).
   author list from web search -- corrected from Crossref to Akhtar, Hu &
   You, Quantum 7, 1026 (2023), key renamed akhtar2023shadow. The only
   other bib TODO (asghariilani2025pmedm) is uncited, so it never prints.
+- Crossref check of all 72 cited entries (same day; script kept out of
+  the repo): 61 matched cleanly. Fixed: gilea2026waste DOI (old one
+  404s) + pages; kumar2026eahqnsga2 "and others" -> all 5 authors;
+  han2004hepsilon DOI added (10.1109/TEVC.2004.823467). Not in Crossref
+  but checked otherwise: 3 arXiv entries (arXiv API), Zitzler thesis
+  (DataCite DOI resolves), and 4 pre-DOI classics (Schaffer 1985,
+  Fonseca 1993, PESA-II 2001, SPEA2 TIK-103) -- consistent with their
+  standard citations. Also stripped "Proceedings of (the)" from every
+  booktitle: mdpi.bst adds "In Proceedings of the" itself, so 10 refs
+  printed "Proceedings of the Proceedings of the ...".
 - Cosmetic: two 525pt "Overfull hbox" log entries at the end of each
   xltabular (empty box from the class, nothing visibly overflows).
 
