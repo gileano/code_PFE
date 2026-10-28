@@ -1,0 +1,261 @@
+{
+  "blocks": [
+    [
+      0,
+      1,
+      2,
+      3
+    ],
+    [
+      4,
+      5,
+      6,
+      7
+    ]
+  ],
+  "block_algorithm": "nsga2",
+  "mutation_scheme": "point",
+  "hybrid_las": false,
+  "kept_injections": [
+    [
+      "rzz",
+      2,
+      5,
+      1.402474430341393
+    ],
+    [
+      "cz",
+      2,
+      5,
+      null
+    ],
+    [
+      "cx",
+      4,
+      3,
+      null
+    ],
+    [
+      "rzz",
+      6,
+      1,
+      2.3259156135863264
+    ],
+    [
+      "cz",
+      3,
+      5,
+      null
+    ],
+    [
+      "cx",
+      3,
+      4,
+      null
+    ],
+    [
+      "rzz",
+      6,
+      1,
+      1.2053668536036601
+    ],
+    [
+      "cz",
+      4,
+      1,
+      null
+    ],
+    [
+      "rzz",
+      3,
+      5,
+      5.446587700984028
+    ],
+    [
+      "cz",
+      5,
+      2,
+      null
+    ],
+    [
+      "rzz",
+      4,
+      3,
+      1.045300783609133
+    ],
+    [
+      "rzz",
+      1,
+      5,
+      1.099993199468648
+    ],
+    [
+      "rzz",
+      3,
+      5,
+      6.017547053587902
+    ]
+  ],
+  "injection_path_used": "fidelity_driven_greedy",
+  "fidelity_after_injection_method": 0.05952220361166974,
+  "fidelity_after_fidelity_driven_greedy": 0.1317529631683638,
+  "fidelity_backend": "exact",
+  "fidelity_exact_threshold": 13,
+  "fidelity_samples": 8,
+  "fidelity_shots": 128,
+  "injection_fidelity_samples": 8,
+  "injection_fidelity_shots": 16,
+  "injection_fidelity_exact_threshold": 7,
+  "fidelity_driven_max_trials": 300,
+  "fidelity_driven_statevector_threshold": 24,
+  "fidelity_approximate_backend": "mps",
+  "fidelity_driven_tier": "statevector",
+  "depth_before": 14,
+  "depth_after": 12,
+  "fidelity_final": 0.1317529631683638,
+  "original_num_qubits": 8,
+  "final_num_qubits": 8,
+  "highly_interactive_qubits_identified": {},
+  "stage_timings_s": {
+    "partitioning": 0.3111580969998613,
+    "block_optimization": 18.751190808998217,
+    "injection": 0.39313634900099714,
+    "compression": 0.23785426799804554
+  },
+  "cost_before": 42,
+  "cost_after": 72,
+  "moo_metrics_per_block": [
+    {
+      "n_pareto": 15,
+      "HV": 0.03618573499658163,
+      "Spread": 1.5714285714285712,
+      "Spacing": 0.11317629033086753,
+      "ref_point": [
+        1.0966510286667646,
+        0.6,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.14787290438841738,
+          1.0,
+          12.0
+        ],
+        [
+          0.14787290438841738,
+          1.0,
+          12.0
+        ],
+        [
+          0.14787290438841738,
+          1.0,
+          12.0
+        ],
+        [
+          0.14787290438841738,
+          1.0,
+          12.0
+        ],
+        [
+          0.14787290438841738,
+          1.0,
+          12.0
+        ],
+        [
+          0.25583363680084636,
+          2.0,
+          12.0
+        ],
+        [
+          0.4363236950637597,
+          4.0,
+          12.0
+        ],
+        [
+          0.4363236950637597,
+          4.0,
+          12.0
+        ],
+        [
+          0.4363236950637597,
+          4.0,
+          12.0
+        ],
+        [
+          0.4363236950637597,
+          4.0,
+          12.0
+        ],
+        [
+          0.4363236950637597,
+          4.0,
+          12.0
+        ],
+        [
+          0.4363236950637597,
+          4.0,
+          12.0
+        ],
+        [
+          0.4363236950637597,
+          4.0,
+          12.0
+        ],
+        [
+          0.3910231137196998,
+          3.0,
+          12.0
+        ],
+        [
+          0.14787290438841735,
+          1.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 6,
+      "HV": 0.031213507467158265,
+      "Spread": 0.9316244886542603,
+      "Spacing": 0.11960696013484476,
+      "ref_point": [
+        1.1,
+        0.475,
+        0.1
+      ],
+      "front_raw": [
+        [
+          3.469446951953614e-18,
+          2.0,
+          12.0
+        ],
+        [
+          3.469446951953614e-18,
+          2.0,
+          12.0
+        ],
+        [
+          0.34272697449439543,
+          4.0,
+          12.0
+        ],
+        [
+          0.30349447921935946,
+          3.0,
+          12.0
+        ],
+        [
+          0.49064685563119725,
+          5.0,
+          12.0
+        ],
+        [
+          0.0,
+          2.0,
+          12.0
+        ]
+      ]
+    }
+  ],
+  "wall_clock_s": 19.94514125799833
+}

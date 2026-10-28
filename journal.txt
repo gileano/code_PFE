@@ -299,6 +299,46 @@ infrastructure ... QIEA--memetic architectures") dropped to compensate.
 Abstract now 346 words -- still well over a 250-word cap if the venue
 has one.
 
+2026-10-28 (later): MIGRATED TO THE MDPI TEMPLATE (ACS variant, from
+Report1/MDPI_template_ACS/). paper_survey/Definitions/ copied in;
+main.tex rewritten on \documentclass[journal,review,submit,moreauthors]
+{Definitions/mdpi}; sections/*.tex and references.bib unchanged apart
+from: all floats [htbp] -> [H] (MDPI rule); the four wide tables (3, 4,
+5, 9) now extend into MDPI's left margin to \fulllength instead of +-2cm;
+a GenAI-use paragraph added at the end of Section 1.1 (MDPI wants it in
+the methods part, not only Acknowledgments); gilea2026waste month = mar
+-> {March} (mdpi.bst has no month macros). Build: 47 pages, no undefined
+references; bibliography via Definitions/mdpi.bst (set by the class).
+- Abstract cut to exactly 200 words (MDPI: ~200 max). Dropped vs. the
+  346-word version: rotation-gate reference-solution point, the
+  correctness-bug sentence, the Sibiu affiliation sentence; FADSE kept
+  only as "ongoing work in FADSE".
+- 9 keywords added. Abbreviations list added (optional in MDPI).
+- Author names RESTORED (Gilea, Florea; MDPI is single-blind for most
+  journals) -- supersedes the 2026-10-27 anonymization; check the
+  target journal is not one of MDPI's double-blind ones.
+- All front/back-matter TODOs resolved with the user (same day):
+  journal = Algorithms (`algorithms`); corresponding author Gilea;
+  affiliation/e-mails as in the PDP 2026 paper (CS & EE Department,
+  "Lucian Blaga" University of Sibiu); ORCIDs Gilea 0009-0007-1350-3247,
+  Florea 0000-0003-0278-4825; CRediT: A.F. also on methodology and
+  validation (validation listed for both -- user may narrow it); no
+  external funding; no conflicts of interest; AI named as "Claude
+  (Anthropic; Claude Opus models, 2026), through Claude Code".
+- Baseline data now in the repo: paper_survey/data/baseline_225/
+  (results_master.csv + each run's config.json/metrics.json, 7.7MB;
+  metrics.json is needed for the fair-HV tables via front_raw).
+  Verified: generate_report.py on this copy reproduces the tables from
+  runs/ byte-identically. Data Availability statement names the folder.
+- Still worth checking: Algorithms' own peer-review type (assumed
+  single-blind, so names are shown).
+- TODO sweep (same day): fu2022shadow (cited in Section 8) had a wrong
+  author list from web search -- corrected from Crossref to Akhtar, Hu &
+  You, Quantum 7, 1026 (2023), key renamed akhtar2023shadow. The only
+  other bib TODO (asghariilani2025pmedm) is uncited, so it never prints.
+- Cosmetic: two 525pt "Overfull hbox" log entries at the end of each
+  xltabular (empty box from the class, nothing visibly overflows).
+
 Known remaining weaknesses (as of 2026-10-08; the earlier three -- only 5
 methods, gilea2026waste rows, drafting language -- are resolved, see above):
 - Most rows of the 13-method Section 5 tables rest on abstracts only;

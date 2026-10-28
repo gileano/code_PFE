@@ -42,7 +42,7 @@ an object like it -- a gap Section~\ref{sec:taxonomy:application}
 already named and Section~\ref{sec:critical-analysis:per-category}
 returns to.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \input{figures/qft_example.tex}
   \caption{A 4-qubit quantum Fourier transform circuit ($H$, controlled
@@ -55,13 +55,14 @@ returns to.
 \end{figure}
 
 % Breakable across pages (xltabular = longtable + tabularx X columns),
-% widened 2cm into each margin like the other comparison tables.
+% widened into the left margin to MDPI's full page width (\fulllength),
+% like the other wide comparison tables.
 \begingroup
 \footnotesize
-\setlength{\LTleft}{-2cm}
-\setlength{\LTright}{-2cm}
+\setlength{\LTleft}{-\extralength}
+\setlength{\LTright}{0cm}
 \setlength{\LTcapwidth}{\textwidth}
-\begin{xltabular}{\dimexpr\textwidth+4cm\relax}{@{}p{2.1cm}XXXX@{}}
+\begin{xltabular}{\fulllength}{@{}p{2.1cm}XXXX@{}}
   \caption{Representation, operator, selection, and domain summary of
     the surveyed QIEA-MOO methods, in order of publication
     (recap of the taxonomy axes, Section~\ref{sec:taxonomy}; method
@@ -167,13 +168,14 @@ returns to.
 \endgroup
 
 % Breakable across pages (xltabular = longtable + tabularx X columns),
-% widened 2cm into each margin like the other comparison tables.
+% widened into the left margin to MDPI's full page width (\fulllength),
+% like the other wide comparison tables.
 \begingroup
 \footnotesize
-\setlength{\LTleft}{-2cm}
-\setlength{\LTright}{-2cm}
+\setlength{\LTleft}{-\extralength}
+\setlength{\LTright}{0cm}
 \setlength{\LTcapwidth}{\textwidth}
-\begin{xltabular}{\dimexpr\textwidth+4cm\relax}{@{}p{2.1cm}XXXX@{}}
+\begin{xltabular}{\fulllength}{@{}p{2.1cm}XXXX@{}}
   \caption{Complexity, scalability, convergence, and reported
     performance of the surveyed QIEA-MOO methods. Cells marked
     ``not confirmed'' require reading the full paper, not just its
@@ -358,7 +360,7 @@ the quantum-inspired variants also lost ground as the number of decision
 variables grew: in both cases the cost of turning Q-bits into a valid
 solution grows with problem size.
 
-\begin{table}[htbp]
+\begin{table}[H]
   \centering
   \small
   \caption{Single-objective QIEAs included as a comparison baseline
@@ -366,7 +368,7 @@ solution grows with problem size.
     solution the variation operator steers toward -- the component that
     has no direct multi-objective equivalent.}
   \label{tab:feature-comparison-so}
-  \begin{adjustwidth}{-2cm}{-2cm}
+  \begin{adjustwidth}{-\extralength}{0cm}
   \centering
   \begin{tabularx}{\linewidth}{@{}p{2.1cm}XXXX@{}}
     \toprule

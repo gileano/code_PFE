@@ -1,0 +1,283 @@
+{
+  "blocks": [
+    [
+      0,
+      1,
+      8,
+      9
+    ],
+    [
+      10,
+      11,
+      2,
+      3
+    ],
+    [
+      12,
+      13,
+      4,
+      5
+    ],
+    [
+      14,
+      15,
+      6,
+      7
+    ]
+  ],
+  "block_algorithm": "nsga3",
+  "mutation_scheme": "point",
+  "hybrid_las": false,
+  "kept_injections": [
+    [
+      "rzz",
+      0,
+      5,
+      0.19969646474274078
+    ],
+    [
+      "cz",
+      2,
+      4,
+      null
+    ],
+    [
+      "cz",
+      8,
+      13,
+      null
+    ],
+    [
+      "cz",
+      2,
+      9,
+      null
+    ],
+    [
+      "cx",
+      7,
+      5,
+      null
+    ],
+    [
+      "rzz",
+      3,
+      15,
+      5.836535610872145
+    ],
+    [
+      "rzz",
+      8,
+      12,
+      5.899471205144851
+    ],
+    [
+      "rzz",
+      12,
+      3,
+      5.651754921566147
+    ],
+    [
+      "cx",
+      15,
+      10,
+      null
+    ],
+    [
+      "rzz",
+      9,
+      15,
+      5.446587700984028
+    ],
+    [
+      "rzz",
+      7,
+      5,
+      4.9821441466287455
+    ],
+    [
+      "rzz",
+      8,
+      2,
+      0.1625139118261704
+    ],
+    [
+      "cx",
+      14,
+      5,
+      null
+    ],
+    [
+      "rzz",
+      4,
+      7,
+      6.24943050173836
+    ],
+    [
+      "cx",
+      6,
+      5,
+      null
+    ],
+    [
+      "rzz",
+      13,
+      2,
+      0.5120920900384796
+    ],
+    [
+      "rzz",
+      15,
+      8,
+      6.067022603479587
+    ]
+  ],
+  "injection_path_used": "fidelity_driven_greedy",
+  "fidelity_after_injection_method": 7.379663417954937e-05,
+  "fidelity_after_fidelity_driven_greedy": 0.0007099254645326058,
+  "fidelity_backend": "statevector_mc",
+  "fidelity_exact_threshold": 13,
+  "fidelity_samples": 8,
+  "fidelity_shots": 128,
+  "injection_fidelity_samples": 8,
+  "injection_fidelity_shots": 16,
+  "injection_fidelity_exact_threshold": 7,
+  "fidelity_driven_max_trials": 300,
+  "fidelity_driven_statevector_threshold": 24,
+  "fidelity_approximate_backend": "statevector",
+  "fidelity_driven_tier": "statevector",
+  "depth_before": 37,
+  "depth_after": 12,
+  "fidelity_final": 0.0007099254645326061,
+  "original_num_qubits": 16,
+  "final_num_qubits": 16,
+  "highly_interactive_qubits_identified": {},
+  "stage_timings_s": {
+    "partitioning": 0.4378422660010983,
+    "block_optimization": 33.81572488999882,
+    "injection": 3.3762679879982898,
+    "compression": 0.5113197270002274
+  },
+  "cost_before": 112,
+  "cost_after": 124,
+  "moo_metrics_per_block": [
+    {
+      "n_pareto": 4,
+      "HV": 0.08797691772271103,
+      "Spread": 0.3120123286119826,
+      "Spacing": 0.20480207969836484,
+      "ref_point": [
+        0.9552868740279964,
+        1.1,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.4536657274041675,
+          15.0,
+          12.0
+        ],
+        [
+          0.4374616544847058,
+          7.0,
+          12.0
+        ],
+        [
+          0.41529246415292,
+          3.0,
+          12.0
+        ],
+        [
+          0.0996790780062328,
+          1.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 5,
+      "HV": 0.030874407899709147,
+      "Spread": 1.0,
+      "Spacing": 0.262992399064879,
+      "ref_point": [
+        0.8241382201808019,
+        0.6714285714285714,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.3899844095270255,
+          5.0,
+          12.0
+        ],
+        [
+          0.3899844095270255,
+          5.0,
+          12.0
+        ],
+        [
+          0.35030975853982194,
+          3.0,
+          12.0
+        ],
+        [
+          0.35030975853982194,
+          3.0,
+          12.0
+        ],
+        [
+          0.1723042612467091,
+          1.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 2,
+      "HV": 0.007056167834384517,
+      "Spread": 0.0,
+      "Spacing": 0.0,
+      "ref_point": [
+        0.3722834501051182,
+        0.43333333333333335,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.4720952850913466,
+          5.0,
+          12.0
+        ],
+        [
+          0.4422127121984323,
+          3.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 2,
+      "HV": 0.011690560952588578,
+      "Spread": 0.0,
+      "Spacing": 0.0,
+      "ref_point": [
+        0.8833418095445722,
+        0.3857142857142857,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.444122378856338,
+          3.0,
+          12.0
+        ],
+        [
+          0.1510114317654701,
+          1.0,
+          12.0
+        ]
+      ]
+    }
+  ],
+  "wall_clock_s": 40.78071118200023
+}

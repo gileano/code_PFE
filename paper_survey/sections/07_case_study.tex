@@ -95,7 +95,7 @@ qubit-interaction graph and Louvain community detection can split into
 blocks with comparatively little entanglement crossing the cuts, which
 is what stage (5) then has to re-add.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.95\linewidth]{figures/weak_random_example.png}
   \caption{A 6-qubit instance of the \texttt{weak\_random} benchmark
@@ -126,7 +126,7 @@ stage (5)'s injection has to reconsider, and stage (1)'s own
 partitioning choice -- not just the circuit's raw connectivity --
 determines how much of that reconsideration is needed.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.75\linewidth]{figures/interaction_graph_weak_random_8q.png}
   \caption{Qubit-interaction graph for the same \texttt{weak\_random}
@@ -211,7 +211,7 @@ about convergence. This is the kind of
 generation-by-generation behavior the aggregate
 fidelity/hypervolume comparisons below necessarily average away.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.85\linewidth]{figures/moo_evolution_weak_random_8q_block0.png}
   \caption{Adaptive (per-generation-normalized) hypervolume and spread
@@ -267,7 +267,7 @@ Section~\ref{sec:critical-analysis:cross-cutting} raises about the wider
 literature -- this project is not exempt from the risk it identifies in
 others, only better positioned to catch it once measured twice.
 
-\begin{table}[htbp]
+\begin{table}[H]
   \centering
   \small
   \caption{Per-block-optimizer comparison on the 225-run core baseline
@@ -291,7 +291,7 @@ others, only better positioned to catch it once measured twice.
   \end{tabularx}
 \end{table}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.6\linewidth]{figures/algorithm_fidelity.png}
   \caption{Mean \texttt{fidelity\_final} by per-block optimizer, pooled
@@ -350,7 +350,7 @@ algorithms, pool all of their front points per block into one shared
 minimum/maximum normalization and one shared, fixed reference point
 before computing hypervolume.
 
-\begin{table}[htbp]
+\begin{table}[H]
   \centering
   \small
   \caption{Adaptive (per-run-normalized) vs.\ fair (shared-reference)
@@ -398,7 +398,7 @@ load-bearing: cross-algorithm hypervolume comparison requires a shared
 reference point, and an adaptive, per-run one is only valid for
 single-run convergence plots.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}{0.48\linewidth}
     \centering
@@ -505,7 +505,7 @@ literature reviewed in Section~\ref{sec:critical-analysis}: an energy
 or resource reduction reported without the quality of the solution
 that achieves it is not yet evidence of efficiency.
 
-\begin{table}[htbp]
+\begin{table}[H]
   \centering
   \small
   \caption{Resource proxies per circuit family on the 225-run core
@@ -663,7 +663,7 @@ alongside the cost and peak-import values of the same schedule, and
 fronts from different optimizers have to be compared with a shared
 hypervolume reference point (Section~\ref{sec:case-study:hypervolume}).
 
-\begin{table}[htbp]
+\begin{table}[H]
   \centering
   \small
   \caption{The two hypothetical application scenarios of
@@ -672,7 +672,7 @@ hypervolume reference point (Section~\ref{sec:case-study:hypervolume}).
     survey's taxonomy and limitations. Both formulations are
     illustrative; no experiment was run and no result is reported.}
   \label{tab:case-study-scenarios}
-  \begin{adjustwidth}{-2cm}{-2cm}
+  \begin{adjustwidth}{-\extralength}{0cm}
   \centering
   \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.9cm}YY@{}}
     \toprule

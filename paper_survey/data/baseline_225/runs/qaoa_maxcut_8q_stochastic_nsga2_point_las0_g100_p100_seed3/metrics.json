@@ -1,0 +1,239 @@
+{
+  "blocks": [
+    [
+      0,
+      3,
+      4,
+      7
+    ],
+    [
+      1,
+      2,
+      5,
+      6
+    ]
+  ],
+  "block_algorithm": "nsga2",
+  "mutation_scheme": "point",
+  "hybrid_las": false,
+  "kept_injections": [
+    [
+      "rzz",
+      7,
+      1,
+      0.18722145136808954
+    ],
+    [
+      "cx",
+      0,
+      6,
+      null
+    ],
+    [
+      "rzz",
+      4,
+      6,
+      0.1223759815903834
+    ],
+    [
+      "cx",
+      3,
+      5,
+      null
+    ],
+    [
+      "cx",
+      1,
+      0,
+      null
+    ],
+    [
+      "cx",
+      5,
+      0,
+      null
+    ],
+    [
+      "rzz",
+      7,
+      5,
+      0.27700529397691737
+    ],
+    [
+      "cx",
+      7,
+      6,
+      null
+    ],
+    [
+      "rzz",
+      0,
+      2,
+      0.016812060944539957
+    ],
+    [
+      "rzz",
+      3,
+      2,
+      1.099993199468648
+    ],
+    [
+      "cx",
+      4,
+      5,
+      null
+    ],
+    [
+      "rzz",
+      3,
+      2,
+      5.108562544938399
+    ],
+    [
+      "rzz",
+      1,
+      0,
+      6.274305627521398
+    ],
+    [
+      "rzz",
+      0,
+      5,
+      0.18191820184027135
+    ],
+    [
+      "cx",
+      3,
+      6,
+      null
+    ],
+    [
+      "rzz",
+      1,
+      4,
+      0.4141363943792827
+    ]
+  ],
+  "injection_path_used": "fidelity_driven_greedy",
+  "fidelity_after_injection_method": 0.005118589548837022,
+  "fidelity_after_fidelity_driven_greedy": 0.01074875880631406,
+  "fidelity_backend": "exact",
+  "fidelity_exact_threshold": 13,
+  "fidelity_samples": 8,
+  "fidelity_shots": 128,
+  "injection_fidelity_samples": 8,
+  "injection_fidelity_shots": 16,
+  "injection_fidelity_exact_threshold": 7,
+  "fidelity_driven_max_trials": 300,
+  "fidelity_driven_statevector_threshold": 24,
+  "fidelity_approximate_backend": "mps",
+  "fidelity_driven_tier": "statevector",
+  "depth_before": 21,
+  "depth_after": 13,
+  "fidelity_final": 0.010748758806314058,
+  "original_num_qubits": 8,
+  "final_num_qubits": 8,
+  "highly_interactive_qubits_identified": {},
+  "stage_timings_s": {
+    "partitioning": 0.37907419900147943,
+    "block_optimization": 34.307744556001126,
+    "injection": 0.43094197000027634,
+    "compression": 0.2824831350008026
+  },
+  "cost_before": 56,
+  "cost_after": 79,
+  "moo_metrics_per_block": [
+    {
+      "n_pareto": 7,
+      "HV": 0.02479015457916198,
+      "Spread": 1.0,
+      "Spacing": 0.1783420892857137,
+      "ref_point": [
+        0.9997903893743696,
+        0.5,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.3137245042606519,
+          3.0,
+          12.0
+        ],
+        [
+          0.3137245042606519,
+          3.0,
+          12.0
+        ],
+        [
+          0.3137245042606519,
+          3.0,
+          12.0
+        ],
+        [
+          0.3137245042606519,
+          3.0,
+          12.0
+        ],
+        [
+          0.5046094593773964,
+          5.0,
+          12.0
+        ],
+        [
+          0.39626500687693134,
+          4.0,
+          12.0
+        ],
+        [
+          0.13084446886345297,
+          1.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 6,
+      "HV": 0.019374247864573483,
+      "Spread": 1.23418362180272,
+      "Spacing": 0.075356001499635,
+      "ref_point": [
+        1.1,
+        0.5285714285714286,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.12356017324465385,
+          -0.0,
+          12.0
+        ],
+        [
+          0.12356017324465385,
+          -0.0,
+          12.0
+        ],
+        [
+          0.5286035637781943,
+          3.0,
+          12.0
+        ],
+        [
+          0.5286035637781943,
+          3.0,
+          12.0
+        ],
+        [
+          0.5286035637781943,
+          3.0,
+          12.0
+        ],
+        [
+          0.18152134585285126,
+          1.0,
+          12.0
+        ]
+      ]
+    }
+  ],
+  "wall_clock_s": 35.84300313900167
+}

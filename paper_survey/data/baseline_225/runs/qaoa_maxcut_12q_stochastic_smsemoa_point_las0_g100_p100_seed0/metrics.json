@@ -1,0 +1,308 @@
+{
+  "blocks": [
+    [
+      0,
+      11,
+      5,
+      6
+    ],
+    [
+      8,
+      1,
+      2,
+      7
+    ],
+    [
+      9,
+      10,
+      3,
+      4
+    ]
+  ],
+  "block_algorithm": "smsemoa",
+  "mutation_scheme": "point",
+  "hybrid_las": false,
+  "kept_injections": [
+    [
+      "cx",
+      3,
+      11,
+      null
+    ],
+    [
+      "rzz",
+      10,
+      6,
+      1.385069277511634
+    ],
+    [
+      "cx",
+      6,
+      7,
+      null
+    ],
+    [
+      "rzz",
+      6,
+      7,
+      2.2744907363926226
+    ],
+    [
+      "rzz",
+      3,
+      11,
+      0.9603174465111405
+    ],
+    [
+      "cx",
+      4,
+      0,
+      null
+    ],
+    [
+      "rzz",
+      6,
+      10,
+      4.929909238431367
+    ],
+    [
+      "cx",
+      11,
+      4,
+      null
+    ],
+    [
+      "cz",
+      1,
+      4,
+      null
+    ],
+    [
+      "rzz",
+      11,
+      4,
+      0.753269811280082
+    ],
+    [
+      "cz",
+      5,
+      3,
+      null
+    ],
+    [
+      "rzz",
+      4,
+      11,
+      4.139681320598408
+    ],
+    [
+      "rzz",
+      4,
+      1,
+      4.672524947781242
+    ],
+    [
+      "rzz",
+      8,
+      11,
+      6.061519386658712
+    ],
+    [
+      "cz",
+      4,
+      2,
+      null
+    ],
+    [
+      "cx",
+      10,
+      5,
+      null
+    ],
+    [
+      "cz",
+      4,
+      2,
+      null
+    ],
+    [
+      "cz",
+      5,
+      4,
+      null
+    ],
+    [
+      "rzz",
+      5,
+      7,
+      5.923009505270244
+    ],
+    [
+      "cz",
+      1,
+      4,
+      null
+    ],
+    [
+      "cz",
+      2,
+      4,
+      null
+    ],
+    [
+      "rzz",
+      5,
+      9,
+      5.492700113935856
+    ],
+    [
+      "rzz",
+      11,
+      7,
+      5.7354738614463985
+    ],
+    [
+      "rzz",
+      3,
+      2,
+      0.13785055891664755
+    ],
+    [
+      "rzz",
+      5,
+      10,
+      0.6906876139308132
+    ],
+    [
+      "cz",
+      2,
+      4,
+      null
+    ]
+  ],
+  "injection_path_used": "fidelity_driven_greedy",
+  "fidelity_after_injection_method": 4.876916665132262e-05,
+  "fidelity_after_fidelity_driven_greedy": 9.674573279059095e-05,
+  "fidelity_backend": "exact",
+  "fidelity_exact_threshold": 13,
+  "fidelity_samples": 8,
+  "fidelity_shots": 128,
+  "injection_fidelity_samples": 8,
+  "injection_fidelity_shots": 16,
+  "injection_fidelity_exact_threshold": 7,
+  "fidelity_driven_max_trials": 300,
+  "fidelity_driven_statevector_threshold": 24,
+  "fidelity_approximate_backend": "mps",
+  "fidelity_driven_tier": "statevector",
+  "depth_before": 29,
+  "depth_after": 19,
+  "fidelity_final": 9.674573279059103e-05,
+  "original_num_qubits": 12,
+  "final_num_qubits": 12,
+  "highly_interactive_qubits_identified": {},
+  "stage_timings_s": {
+    "partitioning": 0.39824930900067557,
+    "block_optimization": 26.855128391998733,
+    "injection": 17.975004604002606,
+    "compression": 0.4315724699990824
+  },
+  "cost_before": 84,
+  "cost_after": 118,
+  "moo_metrics_per_block": [
+    {
+      "n_pareto": 2,
+      "HV": 0.00983399831740605,
+      "Spread": 0.0,
+      "Spacing": 0.0,
+      "ref_point": [
+        0.6500664984072713,
+        0.43333333333333335,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.267164536454506,
+          1.0,
+          12.0
+        ],
+        [
+          0.5556288569418931,
+          3.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 6,
+      "HV": 0.05542574390304016,
+      "Spread": 0.8545268869204665,
+      "Spacing": 0.1278661444275275,
+      "ref_point": [
+        0.9205473711064528,
+        1.1,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.41280030312657445,
+          5.0,
+          12.0
+        ],
+        [
+          0.20225627343883068,
+          1.0,
+          12.0
+        ],
+        [
+          0.20225627343883068,
+          1.0,
+          12.0
+        ],
+        [
+          0.20225627343883068,
+          1.0,
+          12.0
+        ],
+        [
+          0.39262271170244323,
+          4.0,
+          12.0
+        ],
+        [
+          0.3836398114045891,
+          3.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 3,
+      "HV": 0.015022508169942723,
+      "Spread": 0.05137481924654472,
+      "Spacing": 0.017366128104097288,
+      "ref_point": [
+        0.7654724042655711,
+        0.3666666666666667,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.21813898858402392,
+          1.0,
+          12.0
+        ],
+        [
+          0.31730310453666316,
+          3.0,
+          12.0
+        ],
+        [
+          0.4053029503800769,
+          5.0,
+          12.0
+        ]
+      ]
+    }
+  ],
+  "wall_clock_s": 76.82878047100166
+}

@@ -1,0 +1,157 @@
+{
+  "blocks": [
+    [
+      0,
+      1,
+      2,
+      3
+    ],
+    [
+      4,
+      5,
+      6,
+      7
+    ]
+  ],
+  "block_algorithm": "nsga3",
+  "mutation_scheme": "point",
+  "hybrid_las": false,
+  "kept_injections": [],
+  "injection_path_used": "stochastic",
+  "fidelity_after_injection_method": 0.07575520182307044,
+  "fidelity_after_fidelity_driven_greedy": 0.021691584678877846,
+  "fidelity_backend": "exact",
+  "fidelity_exact_threshold": 13,
+  "fidelity_samples": 8,
+  "fidelity_shots": 128,
+  "injection_fidelity_samples": 8,
+  "injection_fidelity_shots": 16,
+  "injection_fidelity_exact_threshold": 7,
+  "fidelity_driven_max_trials": 300,
+  "fidelity_driven_statevector_threshold": 24,
+  "fidelity_approximate_backend": "mps",
+  "fidelity_driven_tier": "statevector",
+  "depth_before": 10,
+  "depth_after": 6,
+  "fidelity_final": 0.07575520182307044,
+  "original_num_qubits": 8,
+  "final_num_qubits": 8,
+  "highly_interactive_qubits_identified": {},
+  "stage_timings_s": {
+    "partitioning": 0.3152503799974511,
+    "block_optimization": 18.2559947990012,
+    "injection": 0.39980022099916823,
+    "compression": 0.1572549069969682
+  },
+  "cost_before": 67,
+  "cost_after": 46,
+  "moo_metrics_per_block": [
+    {
+      "n_pareto": 8,
+      "HV": 0.04434753780789261,
+      "Spread": 0.8630225354318531,
+      "Spacing": 0.1756780434574708,
+      "ref_point": [
+        1.0514248494735168,
+        0.6714285714285714,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.39086026728859874,
+          9.0,
+          12.0
+        ],
+        [
+          0.2794254761493006,
+          4.0,
+          12.0
+        ],
+        [
+          0.2794254761493006,
+          4.0,
+          12.0
+        ],
+        [
+          0.22196967204578738,
+          3.0,
+          12.0
+        ],
+        [
+          0.22196967204578738,
+          3.0,
+          12.0
+        ],
+        [
+          0.22196967204578738,
+          3.0,
+          12.0
+        ],
+        [
+          0.17194372559099713,
+          2.0,
+          12.0
+        ],
+        [
+          0.0607188741623318,
+          1.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 8,
+      "HV": 0.05365393905051037,
+      "Spread": 0.30409013883620617,
+      "Spacing": 0.03696312024273534,
+      "ref_point": [
+        1.02519047756991,
+        0.8272727272727273,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.3871641959215543,
+          9.0,
+          12.0
+        ],
+        [
+          0.34466479093057184,
+          7.0,
+          12.0
+        ],
+        [
+          0.32680247326026324,
+          6.0,
+          12.0
+        ],
+        [
+          0.2964046255490671,
+          5.0,
+          12.0
+        ],
+        [
+          0.24449480634547147,
+          4.0,
+          12.0
+        ],
+        [
+          0.19847496592688776,
+          3.0,
+          12.0
+        ],
+        [
+          0.09573366937935816,
+          2.0,
+          12.0
+        ],
+        [
+          0.0695703275147506,
+          1.0,
+          12.0
+        ]
+      ]
+    }
+  ],
+  "wall_clock_s": 19.401069962001202
+}

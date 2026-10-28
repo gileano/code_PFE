@@ -1,0 +1,212 @@
+{
+  "blocks": [
+    [
+      0,
+      8,
+      15,
+      7
+    ],
+    [
+      1,
+      2,
+      10,
+      9
+    ],
+    [
+      11,
+      3,
+      4,
+      12
+    ],
+    [
+      13,
+      5,
+      6,
+      14
+    ]
+  ],
+  "block_algorithm": "nsga2",
+  "mutation_scheme": "point",
+  "hybrid_las": false,
+  "kept_injections": [
+    [
+      "rzz",
+      8,
+      6,
+      6.190329382932802
+    ]
+  ],
+  "injection_path_used": "fidelity_driven_greedy",
+  "fidelity_after_injection_method": 0.14486515303964917,
+  "fidelity_after_fidelity_driven_greedy": 0.145160732210784,
+  "fidelity_backend": "statevector_mc",
+  "fidelity_exact_threshold": 13,
+  "fidelity_samples": 8,
+  "fidelity_shots": 128,
+  "injection_fidelity_samples": 8,
+  "injection_fidelity_shots": 16,
+  "injection_fidelity_exact_threshold": 7,
+  "fidelity_driven_max_trials": 300,
+  "fidelity_driven_statevector_threshold": 24,
+  "fidelity_approximate_backend": "statevector",
+  "fidelity_driven_tier": "statevector",
+  "depth_before": 37,
+  "depth_after": 7,
+  "fidelity_final": 0.145160732210784,
+  "original_num_qubits": 16,
+  "final_num_qubits": 16,
+  "highly_interactive_qubits_identified": {},
+  "stage_timings_s": {
+    "partitioning": 0.4485185449993878,
+    "block_optimization": 35.18411275800099,
+    "injection": 4.871670505999646,
+    "compression": 0.3184853180027858
+  },
+  "cost_before": 112,
+  "cost_after": 66,
+  "moo_metrics_per_block": [
+    {
+      "n_pareto": 9,
+      "HV": 0.033669073710440214,
+      "Spread": 1.4999999999999998,
+      "Spacing": 0.08852562466019519,
+      "ref_point": [
+        0.9832576543492465,
+        0.6,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.5989788855116527,
+          3.0,
+          12.0
+        ],
+        [
+          0.5989788855116527,
+          3.0,
+          12.0
+        ],
+        [
+          0.5989788855116527,
+          3.0,
+          12.0
+        ],
+        [
+          0.5989788855116527,
+          3.0,
+          12.0
+        ],
+        [
+          0.5989788855116527,
+          3.0,
+          12.0
+        ],
+        [
+          0.6706528402490185,
+          5.0,
+          12.0
+        ],
+        [
+          0.18292049881492287,
+          1.0,
+          12.0
+        ],
+        [
+          0.18292049881492287,
+          1.0,
+          12.0
+        ],
+        [
+          0.18292049881492287,
+          1.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 3,
+      "HV": 0.035109746921927025,
+      "Spread": 0.41524992180243386,
+      "Spacing": 0.23561229439000306,
+      "ref_point": [
+        1.0371886816523803,
+        0.85,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.7023850522293462,
+          4.0,
+          12.0
+        ],
+        [
+          0.18093450637464,
+          1.0,
+          12.0
+        ],
+        [
+          0.564579411069024,
+          3.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 4,
+      "HV": 0.05422749436037677,
+      "Spread": 0.4513778694391697,
+      "Spacing": 0.10117246397627082,
+      "ref_point": [
+        1.0668010599678421,
+        0.9,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.6489967666253009,
+          3.0,
+          12.0
+        ],
+        [
+          0.1483318161255448,
+          2.0,
+          12.0
+        ],
+        [
+          0.7240974995409979,
+          5.0,
+          12.0
+        ],
+        [
+          0.09878773431012568,
+          1.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 2,
+      "HV": 0.019128968481306585,
+      "Spread": 0.0,
+      "Spacing": 0.0,
+      "ref_point": [
+        0.9128968481306576,
+        1.1,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.1799214575538403,
+          1.0,
+          12.0
+        ],
+        [
+          0.684371714959414,
+          3.0,
+          12.0
+        ]
+      ]
+    }
+  ],
+  "wall_clock_s": 43.54831535999983
+}

@@ -1,80 +1,85 @@
-\documentclass[11pt,a4paper]{article}
+%  LaTeX support: latex@mdpi.com
+%  MDPI template (ACS variant, Definitions/ from MDPI_template_ACS), migrated
+%  2026-10-28 from the earlier article-class version (see git history).
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath,amssymb}
-\usepackage{graphicx}
-\usepackage{tikz}
+%=================================================================
+\documentclass[algorithms,review,submit,moreauthors]{Definitions/mdpi}
+
+%=================================================================
+% MDPI internal commands - do not modify
+\firstpage{1}
+\makeatletter
+\setcounter{page}{\@firstpage}
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2026}
+\copyrightyear{2026}
+\datereceived{ }
+\daterevised{ } % Comment out if no revised date
+\dateaccepted{ }
+\datepublished{ }
+
+%=================================================================
+% Packages not already loaded by the MDPI class (which loads graphicx,
+% amsmath, amssymb, booktabs, tabularx, array, changepage, enumitem, tikz,
+% natbib, hyperref, cleveref, geometry, caption, float, ...).
 \usetikzlibrary{quantikz2} % circuit diagram in Section 5 (figures/qft_example.tex)
-\usepackage{booktabs}
-\usepackage{tabularx}
 \usepackage{xltabular} % page-breakable tabularx (Section 5 comparison tables)
-\usepackage{array}
-\usepackage{changepage}
-\usepackage{enumitem} % style=unboxed lets long description labels wrap (Section 2.3)
 \usepackage{needspace}
-\usepackage{hyperref}
-\usepackage{cleveref}
-\usepackage[numbers,sort&compress]{natbib}
 
-% Centered, text-wrapping tabularx column, used to keep wide comparison
-% tables exactly \textwidth-aligned instead of overflowing the margin.
+% Centered, text-wrapping tabularx column (same as the class's C column).
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 
-\title{Critical Analysis of Quantum-Inspired Evolutionary Algorithms\\
-for Multi-Objective Optimization:\\
-Taxonomy, Features, and Limitations}
-% Anonymized for review; restore for the camera-ready version:
-% \author{Olivian-Antonio G\^{\i}lea \and Adrian Florea}
-\author{Anonymous Authors}
-\date{\today}
+%=================================================================
+\Title{Critical Analysis of Quantum-Inspired Evolutionary Algorithms for
+Multi-Objective Optimization: Taxonomy, Features, and Limitations}
 
-\begin{document}
+\newcommand{\orcidauthorA}{0009-0007-1350-3247}
+\newcommand{\orcidauthorB}{0000-0003-0278-4825}
 
-\maketitle
+\Author{Olivian-Antonio G\^{\i}lea *\orcidA{} and Adrian Florea \orcidB{}}
 
-\begin{abstract}
-By integrating core principles of quantum mechanics---specifically
-Q-bit chromosome representations and quantum rotation-gate
-operators---quantum-inspired evolutionary algorithms (QIEAs) enhance the
-search efficiency and diversity of classical evolutionary paradigms. Their multi-objective optimization (MOO)
-branch, active since at least 2003, remains sparse, scattered across
-domains, and, to the best of the authors' knowledge, has not yet been
-the subject of a dedicated survey. A
-bibliometric analysis of 2{,}250 QIEA papers from 1996--2026 shows
-multi-objective work making up under a tenth of the field, with its
-share roughly doubling since 2024, and clustering with application
-domains rather than with algorithm design. This work proposes a taxonomy of
-QIEA-for-MOO methods along five axes (solution representation, operator type,
-selection mechanism, hybridization, and application domain), apply it
-in a feature comparison that uses single-objective QIEAs as a baseline, and critically analyze the
-field's limitations. A review of the most-cited and most recent
-multi-objective QIEA methods reveals significant diversity in selection
-mechanisms, none of which adopt reference-point or hypervolume-based
-indicators. Furthermore, several widely cited approaches fail to clarify
-how objectives are aggregated, and systematic comparative benchmarking
-remains scarce. In particular, while defining the reference solution for
-quantum rotation gates is straightforward in single-objective
-optimization, multi-objective scenarios introduce substantial
-complexity---a design choice explicitly documented by only three of
-these methods.
-Reproducibility gaps, weak benchmarking, and scalability claims tested
-at a single problem size recur across method categories. An
-illustrative case study, a block-partitioned quantum-circuit-optimization
-pipeline extending a published NSGA-II framework with NSGA-III and
-SMS-EMOA, shows how an adaptive, per-run hypervolume reference point can
-change a cross-algorithm ranking and how a correctness bug can silently
-invalidate weeks of results. Two hypothetical application scenarios, a
+\AuthorNames{Olivian-Antonio G\^{\i}lea and Adrian Florea}
+
+\address[1]{%
+Computer Science and Electrical Engineering Department, ``Lucian Blaga''
+University of Sibiu, 550025 Sibiu, Romania;
+adrian.florea@ulbsibiu.ro}
+
+\corres{Correspondence: olivianantonio.gilea@ulbsibiu.ro}
+
+\abstract{Quantum-inspired evolutionary algorithms (QIEAs) use Q-bit
+chromosome representations and quantum rotation-gate operators to
+improve the search efficiency and diversity of classical evolutionary
+algorithms. Their multi-objective optimization (MOO) branch, active
+since at least 2003, remains sparse and has no dedicated survey. A bibliometric analysis of 2{,}250 QIEA
+papers from 1996--2026 shows multi-objective work making up under a
+tenth of the field, its share roughly doubling since 2024. This
+work proposes a five-axis taxonomy of QIEA-for-MOO methods (solution
+representation, operator type, selection mechanism, hybridization, and
+application domain), applies it in a feature comparison with
+single-objective QIEAs as a baseline, and critically analyzes the
+field's limitations. Selection mechanisms vary widely, yet none is
+reference-point- or hypervolume-based; several widely cited methods do
+not state how they aggregate objectives, and systematic benchmarking is
+scarce. An illustrative case study, a block-partitioned
+quantum-circuit-optimization pipeline extended with NSGA-III and
+SMS-EMOA, shows how an adaptive hypervolume reference point can change
+a cross-algorithm ranking. Two hypothetical application scenarios, a
 chemical plant and an industrial microgrid, show that these limitations
 bite hardest on mixed-variable, constrained, and expensive-to-evaluate
-problems. Finally, building on the identified
-gap---no multi-objective QIEA has yet been applied to a
-quantum-computing problem domain---and on a synthesis of key features
-in existing platforms, this paper outlines future research avenues and
-details ongoing developments within FADSE (Framework for Automatic
-Design Space Exploration), an open-source platform developed at Lucian
-Blaga University of Sibiu.
-\end{abstract}
+problems. Finally, since no multi-objective QIEA has yet been applied to
+a quantum-computing problem, the paper outlines future directions,
+including ongoing work in FADSE.}
+
+\keyword{quantum-inspired evolutionary algorithms; multi-objective
+optimization; Q-bit representation; taxonomy; bibliometric analysis;
+NSGA-II; NSGA-III; hypervolume; quantum circuit optimization}
+
+%=================================================================
+\begin{document}
 
 \input{sections/01_introduction}
 \input{sections/02_bibliometric_analysis}
@@ -86,14 +91,66 @@ Blaga University of Sibiu.
 \input{sections/08_open_challenges}
 \input{sections/09_conclusion}
 
-\section*{Acknowledgements}
-The authors used Claude (Anthropic), through the Claude Code
-command-line tool, in parts of this work: literature search and
-screening, the bibliometric analysis, and development of the
-quantum-circuit-optimization pipeline. The authors reviewed and edited all output and take
-full responsibility for the content of this publication.
+%=================================================================
+\vspace{6pt}
 
-\bibliographystyle{unsrtnat}
+\authorcontributions{Conceptualization, O.-A.G. and A.F.;
+methodology, O.-A.G. and A.F.; software, O.-A.G.; validation, O.-A.G.
+and A.F.; investigation, O.-A.G.; data curation, O.-A.G.; writing---original draft preparation, O.-A.G.;
+writing---review and editing, A.F.; visualization, O.-A.G.;
+supervision, A.F. All authors have read and agreed to the published
+version of the manuscript.}
+
+\funding{This research received no external funding.}
+
+\institutionalreview{Not applicable.}
+
+\informedconsent{Not applicable.}
+
+\dataavailability{The pipeline code, experiment tooling, figure-generation
+scripts, and the cached bibliometric data underlying this study are
+available at \url{https://github.com/gileano/code_PFE/tree/ULBS_qiea}.
+The 225-run results table and each run's configuration and metrics,
+from which every case-study table and figure is generated, are in the
+same repository under \texttt{paper\_survey/data/baseline\_225}.}
+
+\acknowledgments{During the preparation of this study, the authors used
+Claude (Anthropic; Claude Opus models, 2026), through the Claude Code
+command-line tool, for literature search and screening, the
+bibliometric analysis, and development of the
+quantum-circuit-optimization pipeline. The authors have reviewed and
+edited the output and take full responsibility for the content of this
+publication.}
+
+\conflictsofinterest{The authors declare no conflicts of interest.}
+
+\abbreviations{Abbreviations}{%
+The following abbreviations are used in this manuscript:\\
+
+\noindent
+\begin{tabular}{@{}ll}
+EA & Evolutionary algorithm\\
+FADSE & Framework for Automatic Design Space Exploration\\
+HV & Hypervolume\\
+IGD & Inverted generational distance\\
+MOEA & Multi-objective evolutionary algorithm\\
+MOEA/D & MOEA based on decomposition\\
+MOO & Multi-objective optimization\\
+NSGA-II/III & Non-dominated sorting genetic algorithm II/III\\
+QEA & Quantum evolutionary algorithm\\
+QIEA & Quantum-inspired evolutionary algorithm\\
+SMS-EMOA & S-metric selection evolutionary multi-objective algorithm\\
+SPEA2 & Strength Pareto evolutionary algorithm 2
+\end{tabular}
+}
+
+%=================================================================
+\begin{adjustwidth}{-\extralength}{0cm}
+
+\reftitle{References}
+
 \bibliography{references}
 
+\PublishersNote{}
+\end{adjustwidth}
 \end{document}

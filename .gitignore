@@ -5,6 +5,8 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 runs/
+# ...except the paper's 225-run baseline data (config.json/metrics.json only)
+!paper_survey/data/baseline_225/runs/
 runs_backup_*/
 report/
 .pytest_cache/

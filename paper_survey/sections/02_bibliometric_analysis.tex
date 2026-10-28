@@ -98,7 +98,7 @@ this survey's case study belongs to, rather than from quantum-inspired
 algorithms, and coincides with the availability of the NISQ hardware
 discussed in Section~\ref{sec:introduction}.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{figures/bibliometric_trend.png}
   \caption{Publications per year, 1996--2026, from OpenAlex after
@@ -155,20 +155,7 @@ The keywords are assigned automatically by OpenAlex rather than by the
 authors, so this reading should be taken as indicative rather than
 definitive.
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth]{figures/bibliometric_clusters.png}
-  \caption{Keyword co-occurrence clusters in the QIEA corpus (55
-    keywords occurring in at least 20 papers; Louvain clustering).
-    Node size is proportional to the number of papers with that
-    keyword; within each cluster, the stronger half of co-occurrence
-    links is drawn and the eight most frequent keywords are labelled.
-    Links between clusters are not drawn. The full keyword list per
-    cluster is in Table~\ref{tab:bibliometric-clusters}.}
-  \label{fig:bibliometric-clusters}
-\end{figure}
-
-\begin{table}[htbp]
+\begin{table}[H]
   \centering
   \small
   \caption{Keywords in each cluster of
@@ -177,7 +164,7 @@ definitive.
     Louvain method to Cluster~1, is listed under Cluster~2, with which it
     is semantically aligned.}
   \label{tab:bibliometric-clusters}
-  \begin{tabularx}{\linewidth}{@{}p{3.2cm}X@{}}
+  \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.2cm}>{\raggedright\arraybackslash}X@{}}
     \toprule
     Cluster & Keywords \\
     \midrule
@@ -229,7 +216,20 @@ Section~\ref{sec:taxonomy:objectives} uses them as the baseline for the
 multi-objective methods. Each paper is summarized briefly below, in rank
 order.
 
-\begin{table}[htbp]
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{figures/bibliometric_clusters.png}
+  \caption{Keyword co-occurrence clusters in the QIEA corpus (55
+    keywords occurring in at least 20 papers; Louvain clustering).
+    Node size is proportional to the number of papers with that
+    keyword; within each cluster, the stronger half of co-occurrence
+    links is drawn and the eight most frequent keywords are labelled.
+    Links between clusters are not drawn. The full keyword list per
+    cluster is in Table~\ref{tab:bibliometric-clusters}.}
+  \label{fig:bibliometric-clusters}
+\end{figure}
+
+\begin{table}[H]
   \centering
   \small
   \caption{The ten most-cited papers in the QIEA corpus (OpenAlex

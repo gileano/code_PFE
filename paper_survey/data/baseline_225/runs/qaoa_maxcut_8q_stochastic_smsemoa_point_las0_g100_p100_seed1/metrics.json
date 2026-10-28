@@ -1,0 +1,152 @@
+{
+  "blocks": [
+    [
+      0,
+      1,
+      4,
+      5
+    ],
+    [
+      2,
+      3,
+      6,
+      7
+    ]
+  ],
+  "block_algorithm": "smsemoa",
+  "mutation_scheme": "point",
+  "hybrid_las": false,
+  "kept_injections": [],
+  "injection_path_used": "stochastic",
+  "fidelity_after_injection_method": 0.005959770687808148,
+  "fidelity_after_fidelity_driven_greedy": 0.0006326321166992751,
+  "fidelity_backend": "exact",
+  "fidelity_exact_threshold": 13,
+  "fidelity_samples": 8,
+  "fidelity_shots": 128,
+  "injection_fidelity_samples": 8,
+  "injection_fidelity_shots": 16,
+  "injection_fidelity_exact_threshold": 7,
+  "fidelity_driven_max_trials": 300,
+  "fidelity_driven_statevector_threshold": 24,
+  "fidelity_approximate_backend": "mps",
+  "fidelity_driven_tier": "statevector",
+  "depth_before": 21,
+  "depth_after": 6,
+  "fidelity_final": 0.005959770687808146,
+  "original_num_qubits": 8,
+  "final_num_qubits": 8,
+  "highly_interactive_qubits_identified": {},
+  "stage_timings_s": {
+    "partitioning": 0.3812601870013168,
+    "block_optimization": 35.41693090499757,
+    "injection": 0.8456866859996808,
+    "compression": 0.35269241300193244
+  },
+  "cost_before": 56,
+  "cost_after": 35,
+  "moo_metrics_per_block": [
+    {
+      "n_pareto": 2,
+      "HV": 0.01726367242887892,
+      "Spread": 0.0,
+      "Spacing": 0.0,
+      "ref_point": [
+        1.0597005762212255,
+        0.7666666666666666,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.47522854024392724,
+          3.0,
+          12.0
+        ],
+        [
+          0.2137271105468122,
+          1.0,
+          12.0
+        ]
+      ]
+    },
+    {
+      "n_pareto": 13,
+      "HV": 0.05391148211381361,
+      "Spread": 1.4999999999999998,
+      "Spacing": 0.1530911414254758,
+      "ref_point": [
+        1.0382255902751365,
+        1.1,
+        0.1
+      ],
+      "front_raw": [
+        [
+          0.178078346932586,
+          1.0,
+          12.0
+        ],
+        [
+          0.178078346932586,
+          1.0,
+          12.0
+        ],
+        [
+          0.178078346932586,
+          1.0,
+          12.0
+        ],
+        [
+          0.178078346932586,
+          1.0,
+          12.0
+        ],
+        [
+          0.178078346932586,
+          1.0,
+          12.0
+        ],
+        [
+          0.178078346932586,
+          1.0,
+          12.0
+        ],
+        [
+          0.178078346932586,
+          1.0,
+          12.0
+        ],
+        [
+          0.178078346932586,
+          1.0,
+          12.0
+        ],
+        [
+          0.178078346932586,
+          1.0,
+          12.0
+        ],
+        [
+          0.178078346932586,
+          1.0,
+          12.0
+        ],
+        [
+          0.4340129158642511,
+          5.0,
+          12.0
+        ],
+        [
+          0.4206731583674204,
+          4.0,
+          12.0
+        ],
+        [
+          0.3013353368507299,
+          3.0,
+          12.0
+        ]
+      ]
+    }
+  ],
+  "wall_clock_s": 37.476774101000046
+}
