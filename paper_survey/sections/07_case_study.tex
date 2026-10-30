@@ -540,11 +540,12 @@ microgrid. Unlike the rest of this section, both are hypothetical. No
 experiment was run for either, and no performance figure is given,
 because none could be given without one. The problem formulations are
 simplified for illustration and are not taken from a published study.
-What the two subsections do instead is ask what the taxonomy
-(Section~\ref{sec:taxonomy}) and the limitations identified in
-Section~\ref{sec:critical-analysis} imply for anyone considering a
-multi-objective QIEA for such a problem; Table~\ref{tab:case-study-scenarios}
-summarizes the answer for both.
+What the two subsections do instead is state the advantages a
+multi-objective QIEA could be expected to bring to each problem, and
+then ask what the taxonomy (Section~\ref{sec:taxonomy}) and the
+limitations identified in Section~\ref{sec:critical-analysis} imply for
+anyone setting out to test them; Table~\ref{tab:case-study-scenarios}
+summarizes both for both scenarios.
 
 \paragraph{Problem.}
 Consider a continuously operated plant producing methanol from syngas,
@@ -561,6 +562,34 @@ Evaluating one candidate requires a rigorous flowsheet simulation, so
 each objective evaluation is expensive, and heat integration makes the
 objective landscape discontinuous wherever the network's stream matches
 change.
+
+\paragraph{Expected advantages.}
+The QIEA literature suggests two reasons why a multi-objective QIEA
+could suit this problem. Both are hypotheses that a study of the
+scenario would have to test, not results.
+\emph{Faster convergence.} Each Q-bit holds a probability of observing
+0 or 1 rather than a fixed bit -- the algorithmic counterpart of a
+superposition of states (Section~\ref{sec:background:quantum}) -- so
+one Q-bit individual represents a probability distribution over many
+candidate plant configurations, and a small population can explore a
+large part of the state space from the first generations.
+\citet{han2002qea} found that their QEA performs well even with a small
+population. Carried over to this problem, the same property could let a
+multi-objective QIEA reach the true Pareto front in far fewer
+generations, and therefore far fewer flowsheet simulations, than a
+classical MOEA.
+\emph{Better spread and diversity.} The rotation gate shifts each
+Q-bit's probabilities gradually instead of overwriting bits, so an
+individual keeps a non-zero chance of observing alternatives it has not
+yet converged away from; \citet{han2002qea} report that this avoids the
+premature convergence of a conventional genetic algorithm. On this
+problem's multi-modal boundaries between continuous and integer
+decisions -- such as which heat-exchanger stream matches are made, or
+how many catalyst beds are used -- it could keep the population from
+collapsing onto a single network structure and so preserve the spread
+of the Pareto front. Both expectations rest on single-objective
+evidence; the survey's findings below state what testing them in a
+multi-objective setting would require.
 
 \paragraph{What the survey implies.}
 \emph{Representation.} The decision vector sits at both ends of the
@@ -581,8 +610,9 @@ loss its authors attribute to the repair step producing more and more
 of each solution (Section~\ref{sec:feature-comparison}); the same risk
 applies here.
 \emph{Evaluation budget.} With a simulator in the loop, the number of
-evaluations, not the optimizer's own overhead, sets the cost. The claim
-that matters is therefore whether a QIEA reaches a given front quality
+evaluations, not the optimizer's own overhead, sets the cost. The first
+expected advantage above is therefore the claim that matters, and it
+has to be stated as whether a QIEA reaches a given front quality
 in fewer evaluations than a classical MOEA at an equal budget. The
 surveyed performance claims each rest on a single problem and an
 author-chosen classical baseline
@@ -594,7 +624,14 @@ diversity-restoring operator. No surveyed multi-objective QIEA has an
 interference-based or reset operator for this
 (Section~\ref{sec:taxonomy:operator}); its only lever is the rotation
 gate's angle schedule, so such an operator would be a contribution in
-its own right, not a component to reuse. With three objectives, the
+its own right, not a component to reuse. The second expected advantage
+rests on that lever alone, and the rotation gate also drives Q-bit
+probabilities toward 0 or 1 over a run -- the collapse that
+\citet{han2004hepsilon}'s H$_\epsilon$ gate was introduced to limit
+(Section~\ref{sec:taxonomy:objectives}) -- so whether diversity
+survives long enough to cover a three-objective front has to be
+measured, for instance with the spread and spacing indicators of
+Section~\ref{sec:background}. With three objectives, the
 reference-point and hypervolume-driven selection that no surveyed QIEA
 pairs with a Q-bit representation (Section~\ref{sec:taxonomy:selection})
 would be natural candidates to try. \emph{Prior work.} A keyword
@@ -614,21 +651,61 @@ connection with time-of-use tariffs and peak-demand charges. The task
 is to fix the next day's dispatch schedule in 15-minute intervals, so
 $T{=}96$ time steps. At each step, four quantities are decided: the
 CHP unit's power output and the battery's charge or discharge power
-(both continuous), whether each shiftable batch production load runs
-(binary), and the heat output of an auxiliary boiler (continuous) --
-$96 \times 4 = 384$ decision variables in total, with one shiftable
-load. Three objectives conflict: minimize daily cost (grid energy,
+(both continuous), whether a shiftable batch production load runs
+(binary), and the heat output of an auxiliary boiler (continuous).
+Three of the four quantities are continuous and one is binary, so the
+schedule has $96 \times 4 = 384$ decision variables in total:
+$96 \times 3 = 288$ continuous and $96 \times 1 = 96$ binary. Three objectives conflict: minimize daily cost (grid energy,
 fuel, and battery degradation), minimize wasted energy (CHP heat dumped
 plus solar output curtailed), and minimize peak grid import. Power and
 heat must balance in every interval, and the battery's state of charge
 links each interval to the next.
 
+\paragraph{Expected advantages.}
+Non-linear battery degradation curves, piecewise turbine efficiency
+maps, and discrete electricity tariff steps make the objective
+landscape rugged and discontinuous, the kind of landscape on which
+standard optimizers such as NSGA-II or particle swarm optimization risk
+premature convergence. Two quantum-inspired operators could help here;
+as in the chemical scenario, both are hypotheses to be tested.
+\emph{Quantum rotation gates.} The probability amplitudes of each Q-bit
+are rotated toward Pareto-optimal reference solutions by a rotation-gate
+matrix (Section~\ref{sec:background:quantum}). Because the rotation
+angle sets how far each step moves, a small angle late in the run
+fine-tunes the battery's state transitions between intervals while the
+reference solutions balance them against tariff spikes.
+\emph{Quantum interference (Hadamard operation).} When the algorithm
+detects stagnation in a local optimum -- for example, a population stuck
+on a suboptimal battery charging cycle -- a Hadamard gate applied to the
+Q-bits scrambles their amplitudes: a Q-bit that has collapsed toward 0
+or 1 is mapped back to equal probabilities of both. This allows
+immediate re-exploration of alternative schedule windows, and because
+the non-dominated solutions found so far are kept in an external
+archive, as in the QMEA line of methods (Section~\ref{sec:taxonomy:objectives}),
+no Pareto-optimal solution is lost. No surveyed multi-objective QIEA
+has such an operator (Section~\ref{sec:taxonomy:operator}): interference
+appears only in single-objective QIEAs, as the crossover of
+\citet{narayanan1996qiga}, and the Hadamard gate in
+\citet{olvera2023continuous}'s methods only initializes the population
+in equal superposition. A stagnation-triggered Hadamard reset would
+therefore be a new operator, and its benefit is untested.
+
 \paragraph{What the survey implies.}
-\emph{Scale.} The problem has 288 continuous variables. At an
-illustrative precision of 10 Q-bits per continuous variable, the
-chromosome would hold 2,976 Q-bits, far beyond the problems on which
-\citet{olvera2023continuous} already saw performance degrade with the
-number of decision variables. \emph{Coupling across time.} Each Q-bit
+\emph{Scale.} As derived above, the problem has 384 decision
+variables, 288 of them continuous (CHP output, battery power, and
+boiler heat at each of the 96 steps) and 96 binary. A Q-bit observes only 0 or 1, so a continuous variable has
+to be encoded in several Q-bits and decoded into a real value, and the
+number of Q-bits sets its precision. At an illustrative 10 Q-bits per
+continuous variable (a resolution of $1/2^{10}$, about 0.1\%, of each
+variable's range), the continuous part alone needs
+$288 \times 10 = 2{,}880$ Q-bits; the 96 binary load decisions add one
+Q-bit each, so the chromosome would hold $2{,}880 + 96 = 2{,}976$
+Q-bits. \citet{olvera2023continuous} coded each variable in 16 Q-bits
+and already saw the quantum-inspired algorithms fall behind NSGA-II on
+benchmark problems with ten decision variables, i.e.\ 160 Q-bits, and
+attribute the degradation to the uncertainty of the Q-bit
+representation growing with the number of Q-bits. The dispatch problem
+would need almost twenty times as many. \emph{Coupling across time.} Each Q-bit
 is observed independently, so the representation itself carries no
 dependency between genes: a schedule observed from a Q-bit chromosome
 can drain the battery at one interval and need it two hours later. The
@@ -683,6 +760,10 @@ hypervolume reference point (Section~\ref{sec:case-study:hypervolume}).
     Decision variables & Mixed: continuous operating parameters, discrete
       heat-exchanger matches and bed count &
       384: 288 continuous, 96 binary (96 steps $\times$ 4) \\
+    Expected advantages (to be tested) & Fewer generations, hence fewer
+      simulator calls; spread kept across discrete design choices &
+      Fine-grained rotation of schedule Q-bits; Hadamard reset on
+      stagnation (a new operator) \\
     Representation issue & Mixed binary--continuous encoding, not
       documented by any surveyed method &
       Thousands of Q-bits after decoding; no inter-gene dependency \\

@@ -232,7 +232,21 @@ basis. Building on that synthesis, ongoing work extends FADSE
 platform developed at Lucian Blaga University of Sibiu, toward
 QIEA-MOO. FADSE provides a standardized infrastructure for
 metaheuristic execution, benchmark interfacing, and performance
-evaluation; within it, the ongoing developments target two classes of
+evaluation. It also already addresses the evaluation cost that
+dominates expensive problems such as those of
+Sections~\ref{sec:case-study:scenario-chemistry}
+and~\ref{sec:case-study:scenario-microgrid}: when connected to a local
+network or to high-performance computing systems, it sends individuals
+to different machines and evaluates them simultaneously, and its
+checkpointing keeps already-evaluated individuals so that a run
+tolerates simulation failures~\citep{patrausanu2024frameworks}. Planned
+work adds a load-balancing job scheduler to distribute these
+evaluations across cores and machines more
+efficiently~\citep{patrausanu2024frameworks}. Population-based search
+suits this mapping well, since the individuals of one generation can be
+evaluated independently, and a Q-bit population is no exception: each
+observed solution is evaluated like any classical individual. Within
+FADSE, the ongoing developments target two classes of
 algorithm: multi-objective QIEA variants incorporating adaptive
 quantum-inspired operators -- including the choice of the rotation
 gate's reference solution, which Section~\ref{sec:critical-analysis}

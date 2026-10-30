@@ -351,6 +351,39 @@ references; bibliography via Definitions/mdpi.bst (set by the class).
 - Cosmetic: two 525pt "Overfull hbox" log entries at the end of each
   xltabular (empty box from the class, nothing visibly overflows).
 
+2026-10-30: supervisor feedback round (paper_survey/supervisor_feedback.txt,
+in Romanian, 4 points; after these the supervisor says it can be
+submitted). Build: 48 pages, no undefined references.
+- Point 1: BOTH authors now corresponding (supersedes "corresponding
+  author Gilea" above) -- the supervisor's 2,200 EUR APC voucher needs him
+  first or corresponding author, and Gilea must stay first for the PhD.
+  User chose both rather than Florea only: CONFIRM WITH THE SUPERVISOR
+  that a shared corresponding role still qualifies for the voucher.
+  Emails moved from the address block to the \corres line.
+- Point 2: abstract's closing restored to the supervisor's full FADSE
+  sentence, plus a clause on parallel evaluation on HPC systems (his
+  complaint: no HPC mention). Abstract now 272 words, OVER MDPI's ~200 --
+  user's choice; trim if the editorial office objects. Section 8 FADSE
+  subsection gained the HPC facts, sourced only from
+  patrausanu2024frameworks (FADSE already distributes individuals over a
+  LAN/HPC machines and checkpoints evaluated ones; load-balancing job
+  scheduler planned).
+- Points 3-4: the requested "advantages" (faster convergence via
+  superposition, spread from rotation gates, rotation-gate fine-tuning
+  and a Hadamard stagnation reset for the microgrid) come from the
+  Report1/Quantum_app_*.docx files. Added as new "Expected advantages"
+  paragraphs, explicitly framed as untested hypotheses so they don't
+  contradict Sections 4-6: convergence/diversity claims attributed to
+  han2002qea's single-objective result; the Hadamard reset stated as a
+  NEW operator (no surveyed MO QIEA has one; Olvera's H gate only
+  initializes). The "What the survey implies" paragraphs now refer back
+  to them (equal-budget test; Q-bit collapse / H_eps). New table row
+  "Expected advantages (to be tested)" in tab:case-study-scenarios.
+- Point 4: the 2,976 Q-bit figure now derived in text (288 x 10 + 96
+  binary) and compared to Olvera et al.'s actual setting, checked in
+  their PDF: 16 Q-bits/variable, degradation already at ten-variable
+  ZDT/LZ09 problems (160 Q-bits), so ~19x fewer than the dispatch case.
+
 Known remaining weaknesses (as of 2026-10-08; the earlier three -- only 5
 methods, gilea2026waste rows, drafting language -- are resolved, see above):
 - Most rows of the 13-method Section 5 tables rest on abstracts only;
