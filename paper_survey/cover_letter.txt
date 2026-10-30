@@ -1,0 +1,80 @@
+Olivian-Antonio Gîlea and Adrian Florea
+Computer Science and Electrical Engineering Department
+"Lucian Blaga" University of Sibiu
+550025 Sibiu, Romania
+olivianantonio.gilea@ulbsibiu.ro; adrian.florea@ulbsibiu.ro
+
+30 October 2026
+
+To the Editor-in-Chief
+Processes (MDPI)
+
+Subject: Submission of a review manuscript entitled "Critical Analysis of
+Quantum-Inspired Evolutionary Algorithms for Multi-Objective Optimization:
+Taxonomy, Features, and Limitations"
+
+Dear Editor,
+
+We are pleased to submit the above manuscript for consideration as a
+Review article in Processes.
+
+Quantum-inspired evolutionary algorithms (QIEAs) represent candidate
+solutions as probabilistic Q-bit chromosomes updated by rotation-gate
+operators. They are increasingly used to solve engineering optimization
+problems on classical hardware. Most real process-design and operation
+problems are multi-objective, but the multi-objective branch of the QIEA
+literature has never been surveyed on its own. It has been active since at
+least 2003, but it remains small and fragmented. Our manuscript addresses
+this gap with four contributions:
+
+  1. A bibliometric analysis of 2,250 QIEA papers (1996-2026) built from
+     OpenAlex. Multi-objective work makes up under a tenth of the field,
+     and its share has roughly doubled in recent years.
+  2. A five-axis taxonomy of multi-objective QIEAs: solution
+     representation, quantum-inspired operator type, selection mechanism,
+     hybridization with classical multi-objective evolutionary algorithms,
+     and application domain. We apply it in a systematic feature
+     comparison, with single-objective QIEAs as a baseline.
+  3. A critical analysis of the field's limitations. Selection mechanisms
+     vary widely, but none is reference-point- or hypervolume-based.
+     Several widely cited methods do not state how they aggregate their
+     objectives, and systematic benchmarking is scarce.
+  4. An illustrative case study: a block-partitioned
+     quantum-circuit-optimization pipeline extended with NSGA-III and
+     SMS-EMOA. On a 225-run experimental baseline, it shows how an
+     adaptive hypervolume reference point can change a cross-algorithm
+     ranking, which is a concrete benchmarking pitfall.
+
+We believe the manuscript fits the scope of Processes, in particular its
+"Process Control, Modeling and Optimization" and "Automation Control
+Systems" (optimization algorithms) sections, and it is relevant to
+"Energy Systems". The survey is intended as a guide for practitioners who
+choose or design evolutionary optimizers for process problems. To connect
+its findings directly to process engineering, Section 7 works through two
+hypothetical but representative application scenarios: the multi-objective
+design of a methanol plant and the 96-step dispatch of an industrial
+microgrid. It shows where the identified limitations matter most: mixed
+continuous/discrete variables, hard constraints, and expensive
+evaluations. Finally, the manuscript outlines future research directions
+within FADSE, an open-source framework for automatic design space
+exploration with parallel evaluation on high-performance computing
+systems.
+
+To support reproducibility, the pipeline code, the experiment tooling, the
+225-run dataset, and the cached bibliometric data are openly available, as
+described in the Data Availability Statement.
+
+We confirm that neither the manuscript nor any parts of its content are
+currently under consideration for publication with or published in another
+journal. All authors have approved the manuscript and agree with its
+submission to Processes.
+
+This manuscript has not been submitted previously to any MDPI journal.
+
+Thank you for considering our work. We look forward to hearing from you.
+
+Sincerely,
+
+Olivian-Antonio Gîlea and Adrian Florea
+(corresponding authors)
+"Lucian Blaga" University of Sibiu

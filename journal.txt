@@ -384,6 +384,18 @@ submitted). Build: 48 pages, no undefined references.
   their PDF: 16 Q-bits/variable, degradation already at ten-variable
   ZDT/LZ09 problems (160 Q-bits), so ~19x fewer than the dispatch case.
 
+2026-10-30 (later): TARGET JOURNAL SWITCHED Algorithms -> Processes
+(user's choice; supersedes "journal = Algorithms" above). main.tex class
+option changed to `processes`; rebuilt, 48 pages, no undefined refs.
+Cover letter written: paper_survey/cover_letter.txt, per the Processes
+instructions (significance in context, scope fit, the two mandatory
+statements verbatim, no prior MDPI submission; reviewer suggestions go
+in SuSy, not the letter). Scope fit argued via the "Process Control,
+Modeling and Optimization" and "Automation Control Systems" sections
+plus Energy Systems, using the two hypothetical Section 7 scenarios.
+Processes is single-blind, so author names stay. Regular submission, no
+Special Issue.
+
 Known remaining weaknesses (as of 2026-10-08; the earlier three -- only 5
 methods, gilea2026waste rows, drafting language -- are resolved, see above):
 - Most rows of the 13-method Section 5 tables rest on abstracts only;
